@@ -3,6 +3,25 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+   <display-name>Archetype Created Web Application</display-name>
+  
+   <servlet>
+      <servlet-name>Jersey Web Application</servlet-name>
+      <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+      <init-param>
+         <param-name>com.sun.jersey.config.property.packages</param-name>         
+         <param-value>com.hax.controllers</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>Jersey Web Application</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+   
+</web-app>
+
+<!--<web-app>
   <display-name>Archetype Created Web Application</display-name>
 
     <servlet>
@@ -13,4 +32,4 @@
         <servlet-name>Hello</servlet-name>
         <url-pattern>/hello/*</url-pattern>
     </servlet-mapping>
-</web-app>
+</web-app>-->
