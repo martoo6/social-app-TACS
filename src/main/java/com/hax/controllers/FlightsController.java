@@ -14,11 +14,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @Path("flights")
-public class TravelsController {
+public class FlightsController {
     
     private final JSONArray flights;
 
-    public TravelsController() throws JSONException {
+    public FlightsController() throws JSONException {
         this.flights = new JSONArray().put(
                         new JSONObject().put("id", 1)
                             .put("destination", "Acapulco")
