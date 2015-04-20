@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@Path("/")
+@Path("flights")
 public class FlightsController {
     
     private final JSONArray flights;
@@ -32,7 +32,9 @@ public class FlightsController {
     }
 
     /**
-     * ask despegar api for travels and filters them
+     * 
+     * Asks despegar api for travels and filters them
+     * 
      * @param from
      * @param to
      * @param fromDate
@@ -40,7 +42,6 @@ public class FlightsController {
      * @return Flights list filtered by paramaters
      * @throws JSONException
      */
-    @Path("flights")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String showFlights(@QueryParam("from") String from, @QueryParam("to") String to,
@@ -50,17 +51,19 @@ public class FlightsController {
     }
 
     /**
-     *recive and save in the system one of the flight's json
+     * 
+     * Recive and save in the system one of the flight's json of {userId}
      *
      * @param flight
+     * @param userId
      * @return operation status
      * @throws JSONException
      */
-    @Path("flights")
+    @Path("{userId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String saveFlight(String flight) throws JSONException
+    public String saveFlight(String flight, @PathParam("userId") int userId) throws JSONException
     {
         return new JSONObject().put("success", true).toString();
     }
@@ -71,7 +74,7 @@ public class FlightsController {
      * @return flights from user
      * @throws JSONException
      */
-    @Path("flights/{userId}")
+    @Path("{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String flights(@PathParam("userId") int userId) throws JSONException
@@ -120,14 +123,15 @@ public class FlightsController {
     }
 
     /**
+     * 
      * Accepts recommendation from friend(in postData)
+     * 
      * @param postData
      * @param userId
      * @param recommId
      * @return operation status
      * @throws JSONException
      */
-
     @Path("friends/recommended/{userId}/{recommID}") 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -139,14 +143,15 @@ public class FlightsController {
     }
 
     /**
+     * 
      * Deny recommendation from friend(in postData)
+     * 
      * @param postData
      * @param userId
      * @param recommId
      * @return operation status
      * @throws JSONException
      */
-
     @Path("friends/recommended/{userId}/{recommID}") 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
@@ -161,19 +166,38 @@ public class FlightsController {
      *
      * {userId} recommends a flight to {friendId}
      * additional data to perform recomendation in postData
+     * 
      * @param postData
      * @param userId
      * @param friendId
      * @return operation status
      * @throws JSONException
      */
-
     @Path("friends/recommend/{userId}/{friendId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String recommendToFriend(String postData, @PathParam("userId") int userId,
             @PathParam("friendId") int friendId) throws JSONException
+    {
+        return new JSONObject().put("success", true).toString();
+    }
+    
+            
+    /**
+     * 
+     * Allows {userId} to share flight in facebook
+     *
+     * @param flight
+     * @param userId
+     * @return operation status
+     * @throws JSONException
+     */
+    @Path("share/{userId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String shareFlight(String flight, @PathParam("userId") int userId) throws JSONException
     {
         return new JSONObject().put("success", true).toString();
     }
