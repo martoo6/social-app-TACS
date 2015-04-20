@@ -1,5 +1,6 @@
 package com.hax.controllers;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -7,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,14 +37,20 @@ public class TravelsController {
     }
     
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String saveTravel(@QueryParam("flight") JSONObject flight) throws JSONException
+    public String saveTravel(String flight) throws JSONException
     {
-        //recive and save in the system one of the flight's json
+        /*
+        *recive and save in the system one of the flight's json
+        *to access the flight json just do:
+        *
+        *new JSONObject(flight)
+        */
         return new JSONObject().put("success", true).toString();
     }
     
-    @Path("my-flights/{userId}")
+    @Path("flights/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String myTravels(@PathParam("userId") int userId) throws JSONException
