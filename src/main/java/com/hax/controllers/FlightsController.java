@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@Path("flights")
+@Path("/")
 public class FlightsController {
     
     private final JSONArray flights;
@@ -40,6 +40,7 @@ public class FlightsController {
      * @return Flights list filtered by paramaters
      * @throws JSONException
      */
+    @Path("flights")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String showFlights(@QueryParam("from") String from, @QueryParam("to") String to,
@@ -55,6 +56,7 @@ public class FlightsController {
      * @return operation status
      * @throws JSONException
      */
+    @Path("flights")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,7 +86,7 @@ public class FlightsController {
      * @return friends from user
      * @throws JSONException
      */
-    @Path("/friends/{userId}")
+    @Path("friends/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String friendsFlights(@PathParam("userId") int userId) throws JSONException
@@ -166,7 +168,7 @@ public class FlightsController {
      * @throws JSONException
      */
 
-    @Path("/friends/recommend/{userId}/{friendId}")
+    @Path("friends/recommend/{userId}/{friendId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
