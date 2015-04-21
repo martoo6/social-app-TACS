@@ -1,6 +1,7 @@
 package com.hax.controllers;
 
 import com.hax.models.FlightModel;
+import com.hax.models.UserModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ public class UsersController {
     @Path("{userID}/friends/")
     public String getFriends(@PathParam("userId") int userId) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
+        return UserModel.friends().toString();
     }
 
     /**
@@ -53,7 +54,7 @@ public class UsersController {
     @Path("{userID}/recommendations/flights")
     public String getFlightsRecommendations(@PathParam("userId") int userId) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
+        return FlightModel.flights().toString();
     }
 
     @POST

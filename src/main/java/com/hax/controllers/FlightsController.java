@@ -9,6 +9,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import com.hax.models.FlightModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +66,7 @@ public class FlightsController {
     public String getFilteredFlight(@QueryParam("origin") String from, @QueryParam("destiny") String to,
                                   @QueryParam("departure") String fromDate, @QueryParam("arrival") String toDate) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
+        return FlightModel.flights().toString();
     }
 
 
