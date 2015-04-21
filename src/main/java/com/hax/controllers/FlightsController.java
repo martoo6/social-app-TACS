@@ -27,7 +27,7 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String saveFlight(@PathParam("flightId") int flightID , @PathParam("userId") int userId) throws JSONException
+    public String publishFlight(@PathParam("flightId") int flightID , @PathParam("userId") int userId) throws JSONException
     {
         return new JSONObject().put("success", true).toString();
     }
@@ -40,7 +40,7 @@ public class FlightsController {
      * @return Estado de la operacion
      * @throws JSONException
      */
-    @Path("{flightID}/recommendation/{userID}")
+    @Path("{flightID}/recommendations/{userID}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ public class FlightsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String recommendFlight(@QueryParam("origin") String from, @QueryParam("destiny") String to,
+    public String getFilteredFlight(@QueryParam("origin") String from, @QueryParam("destiny") String to,
                                   @QueryParam("departure") String fromDate, @QueryParam("arrival") String toDate) throws JSONException
     {
         return new JSONObject().put("success", true).toString();
@@ -96,7 +96,7 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String recommendFlight() throws JSONException
+    public String createFlight() throws JSONException
     {
         return new JSONObject().put("success", true).toString();
     }
