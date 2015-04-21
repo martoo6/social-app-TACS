@@ -1,6 +1,6 @@
 # social-app-TACS
 
-##### Pre-Requisitos
+#### Pre-Requisitos
 * Java 7 JDK
 * Maven
 
@@ -27,3 +27,11 @@ exit
 ```
 
 Caso de estar en *Windows* descargarla de la pagina oficial: [Aqui](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+#### Levantar servidor
+
+Para levantar el servidor alcanza con correr el siguiente comand en la carpeta donde se clono/descargo el proyecto
+
+```
+mvn jetty:run
+```
