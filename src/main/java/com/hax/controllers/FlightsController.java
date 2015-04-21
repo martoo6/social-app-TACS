@@ -78,20 +78,22 @@ public class FlightsController {
      "origin":"EZE, Buenos Aires, Argentina",
      "destiny":"MNT, Montevideo, Uruguay",
      "company":"American Airlines",
-     "flight-number":"B34A5"
-     "departure-time":"20-04-2015 18:30"
-     "duration":"1h 20m"
+     "flight-num":"B34A5",
+     "departure-time":"20-04-2015 18:30",
+     "duration":"1h 20m",
+     "price":"532"
      },
      "return-ticket":
      {
      "origin":"MNT, Montevideo, Uruguay",
      "destiny":"EZE, Buenos Aires, Argentina",
      "company":"American Airlines",
-     "flight-number":"A98P5"
-     "departure-time":"09-06-2015 06:10"
-     "duration":"50m"
-     },
+     "flight-number":"A98P5",
+     "departure-time":"09-06-2015 06:10",
+     "duration":"50m",
      "price":"532"
+     },
+     "total-price":"532"
      }
      */
 

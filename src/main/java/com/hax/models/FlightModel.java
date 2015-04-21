@@ -13,9 +13,9 @@ public class FlightModel {
                     .put("destination", "Acapulco")
                     .put("origin", "Buenos Aires")
                     .put("airline", "Awesome Express")
-                    .put("flight-duration", 10)
-                    .put("flight-date", "5/5/2015")
-                    .put("flight-num", 666)
+                    .put("flight-duration", "1h 20m")
+                    .put("departure-time", "20-04-2015 18:30")
+                    .put("flight-num", "P659B2")
                     .put("price", 250.50)
                 );
     } 
