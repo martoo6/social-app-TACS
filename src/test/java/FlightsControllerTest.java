@@ -1,3 +1,4 @@
+import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnector;
 import com.hax.controllers.FlightsController;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -8,7 +9,10 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by martin on 20/04/15.
@@ -45,7 +49,15 @@ public class FlightsControllerTest extends JerseyTest{
 
     @Test
     public void despegarConnector() {
-        new DespegarConnector().getSomething();
-        assertEquals(2, 2);
+        ListenableFuture<String> f = new DespegarConnector().getFlights("EZE","MIA","2015-08-21");
+        String res = null;
+        try {
+            res = f.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        assertTrue(res.length() > 0);
     }
 }
