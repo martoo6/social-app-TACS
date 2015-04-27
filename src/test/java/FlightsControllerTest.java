@@ -1,3 +1,4 @@
+import com.hax.connectors.DespegarConnector;
 import com.hax.controllers.FlightsController;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -40,5 +41,11 @@ public class FlightsControllerTest extends JerseyTest{
     public void publishFlightResponse() {
         final Response responseWrapper = target("flights/1/publish/1").request(MediaType.APPLICATION_JSON).post(null);
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
+    }
+
+    @Test
+    public void despegarConnector() {
+        new DespegarConnector().getSomething();
+        assertEquals(2, 2);
     }
 }
