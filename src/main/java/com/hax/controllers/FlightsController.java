@@ -7,14 +7,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.CompletionCallback;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
+import com.google.inject.Inject;
+import com.hax.async.utils.CallableWrapper;
+import com.hax.connectors.DespegarConnector;
 import com.hax.models.FlightModel;
+import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.hax.async.utils.FutureHelper.async;
+
 @Path("flights")
 public class FlightsController {
+    FlightsServiceInterface flightsService;
+
+    @Inject
+    public FlightsController(FlightsServiceInterface flightsService){
+        this.flightsService=flightsService;
+    }
 
     /**
      *
@@ -61,10 +76,16 @@ public class FlightsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getFilteredFlight(@QueryParam("origin") String from, @QueryParam("destiny") String to,
-                                  @QueryParam("departure") String fromDate, @QueryParam("arrival") String toDate) throws JSONException
+    public void getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
+                                    @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
+                                    @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return FlightModel.flights().toString();
+        async(flightsService.getFlights(from, to, fromDate, toDate), new CallableWrapper<String, Boolean>() {
+            @Override
+            public Boolean apply(String result) {
+                return asyncResponse.resume(result);
+            }
+        });
     }
 
 

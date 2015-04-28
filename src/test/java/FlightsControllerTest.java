@@ -49,7 +49,7 @@ public class FlightsControllerTest extends JerseyTest{
 
     @Test
     public void despegarConnector() {
-        ListenableFuture<String> f = new DespegarConnector().getFlights("EZE","MIA","2015-08-21");
+        ListenableFuture<String> f = new DespegarConnector().getFlightsAsync("EZE", "MIA", "2015-07-21", "2015-08-28");
         String res = null;
         try {
             res = f.get();

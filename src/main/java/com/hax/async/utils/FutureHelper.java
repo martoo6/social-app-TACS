@@ -9,7 +9,7 @@ import static com.google.common.util.concurrent.Futures.transform;
 /**
  * Created by martin on 27/04/15.
  */
-public class Async {
+public class FutureHelper {
     public static <T,E> ListenableFuture<E> async(ListenableFuture<T> lf, final CallableWrapper<T,E> c) {
         return transform(lf, new AsyncFunction<T, E>() {
             public ListenableFuture<E> apply(final T response) throws Exception {
