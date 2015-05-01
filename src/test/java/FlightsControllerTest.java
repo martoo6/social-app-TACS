@@ -1,7 +1,6 @@
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.config.AppConfig;
 import com.hax.connectors.DespegarConnector;
-import com.hax.controllers.FlightsController;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
@@ -20,7 +19,9 @@ import static org.junit.Assert.assertTrue;
 public class FlightsControllerTest extends JerseyTest{
 
     protected Application configure() {
-        return new ResourceConfig(FlightsController.class);
+
+        //return new ResourceConfig(FlightsController.class);
+        return new AppConfig();
     }
 
     @Test

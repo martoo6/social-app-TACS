@@ -3,6 +3,7 @@ package com.hax.connectors;
 import com.google.common.util.concurrent.ListenableFuture;
 import  com.hax.async.utils.CallableWrapper;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
+import org.jvnet.hk2.annotations.Service;
 
 import javax.ws.rs.core.Response;
 

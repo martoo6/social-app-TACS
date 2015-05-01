@@ -1,35 +1,30 @@
 package com.hax.controllers;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.CompletionCallback;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.MediaType;
-
-import com.google.inject.Inject;
 import com.hax.async.utils.CallableWrapper;
-import com.hax.connectors.DespegarConnector;
-import com.hax.models.FlightModel;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jvnet.hk2.annotations.Service;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.MediaType;
 
 import static com.hax.async.utils.FutureHelper.async;
 
+@Singleton
+@Service
 @Path("flights")
 public class FlightsController {
-    FlightsServiceInterface flightsService;
+    @Inject FlightsServiceInterface flightsService;
 
-    @Inject
-    public FlightsController(FlightsServiceInterface flightsService){
-        this.flightsService=flightsService;
-    }
+
+    //public FlightsController(final FlightsServiceInterface flightsService){
+    //    this.flightsService=flightsService;
+    //}
 
     /**
      *
