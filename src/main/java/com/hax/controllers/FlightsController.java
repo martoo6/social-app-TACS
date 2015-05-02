@@ -1,5 +1,6 @@
 package com.hax.controllers;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.CallableWrapper;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
@@ -13,6 +14,9 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
+import java.util.concurrent.Callable;
+
+import static com.hax.async.executors.Default.ex;
 import static com.hax.async.utils.FutureHelper.async;
 
 @Singleton
@@ -20,11 +24,6 @@ import static com.hax.async.utils.FutureHelper.async;
 @Path("flights")
 public class FlightsController {
     @Inject FlightsServiceInterface flightsService;
-
-
-    //public FlightsController(final FlightsServiceInterface flightsService){
-    //    this.flightsService=flightsService;
-    //}
 
     /**
      *
@@ -75,7 +74,8 @@ public class FlightsController {
                                     @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
                                     @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        async(flightsService.getFlights(from, to, fromDate, toDate), new CallableWrapper<String, Boolean>() {
+        ListenableFuture<String> f = flightsService.getFlights(from, to, fromDate, toDate);
+        async(f, new CallableWrapper<String, Boolean>() {
             @Override
             public Boolean apply(String result) {
                 return asyncResponse.resume(result);
@@ -114,9 +114,15 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createFlight() throws JSONException
+    public void createFlight(@Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
-    }
+        ex.submit(new Callable<Void>() {
+            public Void call() throws Exception {
+                asyncResponse.resume(new JSONObject().put("success", true).toString());
+                return null;
+            }
+        });
 
+
+    }
 }

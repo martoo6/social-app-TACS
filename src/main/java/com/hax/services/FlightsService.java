@@ -13,11 +13,6 @@ public class FlightsService implements FlightsServiceInterface{
     @Inject
     DespegarConnectorInterface despegarConnector;
 
-
-//    public FlightsService(DespegarConnectorInterface despegarConnector){
-//        this.despegarConnector = despegarConnector;
-//    }
-
     public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate){
         return despegarConnector.getFlightsAsync(from, to , fromDate, toDate);
     }
