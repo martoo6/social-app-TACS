@@ -1,9 +1,6 @@
 package com.hax.controllers;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.CallableWrapper;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,12 +12,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import java.util.concurrent.Callable;
 
 import static com.hax.async.executors.Default.ex;
-import static com.hax.async.utils.FutureHelper.async;
+import static com.hax.async.utils.FutureHelper.addControllerCallback;
 
 @Singleton
 @Service
@@ -78,17 +73,7 @@ public class FlightsController {
                                     @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         ListenableFuture<String> f = flightsService.getFlights(from, to, fromDate, toDate);
-
-        Futures.addCallback(f, new FutureCallback<String>() {
-            public void onSuccess(String s) {
-                asyncResponse.resume(s);
-            }
-
-            public void onFailure(Throwable throwable) {
-                WebApplicationException ex = new WebApplicationException(throwable.getMessage(), Response.Status.BAD_REQUEST);
-                asyncResponse.resume(ex);
-            }
-        });
+        addControllerCallback(f, asyncResponse);
     }
 
 

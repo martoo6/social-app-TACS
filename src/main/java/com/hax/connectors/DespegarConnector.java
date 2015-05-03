@@ -1,11 +1,18 @@
 package com.hax.connectors;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.ListenableFuture;
 import  com.hax.async.utils.CallableWrapper;
+import com.hax.models.DespegarError;
+import com.hax.utils.JsonHelper;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.ws.rs.core.Response;
+
+import java.io.IOException;
 
 import static com.google.common.util.concurrent.Futures.transform;
 import static com.hax.async.utils.FutureHelper.async;
@@ -15,6 +22,7 @@ import static com.hax.async.utils.FutureHelper.async;
  */
 
 public class DespegarConnector implements DespegarConnectorInterface {
+    ObjectMapper mapper = new ObjectMapper();
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
@@ -48,7 +56,13 @@ public class DespegarConnector implements DespegarConnectorInterface {
         //Hermosura...
         return async(future, new CallableWrapper<Response, String>() {
             public String apply(Response result) {
-                if(result.getStatus()==Response.Status.BAD_REQUEST.getStatusCode()) throw new RuntimeException(result.readEntity(String.class));
+                if(result.getStatus()!=Response.Status.OK.getStatusCode()){
+
+                    DespegarError de = JsonHelper.readValue(result, DespegarError.class);
+                    Joiner joiner = Joiner.on(". ").skipNulls();
+                    String errorMsg = joiner.join(de.getCauses());
+                    throw new RuntimeException(errorMsg);
+                }
                 return result.readEntity(String.class);
             }
         });
