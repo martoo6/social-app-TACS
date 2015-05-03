@@ -11,7 +11,7 @@ import javax.inject.Inject;
  */
 public class FlightsService implements FlightsServiceInterface{
     @Inject
-    DespegarConnectorInterface despegarConnector;
+    public DespegarConnectorInterface despegarConnector;
 
     public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate){
         return despegarConnector.getFlightsAsync(from, to , fromDate, toDate);

@@ -1,11 +1,9 @@
-import com.hax.controllers.FlightsController;
-import com.hax.controllers.UsersController;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Test;
+package controllers;
 
-import javax.ws.rs.core.Application;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.junit.Test;
+import utils.GenericTest;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -14,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by martin on 20/04/15.
  */
-public class UsersControllerTest extends GenericTest{
+public class UsersControllerTest extends GenericTest {
 
     @Test
     public void getFlightsResponse() {
@@ -41,7 +39,7 @@ public class UsersControllerTest extends GenericTest{
     }
 
     @Override
-    AbstractBinder setBinder() {
+    protected AbstractBinder setBinder() {
         return null;
     }
 }

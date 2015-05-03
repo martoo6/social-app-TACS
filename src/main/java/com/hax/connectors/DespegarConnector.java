@@ -46,9 +46,9 @@ public class DespegarConnector implements DespegarConnectorInterface {
 
 
         //Hermosura...
-
         return async(future, new CallableWrapper<Response, String>() {
             public String apply(Response result) {
+                if(result.getStatus()==Response.Status.BAD_REQUEST.getStatusCode()) throw new RuntimeException(result.readEntity(String.class));
                 return result.readEntity(String.class);
             }
         });

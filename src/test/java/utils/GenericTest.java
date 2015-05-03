@@ -1,3 +1,5 @@
+package utils;
+
 import com.hax.connectors.DespegarConnector;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.controllers.FlightsController;
@@ -14,7 +16,7 @@ import javax.ws.rs.core.Application;
  * Created by martin on 5/1/15.
  */
 abstract public class GenericTest extends JerseyTest {
-    abstract AbstractBinder setBinder();
+    protected abstract AbstractBinder setBinder();
 
     protected Application configure() {
         //Para poder correr test en paralelo
