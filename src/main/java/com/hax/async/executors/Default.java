@@ -10,6 +10,10 @@ import java.util.concurrent.Executors;
  * Created by martin on 27/04/15.
  */
 
+/**
+ * Executor por default, probablemente sea uno solo pero la idea es que existan varios segun el uso que se le de.
+ * Preferentemente deberia haber uno para cada modulo del sistema: controllers, services, connectors
+ */
 public class Default {
     public static ListeningExecutorService ex = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 }

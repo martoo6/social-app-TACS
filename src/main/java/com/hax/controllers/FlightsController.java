@@ -1,6 +1,7 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.models.Flight;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,13 +110,9 @@ public class FlightsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void createFlight(@Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        ex.submit(new Callable<Void>() {
-            public Void call() throws Exception {
-                asyncResponse.resume(new JSONObject().put("success", true).toString());
-                return null;
-            }
-        });
-
-
+        //TODO: Parsear JSON entrante y convertirlo a Flight
+        Flight flight = new Flight();
+        ListenableFuture<Flight> f = flightsService.createFlight(flight);
+        addControllerCallback(f, asyncResponse);
     }
 }
