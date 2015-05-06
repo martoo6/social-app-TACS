@@ -3,13 +3,14 @@ package com.hax.models;
 /**
  * Created by martin on 5/5/15.
  */
+
 public class Flight {
     private Ticket wayTicket;
     private Ticket returnTicket;
     private Double totalPrice;
     private Integer id;
 
-    //Dummy Contructor para poder funcionar con la Inyeccion de Dependencias
+    //Dummy Contructor
     public Flight() {
     }
 

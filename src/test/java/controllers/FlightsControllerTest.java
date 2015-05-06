@@ -1,10 +1,12 @@
 package controllers;
 
+import com.hax.models.Flight;
 import com.hax.services.FlightsServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -12,6 +14,7 @@ import java.util.concurrent.Callable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static com.hax.async.executors.Default.ex;
@@ -74,7 +77,44 @@ public class FlightsControllerTest extends GenericTest {
 
     @Test
     public void createFlightResponse() {
-        final Response response = target("flights").request(MediaType.APPLICATION_JSON).post(null);
+        String json = "{\n" +
+                "     \"wayTicket\":\n" +
+                "     {\n" +
+                "     \"origin\":\"EZE, Buenos Aires, Argentina\",\n" +
+                "     \"destiny\":\"MNT, Montevideo, Uruguay\",\n" +
+                "     \"company\":\"American Airlines\",\n" +
+                "     \"flightNum\":\"B34A5\",\n" +
+                "     \"departureTime\":\"20-04-2015 18:30\",\n" +
+                "     \"duration\":\"1h 20m\",\n" +
+                "     \"price\":\"532\"\n" +
+                "     },\n" +
+                "     \"returnTicket\":\n" +
+                "     {\n" +
+                "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
+                "     \"destiny\":\"EZE, Buenos Aires, Argentina\",\n" +
+                "     \"company\":\"American Airlines\",\n" +
+                "     \"flightNum\":\"A98P5\",\n" +
+                "     \"departureTime\":\"09-06-2015 06:10\",\n" +
+                "     \"duration\":\"50m\",\n" +
+                "     \"price\":\"532\"\n" +
+                "     },\n" +
+                "     \"totalPrice\":\"532\"\n" +
+                "     }";
+
+        when(fs.createFlight(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
+            public Flight call() throws Exception {
+                return new Flight();
+            }
+        }));
+
+        when(fs.createFlight(null)).thenReturn(ex.submit(new Callable<Flight>() {
+            public Flight call() throws Exception {
+                throw new RuntimeException(("Error !"));
+            }
+        }));
+
+
+        final Response response = target("flights").request(MediaType.APPLICATION_JSON).post(Entity.entity(json, MediaType.valueOf("application/json")));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 

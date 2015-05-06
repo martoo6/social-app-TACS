@@ -108,10 +108,9 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void createFlight(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    public void createFlight(final Flight flight, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         //TODO: Parsear JSON entrante y convertirlo a Flight
-        Flight flight = new Flight();
         ListenableFuture<Flight> f = flightsService.createFlight(flight);
         addControllerCallback(f, asyncResponse);
     }

@@ -1,9 +1,7 @@
 package com.hax.config;
 
-import com.hax.connectors.DespegarConnector;
-import com.hax.connectors.DespegarConnectorInterface;
-import com.hax.connectors.FlightsRepository;
-import com.hax.connectors.FlightsRepositoryInterface;
+import com.hax.connectors.*;
+import com.hax.models.Recommendation;
 import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -23,8 +21,9 @@ public class AppConfig extends ResourceConfig {
             @Override
             protected void configure() {
                 bind(DespegarConnector.class).to(DespegarConnectorInterface.class);
-                bind(FlightsService.class).to(FlightsServiceInterface.class);
                 bind(FlightsRepository.class).to(FlightsRepositoryInterface.class);
+                bind(RecommendationRepository.class).to(RecommendationRepositoryInterface.class);
+                bind(FlightsService.class).to(FlightsServiceInterface.class);
             }
         });
         packages(true, "com.hax.controllers");
