@@ -2,6 +2,8 @@ package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
+import com.hax.models.Recommendation;
+import com.hax.models.User;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -12,4 +14,6 @@ public interface FlightsServiceInterface {
     public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
 
     public ListenableFuture<Flight> createFlight(Flight flight);
+
+    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
 }

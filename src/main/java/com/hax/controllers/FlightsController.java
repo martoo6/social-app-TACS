@@ -2,6 +2,8 @@ package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
+import com.hax.models.Recommendation;
+import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,9 +54,13 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String recommendFlight(@PathParam("flightId") int flightID , @PathParam("userId") int userId) throws JSONException
+    public void recommendFlight(@PathParam("flightId") int flightID ,
+                                @PathParam("userId") int userId,
+                                @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
+        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
+        ListenableFuture<Recommendation> f= flightsService.recommendFlight(flightID, 0, userId);
+        addControllerCallback(f, asyncResponse);
     }
 
 

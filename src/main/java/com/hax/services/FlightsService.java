@@ -1,6 +1,7 @@
 package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.async.executors.Default;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.RecommendationRepositoryInterface;
@@ -10,6 +11,7 @@ import com.hax.models.User;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
+import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 4/26/15.
@@ -53,7 +55,11 @@ public class FlightsService implements FlightsServiceInterface{
      * @param toUser
      * @return
      */
-    public ListenableFuture<Recommendation> recommendFlight(Flight flight,User fromUser, User toUser){
-        return recommendationRepository.insert(new Recommendation(flight, fromUser, toUser));
+    //TODO: Hay q ver que datos se van a apsar con el loggeo real de la persona
+    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId){
+        //TODO: llamar a los repostorios para poder hacer la insersion.
+        final ListenableFuture<Flight> flight = flightsRepository.get(flightId);
+        //TODO: Future que espera el return de los futures anteriores.
+        return recommendationRepository.insert(new Recommendation(new Flight(), new User(), new User()));
     }
 }

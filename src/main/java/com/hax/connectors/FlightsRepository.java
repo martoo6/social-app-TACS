@@ -24,4 +24,24 @@ public class FlightsRepository implements FlightsRepositoryInterface{
             }
         });
     }
+
+    public ListenableFuture<Flight> get(final Integer id){
+        return Default.ex.submit(new Callable<Flight>() {
+            public Flight call() throws Exception {
+                //TODO: Esto va a ser con la base de datos, no es concurrente ni a ganchos
+                for(Flight flight :flights){
+                    if(flight.getId()==id) return flight;
+                }
+                return new Flight();
+            }
+        });
+    }
+
+    public ListenableFuture<ArrayList<Flight>> getAll(Integer id){
+        return Default.ex.submit(new Callable<ArrayList<Flight>>() {
+            public ArrayList<Flight> call() throws Exception {
+                return flights;
+            }
+        });
+    }
 }
