@@ -29,19 +29,6 @@
     </servlet>
     <servlet-mapping>
        <servlet-name>JerseyWebApplication</servlet-name>
-       <url-pattern>/*</url-pattern>
+      <url-pattern>/api/v1/*</url-pattern>
     </servlet-mapping>
  </web-app>
-
- <!--<web-app>
-   <display-name>Archetype Created Web Application</display-name>
-
-     <servlet>
-         <servlet-name>Hello</servlet-name>
-         <servlet-class>controllers.HelloServlet</servlet-class>
-     </servlet>
-     <servlet-mapping>
-         <servlet-name>Hello</servlet-name>
-         <url-pattern>/hello/*</url-pattern>
-     </servlet-mapping>
- </web-app>-->
