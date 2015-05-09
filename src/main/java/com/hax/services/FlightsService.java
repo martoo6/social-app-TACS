@@ -1,10 +1,16 @@
 package com.hax.services;
 
+import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.executors.Default;
+import com.hax.async.utils.CallableWrapper;
+import com.hax.async.utils.FutureHelper;
+import com.hax.async.utils.Tuple3;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.RecommendationRepositoryInterface;
+import com.hax.connectors.UserRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
@@ -23,6 +29,8 @@ public class FlightsService implements FlightsServiceInterface{
     public FlightsRepositoryInterface flightsRepository;
     @Inject
     public RecommendationRepositoryInterface recommendationRepository;
+    @Inject
+    public UserRepositoryInterface userRepository;
 
     /**
      * Obtiene todos los vuelos con los filtros corresondientes
@@ -50,16 +58,30 @@ public class FlightsService implements FlightsServiceInterface{
 
     /**
      *
-     * @param flight
-     * @param fromUser
-     * @param toUser
+     * @param flightId
+     * @param fromUserId
+     * @param toUserId
      * @return
      */
-    //TODO: Hay q ver que datos se van a apsar con el loggeo real de la persona
     public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId){
-        //TODO: llamar a los repostorios para poder hacer la insersion.
-        final ListenableFuture<Flight> flight = flightsRepository.get(flightId);
-        //TODO: Future que espera el return de los futures anteriores.
-        return recommendationRepository.insert(new Recommendation(new Flight(), new User(), new User()));
+
+        /**
+        Hacemos 3 llamadas asincronicas a los repositorios y esperamos el resultado de las 3.
+        El Future resultante es utilizado para insertar la recomendacion.
+        Al no ir a los repositorios de manera secuencial se logra la maxima velocidad para obtener los resultados.
+         */
+
+        final ListenableFuture<Flight> flightF = flightsRepository.get(flightId);
+        final ListenableFuture<User> toUserF = userRepository.get(toUserId);
+        final ListenableFuture<User> fromUserF = userRepository.get(fromUserId);
+
+        ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
+
+        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight,User,User>, Recommendation>() {
+            public ListenableFuture<Recommendation> apply(Tuple3<Flight, User, User> t) throws Exception {
+                Recommendation recom = new Recommendation(t.getR1(), t.getR2(), t.getR3());
+                return recommendationRepository.insert(recom);
+            }
+        });
     }
 }

@@ -3,64 +3,35 @@ package com.hax.async.utils;
 /**
  * Created by martin on 27/04/15.
  */
-public class Tuple2<T,E>{
-    T t;
-    E e;
 
-    public Tuple2(T t, E e) {
-        this.t = t;
-        this.e = e;
+/**
+ *  Objeto que almacena 2 objetos de distinto tipo
+ * @param <R1>
+ * @param <R2>
+ */
+public class Tuple2<R1, R2>{
+    R1 r1;
+    R2 r2;
+
+    public Tuple2(R1 r1, R2 r2) {
+        this.r1 = r1;
+        this.r2 = r2;
     }
 
-    public T getT() {
-        return t;
+    public R1 getR1() {
+        return r1;
     }
 
-    public void setT(T t) {
-        this.t = t;
+    public void setR1(R1 r1) {
+        this.r1 = r1;
     }
 
-    public E getE() {
-        return e;
+    public R2 getR2() {
+        return r2;
     }
 
-    public void setE(E e) {
-        this.e = e;
-    }
-}
-
-public class Tuple3<T,E,G>{
-    T t;
-    E e;
-    G g;
-
-    public Tuple3(T t, E e, G g) {
-        this.t = t;
-        this.e = e;
-        this.g = g;
-    }
-
-    public T getT() {
-        return t;
-    }
-
-    public void setT(T t) {
-        this.t = t;
-    }
-
-    public E getE() {
-        return e;
-    }
-
-    public void setE(E e) {
-        this.e = e;
-    }
-
-    public G getG() {
-        return g;
-    }
-
-    public void setG(G g) {
-        this.g = g;
+    public void setR2(R2 r2) {
+        this.r2 = r2;
     }
 }
+

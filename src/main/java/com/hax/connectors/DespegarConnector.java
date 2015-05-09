@@ -1,21 +1,15 @@
 package com.hax.connectors;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import  com.hax.async.utils.CallableWrapper;
 import com.hax.models.DespegarError;
 import com.hax.utils.JsonHelper;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
-import org.jvnet.hk2.annotations.Service;
 
 import javax.ws.rs.core.Response;
-
-import java.io.IOException;
-
-import static com.google.common.util.concurrent.Futures.transform;
-import static com.hax.async.utils.FutureHelper.async;
 
 /**
  * Created by martin on 4/26/15.
@@ -39,31 +33,15 @@ public class DespegarConnector implements DespegarConnectorInterface {
                 .rx()
                 .get();
 
-        //Se deberia de hacer asi sin mis helpers ! Horrendo...
-
-//        AsyncFunction<Response, String> queryFunction = new AsyncFunction<Response, String>(){
-//            public ListenableFuture<String> apply(final Response response) throws Exception {
-//                return Default.ex.submit(new Callable<String>(){
-//                    public String call() throws Exception {
-//                        return response.readEntity(String.class);
-//                    }
-//                });
-//            }
-//        };
-//        return transform(future, f);
-
-
-        //Hermosura...
-        return async(future, new CallableWrapper<Response, String>() {
-            public String apply(Response result) {
-                if(result.getStatus()!=Response.Status.OK.getStatusCode()){
-
-                    DespegarError de = JsonHelper.readValue(result, DespegarError.class);
+        return Futures.transform(future, new Function<Response, String>() {
+            public String apply(Response response) {
+                if(response.getStatus()!=Response.Status.OK.getStatusCode()){
+                    DespegarError de = JsonHelper.readValue(response, DespegarError.class);
                     Joiner joiner = Joiner.on(". ").skipNulls();
                     String errorMsg = joiner.join(de.getCauses());
                     throw new RuntimeException(errorMsg);
                 }
-                return result.readEntity(String.class);
+                return response.readEntity(String.class);
             }
         });
     }

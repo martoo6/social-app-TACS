@@ -1,37 +1,43 @@
 package com.hax.async.utils;
 
-public class Tuple3<T,E,G>{
-    T t;
-    E e;
-    G g;
+/**
+ * Objeto que almacena 3 objetos de distinto tipo
+ * @param <R1>
+ * @param <R2>
+ * @param <R3>
+ */
+public class Tuple3<R1, R2, R3>{
+    R1 r1;
+    R2 r2;
+    R3 r3;
 
-    public Tuple3(T t, E e, G g) {
-        this.t = t;
-        this.e = e;
-        this.g = g;
+    public Tuple3(R1 r1, R2 r2, R3 r3) {
+        this.r1 = r1;
+        this.r2 = r2;
+        this.r3 = r3;
     }
 
-    public T getT() {
-        return t;
+    public R1 getR1() {
+        return r1;
     }
 
-    public void setT(T t) {
-        this.t = t;
+    public void setR1(R1 r1) {
+        this.r1 = r1;
     }
 
-    public E getE() {
-        return e;
+    public R2 getR2() {
+        return r2;
     }
 
-    public void setE(E e) {
-        this.e = e;
+    public void setR2(R2 r2) {
+        this.r2 = r2;
     }
 
-    public G getG() {
-        return g;
+    public R3 getR3() {
+        return r3;
     }
 
-    public void setG(G g) {
-        this.g = g;
+    public void setR3(R3 r3) {
+        this.r3 = r3;
     }
 }

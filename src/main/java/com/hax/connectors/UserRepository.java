@@ -2,8 +2,6 @@ package com.hax.connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.executors.Default;
-import com.hax.models.Flight;
-import com.hax.models.RepositoryElement;
 import com.hax.models.User;
 
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by martin on 5/5/15.
  */
-public class UserRepository {
+public class UserRepository implements UserRepositoryInterface{
     ArrayList<User> collection = new ArrayList<User>();
 
     public ListenableFuture<User> insert(final User user) {
