@@ -48,41 +48,4 @@ public class FlightsService implements FlightsServiceInterface{
         System.out.println(flightsRepository);
         return flightsRepository.insert(flight);
     }
-
-
-    /**
-     *
-     * @param flightId
-     * @param fromUserId
-     * @param toUserId
-     * @return
-     */
-    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId){
-
-        /**
-        Hacemos 3 llamadas asincronicas a los repositorios y esperamos el resultado de las 3.
-        El Future resultante es utilizado para insertar la recomendacion.
-        Al no ir a los repositorios de manera secuencial se logra la maxima velocidad para obtener los resultados.
-         */
-
-        final ListenableFuture<Flight> flightF = flightsRepository.get(flightId);
-        final ListenableFuture<User> fromUserF = userRepository.get(fromUserId);
-        final ListenableFuture<User> toUserF = userRepository.get(toUserId);
-
-
-        ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
-
-        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight, User, User>, Recommendation>() {
-            public ListenableFuture<Recommendation> apply(Tuple3<Flight, User, User> t) throws Exception {
-                User toUser = t.getR3();
-                final Recommendation recom = new Recommendation(t.getR1(), t.getR2());
-                toUser.getRecommendations().add(recom);
-                return Futures.transform(userRepository.update(toUser), new Function<User, Recommendation>() {
-                    public Recommendation apply(User user) {
-                        return recom;
-                    }
-                });
-            }
-        });
-    }
 }

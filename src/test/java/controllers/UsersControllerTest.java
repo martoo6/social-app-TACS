@@ -64,6 +64,14 @@ public class UsersControllerTest extends GenericTest {
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
+    @Test
+    public void recommendFlightResponse() {
+        when(us.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
+
+        final Response response = target("users/1/recommendations/1").request(MediaType.APPLICATION_JSON).post(null);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
     @Override
     protected AbstractBinder setBinder() {
         return new AbstractBinder() {

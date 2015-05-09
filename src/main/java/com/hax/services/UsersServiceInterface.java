@@ -19,4 +19,5 @@ public interface UsersServiceInterface {
     ListenableFuture<ArrayList<Flight>> getFlights(Integer id);
     ListenableFuture<User> update(User user);
     ListenableFuture<ArrayList<Recommendation>> getRecommendations(Integer id);
+    ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
 }

@@ -41,27 +41,6 @@ public class FlightsController {
 
 
     /**
-     *
-     * @param flightID
-     * @param userId
-     * @return Estado de la operacion
-     * @throws JSONException
-     */
-    @Path("{flightID}/recommendations/{userID}")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void recommendFlight(@PathParam("flightId") int flightID ,
-                                @PathParam("userId") int userId,
-                                @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
-        ListenableFuture<Recommendation> f= flightsService.recommendFlight(flightID, 0, userId);
-        addControllerCallback(f, asyncResponse);
-    }
-
-
-    /**
      *getAll
      * @param from
      * @param to

@@ -14,6 +14,4 @@ public interface FlightsServiceInterface {
     public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
 
     public ListenableFuture<Flight> createFlight(Flight flight);
-
-    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
 }

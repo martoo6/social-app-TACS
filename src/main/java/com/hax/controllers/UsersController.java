@@ -1,6 +1,8 @@
 package com.hax.controllers;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
+import com.hax.models.Recommendation;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
@@ -11,6 +13,8 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
+import static com.hax.async.utils.FutureHelper.addControllerCallback;
+
 /**
  * Created by martin on 4/20/15.
  */
@@ -19,14 +23,14 @@ import javax.ws.rs.core.MediaType;
 public class UsersController {
 
     @Inject
-    UsersServiceInterface userService;
+    UsersServiceInterface usersService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{userID}")
     public void getUser(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.getUser(userId) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getUser(userId) ,asyncResponse);
     }
 
 
@@ -34,7 +38,7 @@ public class UsersController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getAllUser(@Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.getAll() ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getAll() ,asyncResponse);
     }
 
     /**
@@ -48,7 +52,7 @@ public class UsersController {
     @Path("{userID}/friends/")
     public void getFriends(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.getFriends(userId) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getFriends(userId) ,asyncResponse);
     }
 
     @GET
@@ -56,7 +60,7 @@ public class UsersController {
     @Path("{userID}/flights/")
     public void getFlights(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.getFlights(userId) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getFlights(userId) ,asyncResponse);
     }
 
     @GET
@@ -64,7 +68,7 @@ public class UsersController {
     @Path("{userID}/recommendations/")
     public void getRecommendations(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.getRecommendations(userId) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getRecommendations(userId) ,asyncResponse);
     }
 
     //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
@@ -79,6 +83,26 @@ public class UsersController {
     @Produces(MediaType.APPLICATION_JSON)
     public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(userService.createUser(user) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.createUser(user) ,asyncResponse);
+    }
+
+    /**
+     *
+     * @param flightID
+     * @param userId
+     * @return Estado de la operacion
+     * @throws JSONException
+     */
+    @Path("{userID}/recommendations/{flightID}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void recommendFlight(@PathParam("flightId") int flightID ,
+                                @PathParam("userId") int userId,
+                                @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
+        ListenableFuture<Recommendation> f= usersService.recommendFlight(flightID, 0, userId);
+        addControllerCallback(f, asyncResponse);
     }
 }
