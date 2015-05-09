@@ -25,6 +25,7 @@ public class UsersRepository implements UsersRepositoryInterface {
         });
     }
 
+    //TODO: Este metodo en realidad va a se de hibernate. Lo que hace no tiene mucho sentido.
     public ListenableFuture<User> update(final User user) {
         return Default.ex.submit(new Callable<User>() {
             public User call() throws Exception {

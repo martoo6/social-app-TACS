@@ -8,6 +8,7 @@ public class Flight {
     private Ticket wayTicket;
     private Ticket returnTicket;
     private Double totalPrice;
+    private String state;
     private Integer id;
 
     //Dummy Contructor
@@ -18,6 +19,7 @@ public class Flight {
         this.wayTicket = wayTicket;
         this.returnTicket = returnTicket;
         this.totalPrice = totalPrice;
+        this.state = "Sin Publicar";
     }
 
     public Ticket getWayTicket() {
@@ -47,5 +49,13 @@ public class Flight {
     public Integer getId() { return id; }
 
     public void setId(Integer id) { this.id = id; }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }
 

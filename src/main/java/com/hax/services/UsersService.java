@@ -99,4 +99,27 @@ public class UsersService implements UsersServiceInterface {
             }
         });
     }
+
+    public ListenableFuture<Recommendation> acceptRecommendation(final Integer recommendationId, Integer userId) {
+        return setRecommendationState(recommendationId, userId, "Aceptada");
+    }
+
+    public ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId, Integer userId) {
+        return setRecommendationState(recommendationId, userId, "Rechazada");
+    }
+
+    private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, Integer userId, final String state){
+        return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
+                    public Recommendation apply(User user) {
+                        ArrayList<Recommendation> lst =  user.getRecommendations();
+                        Recommendation r =null;
+                        for(Recommendation tmpR:lst) if(tmpR.getId()==recommendationId)
+                            if(r==null) throw  new RuntimeException("Recommendation not found");
+                        r.setState(state);
+                        usersRepository.update(user);
+                        return r;
+                    }
+                }
+        );
+    }
 }

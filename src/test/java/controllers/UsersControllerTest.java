@@ -31,7 +31,7 @@ public class UsersControllerTest extends GenericTest {
     public void getFlightsResponse() {
         when(us.getFlights(anyInt())).thenReturn(immediateFuture(new ArrayList<Flight>()));
 
-        final Response responseWrapper = target("users/1/flights/").request(MediaType.APPLICATION_JSON).get();
+        final Response responseWrapper = target("users/flights").request(MediaType.APPLICATION_JSON).header("userId", "0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
@@ -39,7 +39,7 @@ public class UsersControllerTest extends GenericTest {
     public void getFriendsResponse() {
         when(us.getFriends(anyInt())).thenReturn(immediateFuture(new ArrayList<User>()));
 
-        final Response responseWrapper = target("users/1/friends").request(MediaType.APPLICATION_JSON).get();
+        final Response responseWrapper = target("users/friends").request(MediaType.APPLICATION_JSON).header("userId","0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
@@ -47,7 +47,7 @@ public class UsersControllerTest extends GenericTest {
     public void getFlightsRecommendationsResponse() {
         when(us.getRecommendations(anyInt())).thenReturn(immediateFuture(new ArrayList<Recommendation>()));
 
-        final Response responseWrapper = target("users/1/recommendations").request(MediaType.APPLICATION_JSON).get();
+        final Response responseWrapper = target("users/recommendations").request(MediaType.APPLICATION_JSON).header("userId","0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
@@ -68,7 +68,7 @@ public class UsersControllerTest extends GenericTest {
     public void recommendFlightResponse() {
         when(us.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
 
-        final Response response = target("users/1/recommendations/1").request(MediaType.APPLICATION_JSON).post(null);
+        final Response response = target("users/1/recommendations/1").request(MediaType.APPLICATION_JSON).header("userId","0").post(null);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
