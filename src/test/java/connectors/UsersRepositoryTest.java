@@ -1,9 +1,7 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.RecommendationsRepository;
 import com.hax.connectors.UsersRepository;
-import com.hax.models.Recommendation;
 import com.hax.models.User;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;

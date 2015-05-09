@@ -3,7 +3,6 @@ package com.hax.controllers;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
-import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
-import java.util.concurrent.Callable;
 
-import static com.hax.async.executors.Default.ex;
 import static com.hax.async.utils.FutureHelper.addControllerCallback;
 
 @Singleton
@@ -116,7 +113,6 @@ public class FlightsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void createFlight(final Flight flight, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        //TODO: Parsear JSON entrante y convertirlo a Flight
         ListenableFuture<Flight> f = flightsService.createFlight(flight);
         addControllerCallback(f, asyncResponse);
     }

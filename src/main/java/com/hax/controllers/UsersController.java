@@ -1,11 +1,14 @@
 package com.hax.controllers;
 
-import com.hax.models.FlightModel;
-import com.hax.models.UserModel;
+import com.hax.async.utils.FutureHelper;
+import com.hax.models.User;
+import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -15,18 +18,23 @@ import javax.ws.rs.core.MediaType;
 @Path("users")
 public class UsersController {
 
-    /**
-     *
-     * @param userId
-     * @return Todos los vuelos de un usuario
-     * @throws JSONException
-     */
+    @Inject
+    UsersServiceInterface userService;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{userID}/flights/")
-    public String getFlights(@PathParam("userId") int userId) throws JSONException
+    @Path("{userID}")
+    public void getUser(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return FlightModel.flights().toString();
+        FutureHelper.addControllerCallback(userService.getUser(userId) ,asyncResponse);
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getAllUser(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        FutureHelper.addControllerCallback(userService.getAll() ,asyncResponse);
     }
 
     /**
@@ -38,30 +46,39 @@ public class UsersController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{userID}/friends/")
-    public String getFriends(@PathParam("userId") int userId) throws JSONException
+    public void getFriends(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return UserModel.friends().toString();
+        FutureHelper.addControllerCallback(userService.getFriends(userId) ,asyncResponse);
     }
 
-    /**
-     *
-     * @param userId
-     * @return  Todas las recomendacions de vuelo de un usauario
-     * @throws JSONException
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{userID}/recommendations/flights")
-    public String getFlightsRecommendations(@PathParam("userId") int userId) throws JSONException
+    @Path("{userID}/flights/")
+    public void getFlights(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return FlightModel.flights().toString();
+        FutureHelper.addControllerCallback(userService.getFlights(userId) ,asyncResponse);
     }
 
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //TODO: el Redirect del login con facebook tendria q llegar aca si no existe el usuario para crearlo
-    public String createUser() throws JSONException
+    @Path("{userID}/recommendations/")
+    public void getRecommendations(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        return new JSONObject().put("success", true).toString();
+        FutureHelper.addControllerCallback(userService.getRecommendations(userId) ,asyncResponse);
+    }
+
+    //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    //TODO: el Redirect del login con facebook tendria q llegar aca si no existe el usuario para crearlo
+//    public void createUser() throws JSONException
+//    {}
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        FutureHelper.addControllerCallback(userService.createUser(user) ,asyncResponse);
     }
 }

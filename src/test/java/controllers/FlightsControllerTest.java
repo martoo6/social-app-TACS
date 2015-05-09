@@ -115,7 +115,7 @@ public class FlightsControllerTest extends GenericTest {
 
     @Test
     public void recommendFlightResponse() {
-        when(fs.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null,null)));
+        when(fs.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
 
         final Response response = target("flights/1/recommendations/1").request(MediaType.APPLICATION_JSON).post(null);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

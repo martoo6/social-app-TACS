@@ -25,10 +25,22 @@ public class UsersRepository implements UsersRepositoryInterface {
         });
     }
 
+    public ListenableFuture<User> update(final User user) {
+        return Default.ex.submit(new Callable<User>() {
+            public User call() throws Exception {
+                User updatable=null;
+                for(User tmpUser:collection) if(tmpUser.getId()==user.getId()) updatable = tmpUser;
+                if(updatable== null) throw new RuntimeException("User does not exist");
+                collection.remove(updatable);
+                collection.add(user);
+                return user;
+            }
+        });
+    }
+
     public ListenableFuture<User> get(final Integer id){
         return Default.ex.submit(new Callable<User>() {
             public User call() throws Exception {
-                //TODO: Esto va a ser con la base de datos, no es concurrente ni a ganchos
                 for(User user:collection){
                     if(user.getId()==id) return user;
                 }

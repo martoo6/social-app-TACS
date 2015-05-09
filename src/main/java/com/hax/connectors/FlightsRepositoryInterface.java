@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by martin on 5/5/15.
  */
 public interface FlightsRepositoryInterface {
-    public ListenableFuture<Flight> insert(Flight flight);
-    public ListenableFuture<Flight> get(Integer id);
-    public ListenableFuture<ArrayList<Flight>> getAll();
+    ListenableFuture<Flight> insert(Flight flight);
+    ListenableFuture<Flight> get(Integer id);
+    ListenableFuture<ArrayList<Flight>> getAll();
 }

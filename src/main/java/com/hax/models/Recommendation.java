@@ -5,14 +5,12 @@ package com.hax.models;
  */
 public class Recommendation {
     private User fromUser;
-    private User toUser;
     private Flight flight;
     private String state;
     private Integer id;
 
-    public Recommendation(Flight flight, User fromUser, User toUser) {
+    public Recommendation(Flight flight, User fromUser) {
         this.fromUser = fromUser;
-        this.toUser = toUser;
         this.flight = flight;
         this.state = "PENDIENTE";
     }
@@ -21,16 +19,8 @@ public class Recommendation {
         return fromUser;
     }
 
-    public void setFromUser(User fromUser) {
-        this.fromUser = fromUser;
-    }
-
-    public User getToUser() {
-        return toUser;
-    }
-
-    public void setToUser(User toUser) {
-        this.toUser = toUser;
+    public void setFromUser(User toUser) {
+        this.fromUser = toUser;
     }
 
     public Flight getFlight() {

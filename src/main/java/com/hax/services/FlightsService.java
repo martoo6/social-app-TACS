@@ -1,5 +1,6 @@
 package com.hax.services;
 
+import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -7,7 +8,6 @@ import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple3;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
-import com.hax.connectors.RecommendationsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
@@ -23,8 +23,6 @@ public class FlightsService implements FlightsServiceInterface{
     public DespegarConnectorInterface despegarConnector;
     @Inject
     public FlightsRepositoryInterface flightsRepository;
-    @Inject
-    public RecommendationsRepositoryInterface recommendationRepository;
     @Inject
     public UsersRepositoryInterface userRepository;
 
@@ -74,10 +72,16 @@ public class FlightsService implements FlightsServiceInterface{
 
         ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
 
-        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight,User,User>, Recommendation>() {
+        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight, User, User>, Recommendation>() {
             public ListenableFuture<Recommendation> apply(Tuple3<Flight, User, User> t) throws Exception {
-                Recommendation recom = new Recommendation(t.getR1(), t.getR2(), t.getR3());
-                return recommendationRepository.insert(recom);
+                User toUser = t.getR3();
+                final Recommendation recom = new Recommendation(t.getR1(), t.getR2());
+                toUser.getRecommendations().add(recom);
+                return Futures.transform(userRepository.update(toUser), new Function<User, Recommendation>() {
+                    public Recommendation apply(User user) {
+                        return recom;
+                    }
+                });
             }
         });
     }
