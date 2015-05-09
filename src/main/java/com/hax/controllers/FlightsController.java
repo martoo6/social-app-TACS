@@ -65,7 +65,7 @@ public class FlightsController {
 
 
     /**
-     *
+     *getAll
      * @param from
      * @param to
      * @param fromDate

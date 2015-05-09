@@ -1,6 +1,7 @@
 package controllers;
 
 import com.hax.models.Flight;
+import com.hax.models.Recommendation;
 import com.hax.services.FlightsServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
@@ -12,9 +13,11 @@ import javax.ws.rs.core.Response;
 
 import java.util.concurrent.Callable;
 
+import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static com.hax.async.executors.Default.ex;
@@ -40,11 +43,7 @@ public class FlightsControllerTest extends GenericTest {
 
     @Test
     public void getFilteredFlightsResponse() {
-        when(fs.getFlights("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                return "1";
-            }
-        }));
+        when(fs.getFlights("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(immediateFuture("1"));
 
 
         final Response response = target("flights")
@@ -101,11 +100,7 @@ public class FlightsControllerTest extends GenericTest {
                 "     \"totalPrice\":\"532\"\n" +
                 "     }";
 
-        when(fs.createFlight(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
-            public Flight call() throws Exception {
-                return new Flight();
-            }
-        }));
+        when(fs.createFlight(any(Flight.class))).thenReturn(immediateFuture(new Flight()));
 
         when(fs.createFlight(null)).thenReturn(ex.submit(new Callable<Flight>() {
             public Flight call() throws Exception {
@@ -120,6 +115,8 @@ public class FlightsControllerTest extends GenericTest {
 
     @Test
     public void recommendFlightResponse() {
+        when(fs.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null,null)));
+
         final Response response = target("flights/1/recommendations/1").request(MediaType.APPLICATION_JSON).post(null);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }

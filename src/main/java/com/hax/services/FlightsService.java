@@ -3,21 +3,17 @@ package com.hax.services;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.executors.Default;
-import com.hax.async.utils.CallableWrapper;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple3;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
-import com.hax.connectors.RecommendationRepositoryInterface;
-import com.hax.connectors.UserRepositoryInterface;
+import com.hax.connectors.RecommendationsRepositoryInterface;
+import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
-import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
-import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 4/26/15.
@@ -28,9 +24,9 @@ public class FlightsService implements FlightsServiceInterface{
     @Inject
     public FlightsRepositoryInterface flightsRepository;
     @Inject
-    public RecommendationRepositoryInterface recommendationRepository;
+    public RecommendationsRepositoryInterface recommendationRepository;
     @Inject
-    public UserRepositoryInterface userRepository;
+    public UsersRepositoryInterface userRepository;
 
     /**
      * Obtiene todos los vuelos con los filtros corresondientes
@@ -72,8 +68,9 @@ public class FlightsService implements FlightsServiceInterface{
          */
 
         final ListenableFuture<Flight> flightF = flightsRepository.get(flightId);
-        final ListenableFuture<User> toUserF = userRepository.get(toUserId);
         final ListenableFuture<User> fromUserF = userRepository.get(fromUserId);
+        final ListenableFuture<User> toUserF = userRepository.get(toUserId);
+
 
         ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
 

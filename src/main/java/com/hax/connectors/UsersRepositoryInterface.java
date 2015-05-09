@@ -10,8 +10,8 @@ import java.util.concurrent.Callable;
 /**
  * Created by martin on 5/5/15.
  */
-public interface UserRepositoryInterface {
+public interface UsersRepositoryInterface {
     ListenableFuture<User> insert(final User user);
     ListenableFuture<User> get(final Integer id);
-    ListenableFuture<ArrayList<User>> getAll(Integer id);
+    ListenableFuture<ArrayList<User>> getAll();
 }

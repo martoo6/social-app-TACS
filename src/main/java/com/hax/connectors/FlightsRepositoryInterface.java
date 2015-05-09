@@ -11,5 +11,5 @@ import java.util.ArrayList;
 public interface FlightsRepositoryInterface {
     public ListenableFuture<Flight> insert(Flight flight);
     public ListenableFuture<Flight> get(Integer id);
-    public ListenableFuture<ArrayList<Flight>> getAll(Integer id);
+    public ListenableFuture<ArrayList<Flight>> getAll();
 }

@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by martin on 5/5/15.
  */
-public class RecommendationRepository implements RecommendationRepositoryInterface {
+public class RecommendationsRepository implements RecommendationsRepositoryInterface {
     ArrayList<Recommendation> recommendations = new ArrayList<Recommendation>();
 
     public ListenableFuture<Recommendation> insert(final Recommendation recommendation) {
@@ -20,6 +20,25 @@ public class RecommendationRepository implements RecommendationRepositoryInterfa
                 recommendation.setId(recommendations.size());
                 recommendations.add(recommendation);
                 return recommendation;
+            }
+        });
+    }
+
+    public ListenableFuture<Recommendation> get(final Integer id){
+        return Default.ex.submit(new Callable<Recommendation>() {
+            public Recommendation call() throws Exception {
+                for(Recommendation recommendation :recommendations){
+                    if(recommendation.getId()==id) return recommendation;
+                }
+                throw new RuntimeException("Recommendation Not Found");
+            }
+        });
+    }
+
+    public ListenableFuture<ArrayList<Recommendation>> getAll(){
+        return Default.ex.submit(new Callable<ArrayList<Recommendation>>() {
+            public ArrayList<Recommendation> call() throws Exception {
+                return recommendations;
             }
         });
     }

@@ -32,12 +32,12 @@ public class FlightsRepository implements FlightsRepositoryInterface{
                 for(Flight flight :flights){
                     if(flight.getId()==id) return flight;
                 }
-                return new Flight();
+                throw new RuntimeException("Flight Not Found");
             }
         });
     }
 
-    public ListenableFuture<ArrayList<Flight>> getAll(Integer id){
+    public ListenableFuture<ArrayList<Flight>> getAll(){
         return Default.ex.submit(new Callable<ArrayList<Flight>>() {
             public ArrayList<Flight> call() throws Exception {
                 return flights;

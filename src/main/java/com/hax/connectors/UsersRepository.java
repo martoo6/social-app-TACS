@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by martin on 5/5/15.
  */
-public class UserRepository implements UserRepositoryInterface{
+public class UsersRepository implements UsersRepositoryInterface {
     ArrayList<User> collection = new ArrayList<User>();
 
     public ListenableFuture<User> insert(final User user) {
@@ -32,12 +32,12 @@ public class UserRepository implements UserRepositoryInterface{
                 for(User user:collection){
                     if(user.getId()==id) return user;
                 }
-                return new User();
+                throw new RuntimeException("User Not Found");
             }
         });
     }
 
-    public ListenableFuture<ArrayList<User>> getAll(Integer id){
+    public ListenableFuture<ArrayList<User>> getAll(){
         return Default.ex.submit(new Callable<ArrayList<User>>() {
             public ArrayList<User> call() throws Exception {
                 return collection;
