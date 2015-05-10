@@ -16,5 +16,6 @@ function obtenerLatLng(resultados, status)
 	}
 
 };
-	
-decodificadorGeografico.geocode({'address': direccionLiteral}, obtenerLatLng);
+
+var decodificadorGeografico = new google.maps.Geocoder();
+decodificadorGeografico.geocode({'address': 'buenos aires'}, obtenerLatLng);

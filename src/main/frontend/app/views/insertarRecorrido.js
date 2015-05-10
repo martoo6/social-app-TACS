@@ -15,6 +15,7 @@
         //CREA UN NUEVO MAPA
         var mapa = new google.maps.Map(document.getElementById('mapa'), configuracionMapa);
         
+        //SE INSERTAN LAS LATIDUDES Y LONGITUDES DE BUENOS AIRES, MADRID Y ROMA
         vueloLatLng.push(new google.maps.LatLng(-34.6037232, -58.38159310000003));
         vueloLatLng.push(new google.maps.LatLng(40.4167754, -3.7037901999999576));
         vueloLatLng.push(new google.maps.LatLng(41.9027835, 12.496365500000024));
