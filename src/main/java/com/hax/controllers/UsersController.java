@@ -43,38 +43,6 @@ public class UsersController {
         FutureHelper.addControllerCallback(usersService.getAll() ,asyncResponse);
     }
 
-    /**
-     *
-     * @return Todos los amigos de un usuario
-     * @throws JSONException
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("friends")
-    public void getFriends(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.getFriends(userId) ,asyncResponse);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("flights")
-    public void getFlights(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.getFlights(userId) ,asyncResponse);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("recommendations")
-    public void getRecommendations(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.getRecommendations(userId) ,asyncResponse);
-    }
-
     //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
 //    @POST
 //    @Produces(MediaType.APPLICATION_JSON)
@@ -88,27 +56,5 @@ public class UsersController {
     public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         FutureHelper.addControllerCallback(usersService.createUser(user) ,asyncResponse);
-    }
-
-    /**
-     *
-     * @param flightID
-     * @param userId
-     * @return Estado de la operacion
-     * @throws JSONException
-     */
-    @Path("{userID}/recommendations/{flightID}")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void recommendFlight(@PathParam("flightId") int flightID ,
-                                @PathParam("userId") int userId,
-                                @Context HttpHeaders hh,
-                                @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
-        Integer fromUserId = Integer.parseInt(hh.getHeaderString("userId"));
-        ListenableFuture<Recommendation> f= usersService.recommendFlight(flightID, fromUserId, userId);
-        addControllerCallback(f, asyncResponse);
     }
 }

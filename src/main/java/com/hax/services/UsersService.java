@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
+import com.hax.async.utils.Tuple2;
 import com.hax.async.utils.Tuple3;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
@@ -111,15 +112,50 @@ public class UsersService implements UsersServiceInterface {
     private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, Integer userId, final String state){
         return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
                     public Recommendation apply(User user) {
-                        ArrayList<Recommendation> lst =  user.getRecommendations();
-                        Recommendation r =null;
-                        for(Recommendation tmpR:lst) if(tmpR.getId()==recommendationId)
-                            if(r==null) throw  new RuntimeException("Recommendation not found");
+                        ArrayList<Recommendation> lst = user.getRecommendations();
+                        Recommendation r = null;
+                        for (Recommendation tmpR : lst)
+                            if (tmpR.getId() == recommendationId)
+                                if (r == null) throw new RuntimeException("Recommendation not found");
                         r.setState(state);
                         usersRepository.update(user);
                         return r;
                     }
                 }
         );
+    }
+
+    public ListenableFuture<User> addFriend(Integer userId, Integer friendId) {
+        ListenableFuture<User> userFuture = usersRepository.get(userId);
+        ListenableFuture<User> friendFuture = usersRepository.get(friendId);
+
+        ListenableFuture<Tuple2<User, User>> fTuple = FutureHelper.compose(userFuture, friendFuture);
+
+        return Futures.transform(fTuple, new Function<Tuple2<User,User>, User>() {
+            public User apply(Tuple2<User, User> tuple) {
+                User user = tuple.getR1();
+                User friend = tuple.getR2();
+                user.getFriends().add(friend);
+                usersRepository.update(user);
+                return user;
+            }
+        });
+    }
+
+    public ListenableFuture<User> removeFriend(Integer userId, Integer friendId) {
+        ListenableFuture<User> userFuture = usersRepository.get(userId);
+        ListenableFuture<User> friendFuture = usersRepository.get(friendId);
+
+        ListenableFuture<Tuple2<User, User>> fTuple = FutureHelper.compose(userFuture, friendFuture);
+
+        return Futures.transform(fTuple, new Function<Tuple2<User,User>, User>() {
+            public User apply(Tuple2<User, User> tuple) {
+                User user = tuple.getR1();
+                User friend = tuple.getR2();
+                user.getFriends().remove(friend);
+                usersRepository.update(user);
+                return user;
+            }
+        });
     }
 }
