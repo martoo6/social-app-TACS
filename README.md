@@ -31,6 +31,7 @@ Caso de estar en *Windows* descargarla de la pagina oficial: [Aqui](http://www.o
 #### Levantar servidor
 
 Para levantar el servidor alcanza con correr el siguiente comand en la carpeta donde se clono/descargo el proyecto
+(el binario de git debe ser accesible desde la consola y debe haber una conexión a internet)
 
 ```
 mvn jetty:run
