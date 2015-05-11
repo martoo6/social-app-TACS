@@ -1,5 +1,16 @@
-html, body, #mapa{
-    height: 100%; 
+html, body{
+    height: calc(100% - 73px - 50px); 
+    margin: 0px;
+    padding: 0px;
+}
+
+#mapJumbo{
+    height: 100%;
+}
+
+#mapa{
+    height: 100%;
+    width: 100%;
     margin: 0px;
     padding: 0px;
 }
@@ -35,6 +46,7 @@ html, body, #mapa{
 /* Custom page footer */
 .footer {
   padding-top: 19px;
+  margin-top: 53px;
   color: #777;
   border-top: 1px solid #e5e5e5;
 }
