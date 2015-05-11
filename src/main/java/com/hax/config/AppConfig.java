@@ -1,6 +1,8 @@
 package com.hax.config;
 
 import com.hax.connectors.*;
+import com.hax.services.AirportsService;
+import com.hax.services.AirportsServiceInterface;
 import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import com.hax.services.UsersService;
@@ -23,10 +25,12 @@ public class AppConfig extends ResourceConfig {
             protected void configure() {
                 //-------------Connectors y Repositorios----------
                 bind(DespegarConnector.class).to(DespegarConnectorInterface.class);
+                bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
                 bind(FlightsRepository.class).to(FlightsRepositoryInterface.class);
                 bind(UsersRepository.class).to(UsersRepositoryInterface.class);
                 //-------------------Servicios--------------
                 bind(FlightsService.class).to(FlightsServiceInterface.class);
+                bind(AirportsService.class).to(AirportsServiceInterface.class);
                 bind(UsersService.class).to(UsersServiceInterface.class);
 
             }
