@@ -43,8 +43,24 @@ public class RecommendationsControllerTest extends GenericTest {
                 " \"toUserId\":0\n" +
                 "}";
 
-        final Response response = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId", "0").post(Entity.entity(json, MediaType.APPLICATION_JSON));
+        final Response response = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId", "0").post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void acceptRecommendationsResponse() {
+        when(us.acceptRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
+
+        final Response responseWrapper = target("recommendations/1").queryParam("userId", 0).request(MediaType.APPLICATION_JSON).header("userId", "0").put(Entity.json(""));
+        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
+    }
+
+    @Test
+    public void rejectRecommendationsResponse() {
+        when(us.rejectRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
+
+        final Response responseWrapper = target("recommendations/1").queryParam("userId", 0).request(MediaType.APPLICATION_JSON).header("userId", "0").delete();
+        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
     @Override

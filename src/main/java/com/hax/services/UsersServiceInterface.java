@@ -20,8 +20,8 @@ public interface UsersServiceInterface {
     ListenableFuture<User> update(User user);
     ListenableFuture<ArrayList<Recommendation>> getRecommendations(Integer id);
     ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
-    ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId, Integer userId);
-    ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId, Integer userId);
+    ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId);
+    ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId);
     ListenableFuture<User> addFriend(Integer userId, Integer friendId);
     ListenableFuture<User> removeFriend(Integer userId, Integer friendId);
 }

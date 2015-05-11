@@ -3,9 +3,10 @@ package com.hax.models;
 /**
  * Created by martin on 5/5/15.
  */
-public class RecommendationJSON {
+public class RecommendationPOST {
     private Integer toUserId;
     private Integer flightId;
+    private String state;
 
     public Integer getFlightId() {
         return flightId;

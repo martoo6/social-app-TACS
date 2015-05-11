@@ -112,13 +112,7 @@ public class FlightsControllerTest extends GenericTest {
         }));
 
 
-        final Response response = target("flights").request(MediaType.APPLICATION_JSON).post(Entity.entity(json, MediaType.valueOf("application/json")));
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    }
-
-    @Test
-    public void publishFlightResponse() {
-        final Response response = target("flights/1/publish/1").request(MediaType.APPLICATION_JSON).post(null);
+        final Response response = target("flights").request(MediaType.APPLICATION_JSON).post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 }

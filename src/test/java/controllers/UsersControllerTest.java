@@ -36,7 +36,7 @@ public class UsersControllerTest extends GenericTest {
                 " \"email\":\"test01@gmail.com\"\n" +
                 "}";
 
-        final Response response = target("users").request(MediaType.APPLICATION_JSON).post(Entity.entity(json, MediaType.valueOf("application/json")));
+        final Response response = target("users").request(MediaType.APPLICATION_JSON).post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 

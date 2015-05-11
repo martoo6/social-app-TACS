@@ -3,8 +3,7 @@ package com.hax.controllers;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.models.Recommendation;
-import com.hax.models.RecommendationJSON;
-import com.hax.models.User;
+import com.hax.models.RecommendationPOST;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 
@@ -32,21 +31,42 @@ public class RecommendationsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getRecommendations(@QueryParam("userId") Integer userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.getRecommendations(userId) ,asyncResponse);
+        FutureHelper.addControllerCallback(usersService.getRecommendations(userId), asyncResponse);
     }
 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void recommendFlight(final RecommendationJSON recJson,
+    public void recommendFlight(final RecommendationPOST recJson,
                                 @Context HttpHeaders hh,
                                 @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
-
         Integer fromUserId = Integer.parseInt(hh.getHeaderString("userId"));
         ListenableFuture<Recommendation> f= usersService.recommendFlight(recJson.getFlightId(), fromUserId, recJson.getToUserId());
         addControllerCallback(f, asyncResponse);
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{recommendationId}")
+    public void acceptRecommendation(@PathParam("recommendationId") Integer recommendationId,
+                                     @Context HttpHeaders hh,
+                                     @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
+        addControllerCallback(usersService.acceptRecommendation(recommendationId, userId), asyncResponse);
+    }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{recommendationId}")
+    public void rejectRecommendation(@PathParam("recommendationId") Integer recommendationId,
+                                     @Context HttpHeaders hh,
+                                     @Suspended final AsyncResponse asyncResponse) throws JSONException {
+        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
+        addControllerCallback(usersService.rejectRecommendation(recommendationId, userId), asyncResponse);
     }
 }
