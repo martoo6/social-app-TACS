@@ -3,6 +3,7 @@ package controllers;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.services.FlightsServiceInterface;
+import com.hax.services.UsersServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
@@ -30,6 +31,7 @@ public class FlightsControllerTest extends GenericTest {
     //Al estar compartido por los test tiene efecto de lado pero el biding se da una sola vez asique no queda otra.
     //A menos que se encuentre forma de re-iniciar el mock dentro de cada instancia.
     FlightsServiceInterface fs = mock(FlightsServiceInterface.class);
+    UsersServiceInterface us = mock(UsersServiceInterface.class);
 
     @Override
     protected AbstractBinder setBinder() {
@@ -37,6 +39,7 @@ public class FlightsControllerTest extends GenericTest {
             @Override
             protected void configure() {
                 bind(fs).to(FlightsServiceInterface.class);
+                bind(us).to(UsersServiceInterface.class);
             }
         };
     }
@@ -68,7 +71,7 @@ public class FlightsControllerTest extends GenericTest {
                 .queryParam("origin", "EZE")
                 .queryParam("destiny", "MIA")
                 .queryParam("departure", "2015-12-10")
-                .queryParam("arrival","2015-11-10")
+                .queryParam("arrival", "2015-11-10")
                 .request(MediaType.APPLICATION_JSON).get();
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());

@@ -1,9 +1,11 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.async.utils.FutureHelper;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.services.FlightsServiceInterface;
+import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
@@ -21,7 +23,10 @@ import static com.hax.async.utils.FutureHelper.addControllerCallback;
 @Service
 @Path("flights")
 public class FlightsController {
-    @Inject FlightsServiceInterface flightsService;
+    @Inject
+    FlightsServiceInterface flightsService;
+    @Inject
+    UsersServiceInterface usersService;
 
     /**
      *
@@ -52,11 +57,15 @@ public class FlightsController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public void getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
-                                    @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
-                                    @Suspended final AsyncResponse asyncResponse) throws JSONException
+                                  @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
+                                  @QueryParam("userId") Integer userId,
+                                  @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<String> f = flightsService.getFlights(from, to, fromDate, toDate);
-        addControllerCallback(f, asyncResponse);
+        if(userId==null){
+            addControllerCallback(flightsService.getFlights(from, to, fromDate, toDate), asyncResponse);
+        } else{
+            addControllerCallback(usersService.getFlights(userId), asyncResponse);
+        }
     }
 
 

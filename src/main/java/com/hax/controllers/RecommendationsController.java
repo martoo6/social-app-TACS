@@ -1,0 +1,52 @@
+package com.hax.controllers;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.async.utils.FutureHelper;
+import com.hax.models.Recommendation;
+import com.hax.models.RecommendationJSON;
+import com.hax.models.User;
+import com.hax.services.UsersServiceInterface;
+import org.json.JSONException;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+
+import static com.hax.async.utils.FutureHelper.addControllerCallback;
+
+/**
+ * Created by martin on 4/20/15.
+ */
+
+@Path("recommendations")
+public class RecommendationsController {
+
+    @Inject
+    UsersServiceInterface usersService;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getRecommendations(@QueryParam("userId") Integer userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        FutureHelper.addControllerCallback(usersService.getRecommendations(userId) ,asyncResponse);
+    }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void recommendFlight(final RecommendationJSON recJson,
+                                @Context HttpHeaders hh,
+                                @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        //TODO: El cero esta harcodeado y tiene que ser el id del usuario loggeado actualmente.
+
+        Integer fromUserId = Integer.parseInt(hh.getHeaderString("userId"));
+        ListenableFuture<Recommendation> f= usersService.recommendFlight(recJson.getFlightId(), fromUserId, recJson.getToUserId());
+        addControllerCallback(f, asyncResponse);
+    }
+}

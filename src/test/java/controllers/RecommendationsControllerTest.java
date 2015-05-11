@@ -11,7 +11,6 @@ import utils.GenericTest;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -24,22 +23,29 @@ import static org.mockito.Mockito.when;
 /**
  * Created by martin on 20/04/15.
  */
-public class UsersControllerTest extends GenericTest {
+public class RecommendationsControllerTest extends GenericTest {
     UsersServiceInterface us = mock(UsersServiceInterface.class);
 
     @Test
-    public void createUserResponse() {
-        when(us.createUser(any(User.class))).thenReturn(immediateFuture(new User()));
+    public void getFlightsRecommendationsResponse() {
+        when(us.getRecommendations(anyInt())).thenReturn(immediateFuture(new ArrayList<Recommendation>()));
 
-        String json = "{\"username\":\"test01\",\n" +
-                " \"password\":\"qwerty\",\n" +
-                " \"email\":\"test01@gmail.com\"\n" +
-                "}";
-
-        final Response response = target("users").request(MediaType.APPLICATION_JSON).post(Entity.entity(json, MediaType.valueOf("application/json")));
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        final Response responseWrapper = target("recommendations").queryParam("userId",0).request(MediaType.APPLICATION_JSON).header("userId","0").get();
+        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
+    @Test
+    public void recommendFlightResponse() {
+        when(us.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(new Recommendation(null,null)));
+
+        String json = "{\n" +
+                " \"flightId\":9,\n" +
+                " \"toUserId\":0\n" +
+                "}";
+
+        final Response response = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId", "0").post(Entity.entity(json, MediaType.APPLICATION_JSON));
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
     @Override
     protected AbstractBinder setBinder() {
