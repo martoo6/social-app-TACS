@@ -6,19 +6,20 @@ import com.hax.models.Recommendation;
 import com.hax.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 4/27/15.
  */
 
 public interface UsersServiceInterface {
-    ListenableFuture<ArrayList<User>> getAll();
+    ListenableFuture<List<User>> getAll();
     ListenableFuture<User> getUser(Integer id);
     ListenableFuture<User> createUser(User user);
-    ListenableFuture<ArrayList<User>> getFriends(Integer id);
-    ListenableFuture<ArrayList<Flight>> getFlights(Integer id);
+    ListenableFuture<List<User>> getFriends(Integer id);
+    ListenableFuture<List<Flight>> getFlights(Integer id);
     ListenableFuture<User> update(User user);
-    ListenableFuture<ArrayList<Recommendation>> getRecommendations(Integer id);
+    ListenableFuture<List<Recommendation>> getRecommendations(Integer id);
     ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
     ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId);
     ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId);

@@ -15,6 +15,7 @@ import com.hax.models.User;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 4/26/15.
@@ -25,7 +26,7 @@ public class UsersService implements UsersServiceInterface {
     @Inject
     public FlightsRepositoryInterface flightsRepository;
 
-    public ListenableFuture<ArrayList<User>> getAll() {
+    public ListenableFuture<List<User>> getAll() {
         return usersRepository.getAll();
     }
 
@@ -37,25 +38,25 @@ public class UsersService implements UsersServiceInterface {
         return usersRepository.insert(user);
     }
 
-    public ListenableFuture<ArrayList<User>> getFriends(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, ArrayList<User>>() {
-            public ArrayList<User> apply(User user) {
+    public ListenableFuture<List<User>> getFriends(Integer id) {
+        return Futures.transform(usersRepository.get(id), new Function<User, List<User>>() {
+            public List<User> apply(User user) {
                 return user.getFriends();
             }
         });
     }
 
-    public ListenableFuture<ArrayList<Flight>> getFlights(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, ArrayList<Flight>>() {
-            public ArrayList<Flight> apply(User user) {
+    public ListenableFuture<List<Flight>> getFlights(Integer id) {
+        return Futures.transform(usersRepository.get(id), new Function<User, List<Flight>>() {
+            public List<Flight> apply(User user) {
                 return user.getFlights();
             }
         });
     }
 
-    public ListenableFuture<ArrayList<Recommendation>> getRecommendations(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, ArrayList<Recommendation>>() {
-            public ArrayList<Recommendation> apply(User user) {
+    public ListenableFuture<List<Recommendation>> getRecommendations(Integer id) {
+        return Futures.transform(usersRepository.get(id), new Function<User, List<Recommendation>>() {
+            public List<Recommendation> apply(User user) {
                 return user.getRecommendations();
             }
         });
@@ -113,7 +114,7 @@ public class UsersService implements UsersServiceInterface {
         return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
                     public Recommendation apply(User user) {
 
-                        ArrayList<Recommendation> lst = user.getRecommendations();
+                        List<Recommendation> lst = user.getRecommendations();
                         Recommendation r = null;
                         for (Recommendation tmpR : lst) if (tmpR.getId() == recommendationId) r=tmpR;
                         if (r == null) throw new RuntimeException("Recommendation not found");

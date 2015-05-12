@@ -5,13 +5,14 @@ import com.hax.async.executors.Default;
 import com.hax.models.Flight;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 5/5/15.
  */
 public class FlightsRepository implements FlightsRepositoryInterface{
-    ArrayList<Flight> flights = new ArrayList<Flight>();
+    List<Flight> flights = new ArrayList<Flight>();
 
     public ListenableFuture<Flight> insert(final Flight flight) {
         return Default.ex.submit(new Callable<Flight>() {
@@ -37,9 +38,9 @@ public class FlightsRepository implements FlightsRepositoryInterface{
         });
     }
 
-    public ListenableFuture<ArrayList<Flight>> getAll(){
-        return Default.ex.submit(new Callable<ArrayList<Flight>>() {
-            public ArrayList<Flight> call() throws Exception {
+    public ListenableFuture<List<Flight>> getAll(){
+        return Default.ex.submit(new Callable<List<Flight>>() {
+            public List<Flight> call() throws Exception {
                 return flights;
             }
         });

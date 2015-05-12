@@ -12,7 +12,7 @@ public class Recommendation {
     public Recommendation(Flight flight, User fromUser) {
         this.fromUser = fromUser;
         this.flight = flight;
-        this.state = "PENDIENTE";
+        this.state = "Pendant";
     }
 
     public User getFromUser() {

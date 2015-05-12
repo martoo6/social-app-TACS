@@ -5,13 +5,14 @@ import com.hax.async.executors.Default;
 import com.hax.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 5/5/15.
  */
 public class UsersRepository implements UsersRepositoryInterface {
-    ArrayList<User> collection = new ArrayList<User>();
+    List<User> collection = new ArrayList<User>();
 
     public ListenableFuture<User> insert(final User user) {
         return Default.ex.submit(new Callable<User>() {
@@ -50,9 +51,9 @@ public class UsersRepository implements UsersRepositoryInterface {
         });
     }
 
-    public ListenableFuture<ArrayList<User>> getAll(){
-        return Default.ex.submit(new Callable<ArrayList<User>>() {
-            public ArrayList<User> call() throws Exception {
+    public ListenableFuture<List<User>> getAll(){
+        return Default.ex.submit(new Callable<List<User>>() {
+            public List<User> call() throws Exception {
                 return collection;
             }
         });
