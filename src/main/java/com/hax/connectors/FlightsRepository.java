@@ -33,7 +33,7 @@ public class FlightsRepository implements FlightsRepositoryInterface{
                 for(Flight flight :flights){
                     if(flight.getId()==id) return flight;
                 }
-                throw new RuntimeException("Flight Not Found");
+                throw new RuntimeException("Flight not found");
             }
         });
     }

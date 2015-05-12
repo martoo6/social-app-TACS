@@ -32,7 +32,7 @@ public class UsersRepository implements UsersRepositoryInterface {
             public User call() throws Exception {
                 User updatable=null;
                 for(User tmpUser:collection) if(tmpUser.getId()==user.getId()) updatable = tmpUser;
-                if(updatable== null) throw new RuntimeException("User does not exist");
+                if(updatable== null) throw new RuntimeException("User not found");
                 collection.remove(updatable);
                 collection.add(user);
                 return user;
@@ -46,7 +46,7 @@ public class UsersRepository implements UsersRepositoryInterface {
                 for(User user:collection){
                     if(user.getId()==id) return user;
                 }
-                throw new RuntimeException("User Not Found");
+                throw new RuntimeException("User not found");
             }
         });
     }
