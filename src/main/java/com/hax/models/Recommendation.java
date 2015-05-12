@@ -6,13 +6,13 @@ package com.hax.models;
 public class Recommendation {
     private User fromUser;
     private Flight flight;
-    private String state;
+    private RecommendationState state;
     private Integer id;
 
     public Recommendation(Flight flight, User fromUser) {
         this.fromUser = fromUser;
         this.flight = flight;
-        this.state = "Pendant";
+        this.state = RecommendationState.PENDING;
     }
 
     public User getFromUser() {
@@ -31,11 +31,11 @@ public class Recommendation {
         this.flight = flight;
     }
 
-    public String getState() {
+    public RecommendationState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(RecommendationState state) {
         this.state = state;
     }
 

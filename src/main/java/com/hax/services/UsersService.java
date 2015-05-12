@@ -11,6 +11,7 @@ import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
+import com.hax.models.RecommendationState;
 import com.hax.models.User;
 
 import javax.inject.Inject;
@@ -103,21 +104,21 @@ public class UsersService implements UsersServiceInterface {
     }
 
     public ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId) {
-        return setRecommendationState(recommendationId, "Accepted", userId);
+        return setRecommendationState(recommendationId, RecommendationState.ACCEPTED, userId);
     }
 
     public ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId) {
-        return setRecommendationState(recommendationId, "Rejected", userId);
+        return setRecommendationState(recommendationId, RecommendationState.REJECTED, userId);
     }
 
-    private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, final String state,Integer userId){
+    private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, final RecommendationState state, Integer userId){
         return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
                     public Recommendation apply(User user) {
 
                         List<Recommendation> lst = user.getRecommendations();
                         Recommendation r = null;
                         for (Recommendation tmpR : lst) if (tmpR.getId() == recommendationId) r=tmpR;
-                        if (r == null) throw new RuntimeException("Recommendation not found");
+                        if (r == null) throw new RuntimeException("Missing Recommendation");
                         r.setState(state);
                         usersRepository.update(user);
                         return r;
