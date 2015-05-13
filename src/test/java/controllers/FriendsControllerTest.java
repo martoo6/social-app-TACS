@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.util.concurrent.Futures;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -11,6 +12,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
@@ -27,7 +30,10 @@ public class FriendsControllerTest extends GenericTest {
 
     @Test
     public void getFriendsResponse() {
-        when(us.getFriends(anyInt())).thenReturn(immediateFuture(new ArrayList<User>()));
+        User user = new User();
+        user.setUsername("Pepito");
+
+        when(us.getFriends(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
 
         final Response responseWrapper = target("friends").request(MediaType.APPLICATION_JSON).header("userId", "0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -35,7 +41,10 @@ public class FriendsControllerTest extends GenericTest {
 
     @Test
     public void addFriendResponse() {
-        when(us.addFriend(anyInt(), anyInt())).thenReturn(immediateFuture(new User()));
+        User user = new User();
+        user.setUsername("Pepito");
+
+        when(us.addFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
 
         final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("userId", "0").post(null);
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -43,7 +52,10 @@ public class FriendsControllerTest extends GenericTest {
 
     @Test
     public void removeFriendResponse() {
-        when(us.removeFriend(anyInt(), anyInt())).thenReturn(immediateFuture(new User()));
+        User user = new User();
+        user.setUsername("Pepito");
+
+        when(us.removeFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
 
         final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("userId", "0").delete();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());

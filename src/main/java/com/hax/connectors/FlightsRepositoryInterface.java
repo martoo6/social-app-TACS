@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 5/5/15.
@@ -11,5 +12,5 @@ import java.util.ArrayList;
 public interface FlightsRepositoryInterface {
     ListenableFuture<Flight> insert(Flight flight);
     ListenableFuture<Flight> get(Integer id);
-    ListenableFuture<ArrayList<Flight>> getAll();
+    ListenableFuture<List<Flight>> getAll();
 }

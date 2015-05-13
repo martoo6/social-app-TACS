@@ -5,6 +5,7 @@ import com.hax.async.executors.Default;
 import com.hax.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -14,5 +15,5 @@ public interface UsersRepositoryInterface {
     ListenableFuture<User> insert(final User user);
     ListenableFuture<User> update(final User user);
     ListenableFuture<User> get(final Integer id);
-    ListenableFuture<ArrayList<User>> getAll();
+    ListenableFuture<List<User>> getAll();
 }
