@@ -37,7 +37,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
         when(us.getRecommendations(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(recommendation)));
 
-        final Response responseWrapper = target("recommendations").queryParam("userId",0).request(MediaType.APPLICATION_JSON).header("userId","0").get();
+        final Response responseWrapper = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId","0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 

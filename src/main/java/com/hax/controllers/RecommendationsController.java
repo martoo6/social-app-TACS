@@ -29,8 +29,9 @@ public class RecommendationsController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getRecommendations(@QueryParam("userId") Integer userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public void getRecommendations(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
+        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
         FutureHelper.addControllerCallback(usersService.getRecommendations(userId), asyncResponse);
     }
 
