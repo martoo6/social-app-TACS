@@ -103,16 +103,10 @@ public class FlightsControllerTest extends GenericTest {
                 "     \"totalPrice\":\"532\"\n" +
                 "     }";
 
-        when(fs.createFlight(any(Flight.class))).thenReturn(immediateFuture(new Flight()));
-
-        when(fs.createFlight(null)).thenReturn(ex.submit(new Callable<Flight>() {
-            public Flight call() throws Exception {
-                throw new RuntimeException(("Error !"));
-            }
-        }));
+        when(fs.createFlight(any(Flight.class),anyInt())).thenReturn(immediateFuture(new Flight()));
 
 
-        final Response response = target("flights").request(MediaType.APPLICATION_JSON).post(Entity.json(json));
+        final Response response = target("flights").request(MediaType.APPLICATION_JSON).header("userId",0).post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 }

@@ -1,10 +1,13 @@
 package services;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepository;
 import com.hax.connectors.FlightsRepositoryInterface;
+import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
+import com.hax.models.User;
 import com.hax.services.FlightsService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.test.JerseyTest;
@@ -105,7 +108,12 @@ public class FlightsServiceTest extends GenericTest {
     @Test
     public void createFlight() {
         FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
+        User user = new User();
+
+        when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
+        when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
         when(fr.insert(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
             public Flight call() throws Exception {
                 return new Flight();
@@ -115,8 +123,9 @@ public class FlightsServiceTest extends GenericTest {
 
         FlightsService fs = new FlightsService();
         fs.flightsRepository = fr;
+        fs.userRepository = ur;
 
-        ListenableFuture<Flight> lf = fs.createFlight(new Flight());
+        ListenableFuture<Flight> lf = fs.createFlight(new Flight(), 0);
 
         try {
             lf.get();
@@ -129,6 +138,12 @@ public class FlightsServiceTest extends GenericTest {
     @Test
     public void createFlightFailed() {
         FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+
+        User user = new User();
+
+        when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
+        when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
 
         when(fr.insert(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
             public Flight call() throws Exception {
@@ -139,8 +154,9 @@ public class FlightsServiceTest extends GenericTest {
 
         FlightsService fs = new FlightsService();
         fs.flightsRepository = fr;
+        fs.userRepository = ur;
 
-        ListenableFuture<Flight> lf = fs.createFlight(new Flight());
+        ListenableFuture<Flight> lf = fs.createFlight(new Flight(), 0);
 
         try {
             lf.get();
