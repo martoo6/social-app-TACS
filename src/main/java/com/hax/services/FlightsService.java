@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
+import com.hax.async.utils.Tuple2;
 import com.hax.async.utils.Tuple3;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
@@ -13,6 +14,7 @@ import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,10 +46,22 @@ public class FlightsService implements FlightsServiceInterface{
      * @param flight Nuevo vuelo a ingresar en el sistema
      * @return ListenableFuture con el vuelo ingresado
      */
-    public ListenableFuture<Flight> createFlight(Flight flight) {
-        System.out.println(flight);
-        System.out.println(flightsRepository);
-        return flightsRepository.insert(flight);
+    public ListenableFuture<Flight> createFlight(Flight flight, Integer userId) {
+
+        ListenableFuture<Flight> flightF = flightsRepository.insert(flight);
+        ListenableFuture<User> userF = userRepository.get(userId);
+
+        ListenableFuture<Tuple2<Flight,User>> comp = FutureHelper.compose(flightF, userF);
+
+        return Futures.transform(comp, new Function<Tuple2<Flight, User>, Flight>() {
+            public Flight apply(Tuple2<Flight, User> tuple) {
+                Flight flight = tuple.getR1();
+                User user = tuple.getR2();
+                user.getFlights().add(flight);
+                userRepository.update(user);
+                return flight;
+            }
+        });
     }
     
     /**
@@ -55,7 +69,7 @@ public class FlightsService implements FlightsServiceInterface{
      * 
      * @return ListenableFuture con todos los vuelos
      */
-    public ListenableFuture<ArrayList<Flight>> getAllSavedFlights() {
+    public ListenableFuture<List<Flight>> getAllSavedFlights() {
 //        System.out.println();
 //        System.out.println(flightsRepository);
         return flightsRepository.getAll();

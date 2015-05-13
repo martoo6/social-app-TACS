@@ -5,6 +5,8 @@ import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -12,9 +14,7 @@ import org.jvnet.hk2.annotations.Contract;
  */
 
 public interface FlightsServiceInterface {
-    public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
-
-    public ListenableFuture<ArrayList<Flight>> getAllSavedFlights();
-    
-    public ListenableFuture<Flight> createFlight(Flight flight);
+    ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
+    ListenableFuture<List<Flight>> getAllSavedFlights();
+    ListenableFuture<Flight> createFlight(Flight flight, Integer userId);
 }

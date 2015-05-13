@@ -15,10 +15,13 @@ import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import static com.hax.async.utils.FutureHelper.addControllerCallback;
 import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 @Service
@@ -100,9 +103,10 @@ public class FlightsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void createFlight(final Flight flight, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public void createFlight(final Flight flight,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<Flight> f = flightsService.createFlight(flight);
+        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
+        ListenableFuture<Flight> f = flightsService.createFlight(flight, userId);
         addControllerCallback(f, asyncResponse);
     }
     
@@ -117,7 +121,7 @@ public class FlightsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getAllSavedFlights(@Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<ArrayList<Flight>> f = flightsService.getAllSavedFlights();
+        ListenableFuture<List<Flight>> f = flightsService.getAllSavedFlights();
         addControllerCallback(f, asyncResponse);
     }
 }
