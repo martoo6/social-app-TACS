@@ -12,6 +12,7 @@ import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -47,5 +48,16 @@ public class FlightsService implements FlightsServiceInterface{
         System.out.println(flight);
         System.out.println(flightsRepository);
         return flightsRepository.insert(flight);
+    }
+    
+    /**
+     * trae todos los vuelos
+     * 
+     * @return ListenableFuture con todos los vuelos
+     */
+    public ListenableFuture<ArrayList<Flight>> getAllSavedFlights() {
+//        System.out.println();
+//        System.out.println(flightsRepository);
+        return flightsRepository.getAll();
     }
 }

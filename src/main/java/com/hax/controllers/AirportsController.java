@@ -32,11 +32,21 @@ public class AirportsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getFilteredFlight(@QueryParam("latitude") final String latitude,
+    public void getAirport(@QueryParam("latitude") final String latitude,
                                     @QueryParam("longitude") final String longitude, 
                                     @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         ListenableFuture<String> f = airportsService.getAirport(latitude, longitude);
+        addControllerCallback(f, asyncResponse);
+    }
+    
+    @Path("{airportCode}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getAirportFromCode(@PathParam("airportCode") String airportCode,
+                                   @Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        ListenableFuture<String> f = airportsService.getAirport(airportCode);
         addControllerCallback(f, asyncResponse);
     }
 

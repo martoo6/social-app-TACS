@@ -18,6 +18,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
 import static com.hax.async.utils.FutureHelper.addControllerCallback;
+import java.util.ArrayList;
 
 @Singleton
 @Service
@@ -102,6 +103,21 @@ public class FlightsController {
     public void createFlight(final Flight flight, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         ListenableFuture<Flight> f = flightsService.createFlight(flight);
+        addControllerCallback(f, asyncResponse);
+    }
+    
+    
+    /**
+     * ruta de prueba para ver todos los vuelos guardados
+     * 
+     * @throws JSONException 
+     */
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getAllSavedFlights(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    {
+        ListenableFuture<ArrayList<Flight>> f = flightsService.getAllSavedFlights();
         addControllerCallback(f, asyncResponse);
     }
 }

@@ -27,6 +27,7 @@ public class AirportsConnector implements AirportsConnectorInterface {
                 .target(url)
                 .queryParam("format", "json")
                 .queryParam("n", 1)
+                .queryParam("runway_length_min", 8600)
                 .queryParam("near",  latitude + "," + longitude)
                 .request()
                 .rx()
@@ -36,8 +37,31 @@ public class AirportsConnector implements AirportsConnectorInterface {
             public String apply(Response response) {
                 String json = response.readEntity(String.class);
                 
-                return json.substring(json.indexOf('{'), json.lastIndexOf('}'));
+                return formatJson(json);
             }
         });
+    }
+        
+    public ListenableFuture<String> getAirportAsync(String airportCode){
+        String url = "http://airports.pidgets.com/v1/airports/" + airportCode;
+        ListenableFuture<Response> future = RxListenableFuture.newClient()
+                .target(url)
+                .queryParam("format", "json")
+                .queryParam("n", 1)
+                .request()
+                .rx()
+                .get();
+
+        return Futures.transform(future, new Function<Response, String>() {
+            public String apply(Response response) {
+                String json = response.readEntity(String.class);
+                
+                return formatJson(json);
+            }
+        });
+    }
+    
+    private String formatJson(String json){
+        return json.substring(json.indexOf('{'), json.lastIndexOf('}') + 1);
     }
 }

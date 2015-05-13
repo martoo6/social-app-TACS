@@ -1,6 +1,8 @@
 // Generated on 2015-05-07 using generator-angular 0.11.1
 'use strict';
 
+
+var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'
@@ -81,6 +83,7 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
+              proxySnippet,
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
@@ -429,7 +432,7 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
+//    'karma'
   ]);
 
   grunt.registerTask('build', [
@@ -450,7 +453,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
+//    'newer:jshint',
     'test',
     'build'
   ]);

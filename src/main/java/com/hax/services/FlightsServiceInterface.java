@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
+import java.util.ArrayList;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -13,5 +14,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface FlightsServiceInterface {
     public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
 
+    public ListenableFuture<ArrayList<Flight>> getAllSavedFlights();
+    
     public ListenableFuture<Flight> createFlight(Flight flight);
 }

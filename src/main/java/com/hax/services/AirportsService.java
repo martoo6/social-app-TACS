@@ -21,4 +21,14 @@ public class AirportsService implements AirportsServiceInterface{
     public ListenableFuture<String> getAirport(String latitude, String longitude){
         return airportsConnector.getAirportAsync(latitude , longitude);
     }
+    
+    /**
+     * Obtiene info de un aeropuerto a partir de su airportCode
+     * 
+     * @param airportCode
+     * @return Json del aeropuerto de codigo airportCode
+     */
+    public ListenableFuture<String> getAirport(String airportCode){
+        return airportsConnector.getAirportAsync(airportCode);
+    }
 }

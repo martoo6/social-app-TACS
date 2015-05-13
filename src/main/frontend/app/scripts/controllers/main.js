@@ -8,10 +8,11 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MainCtrl', function ($scope, geolocatorFactory) {
+    
+    navigator.geolocation.getCurrentPosition(function(pos){
+      $scope.$apply(function(){
+        $scope.userAllowed = true;
+      });
+    });
   });
