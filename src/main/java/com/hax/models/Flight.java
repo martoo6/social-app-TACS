@@ -1,12 +1,14 @@
 package com.hax.models;
 
+import java.util.List;
+
 /**
  * Created by martin on 5/5/15.
  */
 
 public class Flight {
-    private Ticket wayTicket;
-    private Ticket returnTicket;
+    private List<Segment> waySegments;
+    private List<Segment> returnSegments;
     private Double totalPrice;
     private String state;
     private Integer id;
@@ -15,27 +17,27 @@ public class Flight {
     public Flight() {
     }
 
-    public Flight(Ticket wayTicket, Ticket returnTicket, Double totalPrice) {
-        this.wayTicket = wayTicket;
-        this.returnTicket = returnTicket;
+    public Flight(List<Segment> waySegments, List<Segment> returnSegments, Double totalPrice) {
+        this.waySegments = waySegments;
+        this.returnSegments = returnSegments;
         this.totalPrice = totalPrice;
         this.state = "Sin Publicar";
     }
 
-    public Ticket getWayTicket() {
-        return wayTicket;
+    public List<Segment> getWaySegments() {
+        return waySegments;
     }
 
-    public void setWayTicket(Ticket wayTicket) {
-        this.wayTicket = wayTicket;
+    public void setWaySegments(List<Segment> waySegments) {
+        this.waySegments = waySegments;
     }
 
-    public Ticket getReturnTicket() {
-        return returnTicket;
+    public List<Segment> getReturnSegments() {
+        return returnSegments;
     }
 
-    public void setReturnTicket(Ticket returnTicket) {
-        this.returnTicket = returnTicket;
+    public void setReturnSegments(List<Segment> returnSegments) {
+        this.returnSegments = returnSegments;
     }
 
     public Double getTotalPrice() {

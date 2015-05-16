@@ -1,15 +1,14 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.DespegarConnector;
 import com.hax.connectors.FlightsRepository;
 import com.hax.models.Flight;
-import com.hax.models.Ticket;
+import com.hax.models.Segment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.junit.Ignore;
 import org.junit.Test;
 import utils.GenericTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -24,9 +23,9 @@ public class FlightsRepositoryTest extends GenericTest {
     public void insertFlight(){
         FlightsRepository dc = new FlightsRepository();
 
-        Ticket t1 = new Ticket();
-        Ticket t2 = new Ticket();
-        Flight flight = new Flight(t1,t2, 100.0);
+        List<Segment> s1 = Arrays.asList(new Segment());
+        List<Segment> s2 = Arrays.asList(new Segment());
+        Flight flight = new Flight(s1,s2, 100.0);
 
         ListenableFuture<Flight> lf = dc.insert(flight);
 
@@ -42,9 +41,11 @@ public class FlightsRepositoryTest extends GenericTest {
     public void getFlight() throws ExecutionException, InterruptedException {
         FlightsRepository dc = new FlightsRepository();
 
-        Ticket t1 = new Ticket();
-        Ticket t2 = new Ticket();
-        Flight flight = new Flight(t1,t2, 100.0);
+
+
+        List<Segment> s1 = Arrays.asList(new Segment());
+        List<Segment> s2 = Arrays.asList(new Segment());
+        Flight flight = new Flight(s1,s2, 100.0);
 
         dc.insert(flight).get();
 
@@ -76,9 +77,9 @@ public class FlightsRepositoryTest extends GenericTest {
     public void getAllFlight() throws ExecutionException, InterruptedException {
         FlightsRepository dc = new FlightsRepository();
 
-        Ticket t1 = new Ticket();
-        Ticket t2 = new Ticket();
-        Flight flight = new Flight(t1,t2, 100.0);
+        List<Segment> s1 = Arrays.asList(new Segment());
+        List<Segment> s2 = Arrays.asList(new Segment());
+        Flight flight = new Flight(s1,s2, 100.0);
 
         dc.insert(flight).get();
 

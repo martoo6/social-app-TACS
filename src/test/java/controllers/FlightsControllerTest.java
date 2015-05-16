@@ -80,26 +80,24 @@ public class FlightsControllerTest extends GenericTest {
     @Test
     public void createFlightResponse() {
         String json = "{\n" +
-                "     \"wayTicket\":\n" +
-                "     {\n" +
+                "     \"waySegments\":\n" +
+                "     [{\n" +
                 "     \"origin\":\"EZE, Buenos Aires, Argentina\",\n" +
                 "     \"destiny\":\"MNT, Montevideo, Uruguay\",\n" +
                 "     \"company\":\"American Airlines\",\n" +
                 "     \"flightNum\":\"B34A5\",\n" +
                 "     \"departureTime\":\"20-04-2015 18:30\",\n" +
-                "     \"duration\":\"1h 20m\",\n" +
-                "     \"price\":\"532\"\n" +
-                "     },\n" +
-                "     \"returnTicket\":\n" +
-                "     {\n" +
+                "     \"duration\":\"1h 20m\"\n" +
+                "     }],\n" +
+                "     \"returnSegments\":\n" +
+                "     [{\n" +
                 "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
                 "     \"destiny\":\"EZE, Buenos Aires, Argentina\",\n" +
                 "     \"company\":\"American Airlines\",\n" +
                 "     \"flightNum\":\"A98P5\",\n" +
                 "     \"departureTime\":\"09-06-2015 06:10\",\n" +
-                "     \"duration\":\"50m\",\n" +
-                "     \"price\":\"532\"\n" +
-                "     },\n" +
+                "     \"duration\":\"50m\"\n" +
+                "     }],\n" +
                 "     \"totalPrice\":\"532\"\n" +
                 "     }";
 

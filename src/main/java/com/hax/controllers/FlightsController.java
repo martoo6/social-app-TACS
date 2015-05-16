@@ -83,8 +83,7 @@ public class FlightsController {
      "company":"American Airlines",
      "flight-num":"B34A5",
      "departure-time":"20-04-2015 18:30",
-     "duration":"1h 20m",
-     "price":"532"
+     "duration":"1h 20m"
      },
      "return-ticket":
      {
@@ -93,8 +92,7 @@ public class FlightsController {
      "company":"American Airlines",
      "flight-number":"A98P5",
      "departure-time":"09-06-2015 06:10",
-     "duration":"50m",
-     "price":"532"
+     "duration":"50m"
      },
      "total-price":"532"
      }

@@ -1,25 +1,23 @@
 package com.hax.models;
 
-public class Ticket{
+public class Segment {
     private String origin;
     private String destiny;
     private String company;
     private String flightNum;
     private String departureTime; //TODO: Pasar a dateTime (posiblemente JODA)
     private String duration;//TODO: Pasar a dateTime (posiblemente JODA)
-    private Double price;
 
     //Dummy Contructor para poder funcionar con la Inyeccion de Dependencias
-    public Ticket(){}
+    public Segment(){}
 
-    public Ticket(String origin, String destiny, String company, String flightNum, String departureTime, String duration, Double price) {
+    public Segment(String origin, String destiny, String company, String flightNum, String departureTime, String duration) {
         this.origin = origin;
         this.destiny = destiny;
         this.company = company;
         this.flightNum = flightNum;
         this.departureTime = departureTime;
         this.duration = duration;
-        this.price = price;
     }
 
     public String getOrigin() {
@@ -68,13 +66,5 @@ public class Ticket{
 
     public void setDuration(String duration) {
         this.duration = duration;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 }
