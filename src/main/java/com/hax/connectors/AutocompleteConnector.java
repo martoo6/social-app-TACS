@@ -21,7 +21,7 @@ public class AutocompleteConnector implements AutocompleteConnectorInterface {
         String url = "https://api.despegar.com/v3/autocomplete";
         ListenableFuture<Response> future = RxListenableFuture.newClient()
                 .target(url)
-                .queryParam(" airport_result", 5)
+                .queryParam("airport_result", 5)
                 .queryParam("query", autocomplete)
                 .request()
                 .header("X-ApiKey","a97e70ca025a45adb3761471eb2d9b39")

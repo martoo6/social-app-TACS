@@ -3,6 +3,8 @@ package com.hax.config;
 import com.hax.connectors.*;
 import com.hax.services.AirportsService;
 import com.hax.services.AirportsServiceInterface;
+import com.hax.services.AutocompleteService;
+import com.hax.services.AutocompleteServiceInterface;
 import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import com.hax.services.UsersService;
@@ -26,12 +28,14 @@ public class AppConfig extends ResourceConfig {
                 //-------------Connectors y Repositorios----------
                 bind(FlightsConnector.class).to(FlightsConnectorInterface.class);
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
+                bind(AutocompleteConnector.class).to(AutocompleteConnectorInterface.class);
                 bind(FlightsRepository.class).to(FlightsRepositoryInterface.class);
                 bind(UsersRepository.class).to(UsersRepositoryInterface.class);
                 //-------------------Servicios--------------
                 bind(FlightsService.class).to(FlightsServiceInterface.class);
                 bind(AirportsService.class).to(AirportsServiceInterface.class);
                 bind(UsersService.class).to(UsersServiceInterface.class);
+                bind(AutocompleteService.class).to(AutocompleteServiceInterface.class);
 
             }
         });
