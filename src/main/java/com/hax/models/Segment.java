@@ -3,7 +3,7 @@ package com.hax.models;
 public class Segment {
     private String origin;
     private String destiny;
-    private String company;
+    private String airline;
     private String flightNum;
     private String departureTime; //TODO: Pasar a dateTime (posiblemente JODA)
     private String duration;//TODO: Pasar a dateTime (posiblemente JODA)
@@ -11,10 +11,10 @@ public class Segment {
     //Dummy Contructor para poder funcionar con la Inyeccion de Dependencias
     public Segment(){}
 
-    public Segment(String origin, String destiny, String company, String flightNum, String departureTime, String duration) {
+    public Segment(String origin, String destiny, String airline, String flightNum, String departureTime, String duration) {
         this.origin = origin;
         this.destiny = destiny;
-        this.company = company;
+        this.airline = airline;
         this.flightNum = flightNum;
         this.departureTime = departureTime;
         this.duration = duration;
@@ -36,12 +36,12 @@ public class Segment {
         this.destiny = destiny;
     }
 
-    public String getCompany() {
-        return company;
+    public String getAirline() {
+        return airline;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setAirline(String airline) {
+        this.airline = airline;
     }
 
     public String getFlightNum() {

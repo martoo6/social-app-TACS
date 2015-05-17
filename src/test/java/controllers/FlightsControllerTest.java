@@ -84,7 +84,7 @@ public class FlightsControllerTest extends GenericTest {
                 "     [{\n" +
                 "     \"origin\":\"EZE, Buenos Aires, Argentina\",\n" +
                 "     \"destiny\":\"MNT, Montevideo, Uruguay\",\n" +
-                "     \"company\":\"American Airlines\",\n" +
+                "     \"airline\":\"American Airlines\",\n" +
                 "     \"flightNum\":\"B34A5\",\n" +
                 "     \"departureTime\":\"20-04-2015 18:30\",\n" +
                 "     \"duration\":\"1h 20m\"\n" +
@@ -93,15 +93,17 @@ public class FlightsControllerTest extends GenericTest {
                 "     [{\n" +
                 "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
                 "     \"destiny\":\"EZE, Buenos Aires, Argentina\",\n" +
-                "     \"company\":\"American Airlines\",\n" +
+                "     \"airline\":\"American Airlines\",\n" +
                 "     \"flightNum\":\"A98P5\",\n" +
                 "     \"departureTime\":\"09-06-2015 06:10\",\n" +
                 "     \"duration\":\"50m\"\n" +
                 "     }],\n" +
-                "     \"totalPrice\":\"532\"\n" +
+                "     \"totalPrice\":\"532\",\n" +
+                "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
+                "     \"destiny\":\"EZE, Buenos Aires, Argentina\"\n" +
                 "     }";
 
-        when(fs.createFlight(any(Flight.class),anyInt())).thenReturn(immediateFuture(new Flight()));
+        when(fs.createFlight(any(Flight.class), anyInt())).thenReturn(immediateFuture(new Flight()));
 
 
         final Response response = target("flights").request(MediaType.APPLICATION_JSON).header("userId",0).post(Entity.json(json));
