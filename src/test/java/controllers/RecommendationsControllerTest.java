@@ -31,7 +31,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void getFlightsRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null);
+        Flight flight = new Flight(null,null,null, "Argentina", "USA");
         User user = new User();
         Recommendation recommendation = new Recommendation(flight, user);
 
@@ -43,7 +43,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void recommendFlightResponse() {
-        Flight flight = new Flight(null,null,null);
+        Flight flight = new Flight(null,null,null, "Argentina", "USA");
         User user = new User();
         Recommendation recommendation = new Recommendation(flight, user);
 
@@ -60,7 +60,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void acceptRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null);
+        Flight flight = new Flight(null,null,null, "Argentina", "USA");
         User user = new User();
         Recommendation recommendation = new Recommendation(flight, user);
 
@@ -72,7 +72,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void rejectRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null);
+        Flight flight = new Flight(null,null,null, "Argentina", "USA");
         User user = new User();
         Recommendation recommendation = new Recommendation(flight, user);
 

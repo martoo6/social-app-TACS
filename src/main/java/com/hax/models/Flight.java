@@ -9,6 +9,8 @@ import java.util.List;
 public class Flight {
     private List<Segment> waySegments;
     private List<Segment> returnSegments;
+    private String origin;
+    private String destiny;
     private Double totalPrice;
     private String state;
     private Integer id;
@@ -17,7 +19,7 @@ public class Flight {
     public Flight() {
     }
 
-    public Flight(List<Segment> waySegments, List<Segment> returnSegments, Double totalPrice) {
+    public Flight(List<Segment> waySegments, List<Segment> returnSegments, Double totalPrice, String origin, String destiny) {
         this.waySegments = waySegments;
         this.returnSegments = returnSegments;
         this.totalPrice = totalPrice;
@@ -58,6 +60,22 @@ public class Flight {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getDestiny() {
+        return destiny;
+    }
+
+    public void setDestiny(String destiny) {
+        this.destiny = destiny;
     }
 }
 

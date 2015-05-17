@@ -25,7 +25,7 @@ public class FlightsRepositoryTest extends GenericTest {
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0);
+        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
 
         ListenableFuture<Flight> lf = dc.insert(flight);
 
@@ -45,7 +45,7 @@ public class FlightsRepositoryTest extends GenericTest {
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0);
+        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
 
         dc.insert(flight).get();
 
@@ -79,7 +79,7 @@ public class FlightsRepositoryTest extends GenericTest {
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0);
+        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
 
         dc.insert(flight).get();
 
