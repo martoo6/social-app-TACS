@@ -3,23 +3,20 @@ package connectors;
 import com.google.common.util.concurrent.ListenableFuture;
 import utils.GenericTest;
 
-import com.hax.connectors.DespegarConnector;
+import com.hax.connectors.FlightsConnector;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
-
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by martin on 5/3/15.
  */
-public class DesegarConnectorTest extends GenericTest {
+public class FlightsConnectorTest extends GenericTest {
 
     @Test
     public void validFlight(){
-        DespegarConnector dc = new DespegarConnector();
+        FlightsConnector dc = new FlightsConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-10-10", "2015-11-10");
 
         try {
@@ -33,7 +30,7 @@ public class DesegarConnectorTest extends GenericTest {
 
     @Test
     public void invalidDate(){
-        DespegarConnector dc = new DespegarConnector();
+        FlightsConnector dc = new FlightsConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-11-10", "2015-10-10");
 
         try {
@@ -47,7 +44,7 @@ public class DesegarConnectorTest extends GenericTest {
 
     @Test
     public void invalidLocation(){
-        DespegarConnector dc = new DespegarConnector();
+        FlightsConnector dc = new FlightsConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("ZZZ", "MIA", "2015-10-10", "2015-11-10");
 
         try {

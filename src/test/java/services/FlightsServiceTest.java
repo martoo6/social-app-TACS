@@ -2,28 +2,21 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.DespegarConnectorInterface;
-import com.hax.connectors.FlightsRepository;
+import com.hax.connectors.FlightsConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.User;
 import com.hax.services.FlightsService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import utils.GenericTest;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +27,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getValidFlights() {
-        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
+        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
 
         when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {
@@ -59,7 +52,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getFlightsWrongDates() {
-        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
+        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
 
         when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {
@@ -83,7 +76,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getFlightsWrongDestiny() {
-        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
+        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
 
         when(dc.getFlightsAsync("ZZZ", "MIA", "2015-11-10", "2015-10-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {

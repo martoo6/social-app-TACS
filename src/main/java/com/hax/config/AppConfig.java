@@ -24,7 +24,7 @@ public class AppConfig extends ResourceConfig {
             @Override
             protected void configure() {
                 //-------------Connectors y Repositorios----------
-                bind(DespegarConnector.class).to(DespegarConnectorInterface.class);
+                bind(FlightsConnector.class).to(FlightsConnectorInterface.class);
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
                 bind(FlightsRepository.class).to(FlightsRepositoryInterface.class);
                 bind(UsersRepository.class).to(UsersRepositoryInterface.class);

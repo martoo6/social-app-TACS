@@ -2,22 +2,17 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
-import com.hax.connectors.UsersRepository;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
-import com.hax.services.FlightsService;
 import com.hax.services.UsersService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.internal.RuntimeExecutorsBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;

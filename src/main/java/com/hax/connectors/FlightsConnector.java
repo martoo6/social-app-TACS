@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
  * Created by martin on 4/26/15.
  */
 
-public class DespegarConnector implements DespegarConnectorInterface {
+public class FlightsConnector implements FlightsConnectorInterface {
     ObjectMapper mapper = new ObjectMapper();
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){

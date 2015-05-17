@@ -1,10 +1,5 @@
 package utils;
 
-import com.hax.connectors.DespegarConnector;
-import com.hax.connectors.DespegarConnectorInterface;
-import com.hax.controllers.FlightsController;
-import com.hax.services.FlightsService;
-import com.hax.services.FlightsServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

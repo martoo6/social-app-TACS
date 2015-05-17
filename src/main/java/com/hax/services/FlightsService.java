@@ -1,19 +1,16 @@
 package com.hax.services;
 
 import com.google.common.base.Function;
-import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple2;
-import com.hax.async.utils.Tuple3;
-import com.hax.connectors.DespegarConnectorInterface;
+import com.hax.connectors.FlightsConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
-import com.hax.models.Recommendation;
 import com.hax.models.User;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,7 +20,7 @@ import javax.inject.Inject;
  */
 public class FlightsService implements FlightsServiceInterface{
     @Inject
-    public DespegarConnectorInterface despegarConnector;
+    public FlightsConnectorInterface despegarConnector;
     @Inject
     public FlightsRepositoryInterface flightsRepository;
     @Inject
