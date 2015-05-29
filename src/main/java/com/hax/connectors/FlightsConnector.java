@@ -5,6 +5,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.config.App;
 import com.hax.models.DespegarError;
 import com.hax.utils.JsonHelper;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
@@ -16,7 +17,6 @@ import javax.ws.rs.core.Response;
  */
 
 public class FlightsConnector implements FlightsConnectorInterface {
-    ObjectMapper mapper = new ObjectMapper();
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
@@ -29,7 +29,7 @@ public class FlightsConnector implements FlightsConnectorInterface {
                 .queryParam("return_date", toDate)
                 .queryParam("adults", "1")
                 .request()
-                .header("X-ApiKey","a97e70ca025a45adb3761471eb2d9b39")
+                .header(App.config.getString("despegar.api.key.name"), App.config.getString("despegar.api.key.value"))
                 .rx()
                 .get();
 

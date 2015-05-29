@@ -1,5 +1,6 @@
 package utils;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;

@@ -1,7 +1,7 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.UsersRepository;
+import com.hax.connectors.UsersInMemoryRepository;
 import com.hax.models.User;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class UsersRepositoryTest extends GenericTest {
 
     @Test
     public void insertUser(){
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
         User user = new User();
 
@@ -38,7 +38,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void updateUser() throws ExecutionException, InterruptedException {
         User user = new User();
         user.setId(1);
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
 
@@ -55,7 +55,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUserMissing() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
 
         ListenableFuture<User> lf = ur.update(user);
@@ -71,7 +71,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void getUser() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
         ListenableFuture<User> lf = ur.get(0);
@@ -82,7 +82,7 @@ public class UsersRepositoryTest extends GenericTest {
 
     @Test
     public void getUserMissing(){
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
         ListenableFuture<User> lf = ur.get(1);
 
@@ -97,7 +97,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void getAll() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
+        UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
         ListenableFuture<List<User>> lf = ur.getAll();

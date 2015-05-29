@@ -1,5 +1,6 @@
 package com.hax.models;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ public class Flight {
     private List<Segment> returnSegments;
     private String origin;
     private String destiny;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private String state;
     private Integer id;
 
@@ -19,7 +20,7 @@ public class Flight {
     public Flight() {
     }
 
-    public Flight(List<Segment> waySegments, List<Segment> returnSegments, Double totalPrice, String origin, String destiny) {
+    public Flight(List<Segment> waySegments, List<Segment> returnSegments, BigDecimal totalPrice, String origin, String destiny) {
         this.waySegments = waySegments;
         this.returnSegments = returnSegments;
         this.totalPrice = totalPrice;
@@ -42,11 +43,11 @@ public class Flight {
         this.returnSegments = returnSegments;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 

@@ -9,6 +9,9 @@ import com.hax.services.FlightsService;
 import com.hax.services.FlightsServiceInterface;
 import com.hax.services.UsersService;
 import com.hax.services.UsersServiceInterface;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -19,9 +22,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 /**
  * En esta clase se configura la inyeccion de dependencias de la aplicacion
  */
-public class AppConfig extends ResourceConfig {
+public class App extends ResourceConfig {
+    public static PropertiesConfiguration config;
 
-    public AppConfig() {
+    public App() throws ConfigurationException {
         register(new AbstractBinder() {
             @Override
             protected void configure() {
@@ -29,8 +33,8 @@ public class AppConfig extends ResourceConfig {
                 bind(FlightsConnector.class).to(FlightsConnectorInterface.class);
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
                 bind(AutocompleteConnector.class).to(AutocompleteConnectorInterface.class);
-                bind(FlightsRepository.class).to(FlightsRepositoryInterface.class);
-                bind(UsersRepository.class).to(UsersRepositoryInterface.class);
+                bind(FlightsInMemoryRepository.class).to(FlightsRepositoryInterface.class);
+                bind(UsersInMemoryRepository.class).to(UsersRepositoryInterface.class);
                 //-------------------Servicios--------------
                 bind(FlightsService.class).to(FlightsServiceInterface.class);
                 bind(AirportsService.class).to(AirportsServiceInterface.class);
@@ -40,5 +44,10 @@ public class AppConfig extends ResourceConfig {
             }
         });
         packages(true, "com.hax.controllers");
+
+        config = new PropertiesConfiguration("app.config");
+        config.setReloadingStrategy(new FileChangedReloadingStrategy());
     }
+
+
 }

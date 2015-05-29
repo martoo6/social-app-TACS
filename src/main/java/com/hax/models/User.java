@@ -14,6 +14,7 @@ public class User {
     private List<User> friends = new ArrayList<User>();
     private List<Flight> flights = new ArrayList<Flight>();
     private List<Recommendation> recommendations = new ArrayList<Recommendation>();
+    private String longLivedToken;
 
 
     public String getUsername() { return username; }
@@ -64,5 +65,13 @@ public class User {
 
     public void setRecommendations(List<Recommendation> recommendations) {
         this.recommendations = recommendations;
+    }
+
+    public String getLongLivedToken() {
+        return longLivedToken;
+    }
+
+    public void setLongLivedToken(String longLivedToken) {
+        this.longLivedToken = longLivedToken;
     }
 }

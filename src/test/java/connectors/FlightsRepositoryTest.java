@@ -1,13 +1,17 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.FlightsRepository;
+import com.hax.config.App;
+import com.hax.connectors.FlightsInMemoryRepository;
 import com.hax.models.Flight;
 import com.hax.models.Segment;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -21,11 +25,11 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void insertFlight(){
-        FlightsRepository dc = new FlightsRepository();
+        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
+        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
         ListenableFuture<Flight> lf = dc.insert(flight);
 
@@ -39,13 +43,13 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void getFlight() throws ExecutionException, InterruptedException {
-        FlightsRepository dc = new FlightsRepository();
+        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
 
 
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
+        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
         dc.insert(flight).get();
 
@@ -61,7 +65,7 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void getFlightMissingFlight() throws ExecutionException, InterruptedException {
-        FlightsRepository dc = new FlightsRepository();
+        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
 
         ListenableFuture<Flight> lf = dc.get(0);
 
@@ -75,11 +79,11 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void getAllFlight() throws ExecutionException, InterruptedException {
-        FlightsRepository dc = new FlightsRepository();
+        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
 
         List<Segment> s1 = Arrays.asList(new Segment());
         List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, 100.0, "Argentina", "USA");
+        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
         dc.insert(flight).get();
 
@@ -97,6 +101,11 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Override
     protected AbstractBinder setBinder() {
+        try {
+            App.config = new PropertiesConfiguration("app.config");
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

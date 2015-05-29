@@ -1,6 +1,9 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.config.App;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import utils.GenericTest;
 
 import com.hax.connectors.FlightsConnector;
@@ -59,6 +62,11 @@ public class FlightsConnectorTest extends GenericTest {
 
     @Override
     protected AbstractBinder setBinder() {
+        try {
+            App.config = new PropertiesConfiguration("app.config");
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
