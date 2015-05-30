@@ -15,7 +15,6 @@ import com.hax.models.RecommendationState;
 import com.hax.models.User;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

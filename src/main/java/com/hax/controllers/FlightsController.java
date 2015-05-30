@@ -1,9 +1,7 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.FutureHelper;
 import com.hax.models.Flight;
-import com.hax.models.Recommendation;
 import com.hax.services.FlightsServiceInterface;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
@@ -18,10 +16,10 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.hax.utils.ControllerHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.fail;
 
 @Singleton
 @Service
@@ -103,9 +101,13 @@ public class FlightsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void createFlight(final Flight flight,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        ListenableFuture<Flight> f = flightsService.createFlight(flight, userId);
-        addControllerCallback(f, asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(flightsService.createFlight(flight, userId), asyncResponse);
+        }
     }
     
     

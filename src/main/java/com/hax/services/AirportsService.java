@@ -1,7 +1,8 @@
 package com.hax.services;
 
-import com.hax.connectors.AirportsConnectorInterface;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.connectors.AirportsConnectorInterface;
+
 import javax.inject.Inject;
 
 /**
@@ -12,7 +13,7 @@ public class AirportsService implements AirportsServiceInterface{
     public AirportsConnectorInterface airportsConnector;
 
     /**
-     * Obtiene el aeropuerto del país más cercano a (latitude, longitude)
+     * Obtiene el aeropuerto del paï¿½s mï¿½s cercano a (latitude, longitude)
      * 
      * @param latitude Latitud de un punto
      * @param longitude Longitud de un punto

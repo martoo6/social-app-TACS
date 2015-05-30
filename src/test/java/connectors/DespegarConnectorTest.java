@@ -2,13 +2,12 @@ package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.config.App;
+import com.hax.connectors.DespegarConnector;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import utils.GenericTest;
-
-import com.hax.connectors.DespegarConnector;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
+import utils.GenericTest;
 
 import static org.junit.Assert.assertTrue;
 
@@ -59,6 +58,19 @@ public class DespegarConnectorTest extends GenericTest {
         }
     }
 
+    @Test
+    public void validComplete(){
+        DespegarConnector dc = new DespegarConnector();
+        ListenableFuture<String> lf = dc.getAirportsAsync("buenos");
+
+        try {
+            //TODO: Assert transformacion ??
+            lf.get();
+            assertTrue(true);
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+    }
 
     @Override
     protected AbstractBinder setBinder() {

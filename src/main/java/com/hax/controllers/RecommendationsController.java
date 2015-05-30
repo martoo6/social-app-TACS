@@ -1,7 +1,6 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.FutureHelper;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationPOST;
 import com.hax.services.UsersServiceInterface;
@@ -15,7 +14,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.fail;
 
 /**
  * Created by martin on 4/20/15.
@@ -31,8 +31,13 @@ public class RecommendationsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getRecommendations(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.getRecommendations(userId), asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.getRecommendations(userId), asyncResponse);
+        }
     }
 
 
@@ -43,9 +48,14 @@ public class RecommendationsController {
                                 @Context HttpHeaders hh,
                                 @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer fromUserId = Integer.parseInt(hh.getHeaderString("userId"));
-        ListenableFuture<Recommendation> f= usersService.recommendFlight(recJson.getFlightId(), fromUserId, recJson.getToUserId());
-        addControllerCallback(f, asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer fromUserId = Integer.parseInt(optUserId);
+            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), fromUserId, recJson.getToUserId());
+            addControllerCallback(f, asyncResponse);
+        }
     }
 
     @PUT
@@ -56,8 +66,13 @@ public class RecommendationsController {
                                      @Context HttpHeaders hh,
                                      @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        addControllerCallback(usersService.acceptRecommendation(recommendationId, userId), asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.acceptRecommendation(recommendationId, userId), asyncResponse);
+        }
     }
 
     @DELETE
@@ -67,7 +82,12 @@ public class RecommendationsController {
     public void rejectRecommendation(@PathParam("recommendationId") Integer recommendationId,
                                      @Context HttpHeaders hh,
                                      @Suspended final AsyncResponse asyncResponse) throws JSONException {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        addControllerCallback(usersService.rejectRecommendation(recommendationId, userId), asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.rejectRecommendation(recommendationId, userId), asyncResponse);
+        }
     }
 }

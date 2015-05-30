@@ -1,8 +1,5 @@
 package com.hax.controllers;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.FutureHelper;
-import com.hax.models.Recommendation;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
@@ -11,11 +8,9 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.addControllerCallback;
 
 /**
  * Created by martin on 4/20/15.
@@ -32,7 +27,7 @@ public class UsersController {
     @Path("{userID}")
     public void getUser(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.getUser(userId) ,asyncResponse);
+        addControllerCallback(usersService.getUser(userId), asyncResponse);
     }
 
 
@@ -40,7 +35,7 @@ public class UsersController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getAllUser(@Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.getAll() ,asyncResponse);
+        addControllerCallback(usersService.getAll(), asyncResponse);
     }
 
     //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
@@ -55,6 +50,6 @@ public class UsersController {
     @Produces(MediaType.APPLICATION_JSON)
     public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.createUser(user) ,asyncResponse);
+        addControllerCallback(usersService.createUser(user), asyncResponse);
     }
 }

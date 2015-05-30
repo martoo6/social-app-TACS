@@ -2,12 +2,10 @@ package com.hax.connectors;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.executors.Default;
 import com.hax.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 5/5/15.

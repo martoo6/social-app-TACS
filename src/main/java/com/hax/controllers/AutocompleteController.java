@@ -1,12 +1,7 @@
 package com.hax.controllers;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.Flight;
 import com.hax.services.AutocompleteServiceInterface;
-import com.hax.services.FlightsServiceInterface;
-import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
@@ -14,12 +9,9 @@ import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.addControllerCallback;
 
 @Singleton
 @Service

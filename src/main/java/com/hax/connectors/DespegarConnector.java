@@ -1,6 +1,5 @@
 package com.hax.connectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.Response;
  * Created by martin on 4/26/15.
  */
 
-public class DespegarConnector implements FlightsConnectorInterface {
+public class DespegarConnector implements DespegarConnectorInterface {
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
@@ -28,6 +27,31 @@ public class DespegarConnector implements FlightsConnectorInterface {
                 .queryParam("departure_date", fromDate)
                 .queryParam("return_date", toDate)
                 .queryParam("adults", "1")
+                .request()
+                .header("X-ApiKey", App.config.getString("despegar.api.key.value"))
+                .rx()
+                .get();
+
+        return Futures.transform(future, new Function<Response, String>() {
+            public String apply(Response response) {
+                if(response.getStatus()!=Response.Status.OK.getStatusCode()){
+                    DespegarError de = JsonHelper.readValue(response, DespegarError.class);
+                    Joiner joiner = Joiner.on(". ").skipNulls();
+                    String errorMsg = joiner.join(de.getCauses());
+                    throw new RuntimeException(errorMsg);
+                }
+                return response.readEntity(String.class);
+            }
+        });
+    }
+
+    public ListenableFuture<String> getAirportsAsync(String autocomplete) {
+        String url = "https://api.despegar.com/v3/autocomplete";
+
+        ListenableFuture<Response> future = RxListenableFuture.newClient()
+                .target(url)
+                .queryParam("airport_result", 5)
+                .queryParam("query", autocomplete)
                 .request()
                 .header("X-ApiKey", App.config.getString("despegar.api.key.value"))
                 .rx()

@@ -1,9 +1,8 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.Flight;
+import com.hax.services.AirportsServiceInterface;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
@@ -13,8 +12,7 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
-import com.hax.services.AirportsServiceInterface;
+import static com.hax.utils.ControllerHelper.addControllerCallback;
 
 @Singleton
 @Service
@@ -23,7 +21,7 @@ public class AirportsController {
     @Inject AirportsServiceInterface airportsService;
 
     /**
-     * Obtiene el aeropuerto del país más cercano a (latitude, longitude)
+     * Obtiene el aeropuerto del paï¿½s mï¿½s cercano a (latitude, longitude)
      * 
      * @param latitude Latitud de un punto
      * @param longitude Longitud de un punto

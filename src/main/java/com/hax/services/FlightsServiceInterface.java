@@ -2,12 +2,8 @@ package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
-import com.hax.models.Recommendation;
-import com.hax.models.User;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.jvnet.hk2.annotations.Contract;
+import java.util.List;
 
 /**
  * Created by martin on 4/27/15.

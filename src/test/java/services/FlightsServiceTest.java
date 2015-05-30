@@ -2,7 +2,7 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.FlightsConnectorInterface;
+import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.connectors.FlightsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Flight;
@@ -27,7 +27,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getValidFlights() {
-        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
+        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
         when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {
@@ -52,7 +52,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getFlightsWrongDates() {
-        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
+        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
         when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {
@@ -76,7 +76,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void getFlightsWrongDestiny() {
-        FlightsConnectorInterface dc = mock(FlightsConnectorInterface.class);
+        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
         when(dc.getFlightsAsync("ZZZ", "MIA", "2015-11-10", "2015-10-10")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {

@@ -1,15 +1,8 @@
 package services;
 
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.AutocompleteConnectorInterface;
-import com.hax.connectors.FlightsConnectorInterface;
-import com.hax.connectors.FlightsRepositoryInterface;
-import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Flight;
-import com.hax.models.User;
+import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.services.AutocompleteService;
-import com.hax.services.FlightsService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
@@ -18,7 +11,6 @@ import java.util.concurrent.Callable;
 
 import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,9 +21,9 @@ public class AutocompleteServiceTest extends GenericTest {
 
     @Test
     public void getValidFlights() {
-        AutocompleteConnectorInterface acc = mock(AutocompleteConnectorInterface.class);
+        DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
-        when(acc.getAirportsAsync("buenos")).thenReturn(ex.submit(new Callable<String>() {
+        when(dc.getAirportsAsync("buenos")).thenReturn(ex.submit(new Callable<String>() {
             public String call() throws Exception {
                 String response = "[\n" +
                         " {\n" +
@@ -83,7 +75,7 @@ public class AutocompleteServiceTest extends GenericTest {
 
 
         AutocompleteService acs = new AutocompleteService();
-        acs.autocompleteConnector = acc;
+        acs.despegarConnector = dc;
 
         ListenableFuture<String> lf = acs.getAirports("buenos");
 

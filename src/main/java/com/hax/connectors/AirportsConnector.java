@@ -1,19 +1,11 @@
 package com.hax.connectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.DespegarError;
-import com.hax.utils.JsonHelper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
+
+import javax.ws.rs.core.Response;
 
 
 public class AirportsConnector implements AirportsConnectorInterface {

@@ -1,11 +1,9 @@
 package com.hax.connectors;
 
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.DespegarError;
-import com.hax.utils.JsonHelper;
+import com.hax.config.App;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
 import javax.ws.rs.core.Response;
@@ -21,11 +19,10 @@ public class FacebookConnector implements FacebookConnectorInterface{
         ListenableFuture<Response> future = RxListenableFuture.newClient()
                 .target(url)
                 .queryParam("grant_type", "fb_exchange_token")
-                .queryParam("client_id", "{app-ip}")
-                .queryParam("client_secret", "{app-secret}")
+                .queryParam("client_id", App.config.getString("facebook.api.app.id"))
+                .queryParam("client_secret", App.config.getString("facebook.api.app.secret"))
                 .queryParam("fb_exchange_token", shortLivedToken)
                 .request()
-                .header("X-ApiKey","a97e70ca025a45adb3761471eb2d9b39")
                 .rx()
                 .get();
 

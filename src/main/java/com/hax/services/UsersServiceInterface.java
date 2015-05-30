@@ -5,7 +5,6 @@ import com.hax.models.Flight;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

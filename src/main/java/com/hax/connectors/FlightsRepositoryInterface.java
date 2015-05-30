@@ -3,7 +3,6 @@ package com.hax.connectors;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.models.Flight;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,7 +1,5 @@
 package com.hax.controllers;
 
-import com.hax.async.utils.FutureHelper;
-import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 
@@ -12,6 +10,9 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+
+import static com.hax.utils.ControllerHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.fail;
 
 /**
  * Created by martin on 4/20/15.
@@ -33,8 +34,13 @@ public class FriendsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getFriends(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.getFriends(userId) ,asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.getFriends(userId), asyncResponse);
+        }
     }
 
     /**
@@ -47,8 +53,13 @@ public class FriendsController {
     @Path("{friendId}")
     public void addFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.addFriend(userId, friendId) ,asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.addFriend(userId, friendId), asyncResponse);
+        }
     }
 
     /**
@@ -61,7 +72,12 @@ public class FriendsController {
     @Path("{friendId}")
     public void removeFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        FutureHelper.addControllerCallback(usersService.removeFriend(userId, friendId) ,asyncResponse);
+        String optUserId = hh.getHeaderString("userId");
+        if(optUserId==null) {
+            fail("Missing userId", asyncResponse);
+        } else {
+            Integer userId = Integer.parseInt(optUserId);
+            addControllerCallback(usersService.removeFriend(userId, friendId), asyncResponse);
+        }
     }
 }
