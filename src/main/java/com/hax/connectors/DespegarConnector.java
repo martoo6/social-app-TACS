@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
  * Created by martin on 4/26/15.
  */
 
-public class FlightsConnector implements FlightsConnectorInterface {
+public class DespegarConnector implements FlightsConnectorInterface {
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
@@ -29,7 +29,7 @@ public class FlightsConnector implements FlightsConnectorInterface {
                 .queryParam("return_date", toDate)
                 .queryParam("adults", "1")
                 .request()
-                .header(App.config.getString("despegar.api.key.name"), App.config.getString("despegar.api.key.value"))
+                .header("X-ApiKey", App.config.getString("despegar.api.key.value"))
                 .rx()
                 .get();
 

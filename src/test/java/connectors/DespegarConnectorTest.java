@@ -6,7 +6,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import utils.GenericTest;
 
-import com.hax.connectors.FlightsConnector;
+import com.hax.connectors.DespegarConnector;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 
@@ -15,11 +15,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by martin on 5/3/15.
  */
-public class FlightsConnectorTest extends GenericTest {
+public class DespegarConnectorTest extends GenericTest {
 
     @Test
     public void validFlight(){
-        FlightsConnector dc = new FlightsConnector();
+        DespegarConnector dc = new DespegarConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-10-10", "2015-11-10");
 
         try {
@@ -33,7 +33,7 @@ public class FlightsConnectorTest extends GenericTest {
 
     @Test
     public void invalidDate(){
-        FlightsConnector dc = new FlightsConnector();
+        DespegarConnector dc = new DespegarConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-11-10", "2015-10-10");
 
         try {
@@ -47,7 +47,7 @@ public class FlightsConnectorTest extends GenericTest {
 
     @Test
     public void invalidLocation(){
-        FlightsConnector dc = new FlightsConnector();
+        DespegarConnector dc = new DespegarConnector();
         ListenableFuture<String> lf = dc.getFlightsAsync("ZZZ", "MIA", "2015-10-10", "2015-11-10");
 
         try {
