@@ -1,7 +1,7 @@
 package controllers;
 
 import com.google.common.util.concurrent.Futures;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
@@ -28,21 +28,21 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void getFlightsRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null, "Argentina", "USA");
+        Trip trip = new Trip(null,null,null, "Argentina", "USA");
         User user = new User();
-        Recommendation recommendation = new Recommendation(flight, user);
+        Recommendation recommendation = new Recommendation(trip, user);
 
         when(us.getRecommendations(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(recommendation)));
 
-        final Response responseWrapper = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId","0").get();
+        final Response responseWrapper = target("recommendations").request(MediaType.APPLICATION_JSON).header("token","0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
     @Test
     public void recommendFlightResponse() {
-        Flight flight = new Flight(null,null,null, "Argentina", "USA");
+        Trip trip = new Trip(null,null,null, "Argentina", "USA");
         User user = new User();
-        Recommendation recommendation = new Recommendation(flight, user);
+        Recommendation recommendation = new Recommendation(trip, user);
 
         when(us.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
 
@@ -51,31 +51,31 @@ public class RecommendationsControllerTest extends GenericTest {
                 " \"toUserId\":0\n" +
                 "}";
 
-        final Response response = target("recommendations").request(MediaType.APPLICATION_JSON).header("userId", "0").post(Entity.json(json));
+        final Response response = target("recommendations").request(MediaType.APPLICATION_JSON).header("token", "0").post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void acceptRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null, "Argentina", "USA");
+        Trip trip = new Trip(null,null,null, "Argentina", "USA");
         User user = new User();
-        Recommendation recommendation = new Recommendation(flight, user);
+        Recommendation recommendation = new Recommendation(trip, user);
 
         when(us.acceptRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
 
-        final Response responseWrapper = target("recommendations/1").queryParam("userId", 0).request(MediaType.APPLICATION_JSON).header("userId", "0").put(Entity.json(""));
+        final Response responseWrapper = target("recommendations/1").queryParam("token", 0).request(MediaType.APPLICATION_JSON).header("token", "0").put(Entity.json(""));
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
     @Test
     public void rejectRecommendationsResponse() {
-        Flight flight = new Flight(null,null,null, "Argentina", "USA");
+        Trip trip = new Trip(null,null,null, "Argentina", "USA");
         User user = new User();
-        Recommendation recommendation = new Recommendation(flight, user);
+        Recommendation recommendation = new Recommendation(trip, user);
 
         when(us.rejectRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
 
-        final Response responseWrapper = target("recommendations/1").queryParam("userId", 0).request(MediaType.APPLICATION_JSON).header("userId", "0").delete();
+        final Response responseWrapper = target("recommendations/1").queryParam("token", 0).request(MediaType.APPLICATION_JSON).header("token", "0").delete();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 

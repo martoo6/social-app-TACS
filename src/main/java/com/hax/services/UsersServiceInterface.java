@@ -1,7 +1,7 @@
 package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 
@@ -16,7 +16,7 @@ public interface UsersServiceInterface {
     ListenableFuture<User> getUser(Integer id);
     ListenableFuture<User> createUser(User user);
     ListenableFuture<List<User>> getFriends(Integer id);
-    ListenableFuture<List<Flight>> getFlights(Integer id);
+    ListenableFuture<List<Trip>> getFlights(Integer id);
     ListenableFuture<User> update(User user);
     ListenableFuture<List<Recommendation>> getRecommendations(Integer id);
     ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);

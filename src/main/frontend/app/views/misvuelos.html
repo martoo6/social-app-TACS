@@ -4,10 +4,10 @@
 
     <img id="spinner" class="center-block" style="display:none;position:relative;top:calc(50% - 50px);" src="images/spinner.gif" />
 
-    <div ng-repeat="flight in myFlights">
+    <div ng-repeat="trip in myFlights">
         <div class="well selectableFlight">
-            <div class="row" ng-click="showMap(flight)">
-                <div class="col-xs-5" ng-init="wt = flight.waySegment" style="border-right:dotted">
+            <div class="row" ng-click="showMap(trip)">
+                <div class="col-xs-5" ng-init="wt = trip.waySegment" style="border-right:dotted">
                     <div style="text-align:center"><h4>Ida</h4></div>
                     <div><strong>Origen: </strong><span>{{wt.origin}}</span></div>
                     <div><strong>Destino: </strong><span>{{wt.destiny}}</span></div>
@@ -16,7 +16,7 @@
                     <div><strong>Salida: </strong><span>{{wt.departureTime}}</span></div>
                     <div><strong>Duracion: </strong><span>{{wt.duration}}</span></div>
                 </div>
-                <div class="col-xs-5" ng-init="rt = flight.returnSegment" style="border-right:dotted">
+                <div class="col-xs-5" ng-init="rt = trip.returnSegment" style="border-right:dotted">
                     <div style="text-align:center"><h4>Vuelta</h4></div>
                     <div><strong>Origen: </strong><span>{{rt.origin}}</span></div>
                     <div><strong>Destino: </strong><span>{{rt.destiny}}</span></div>
@@ -26,7 +26,7 @@
                     <div><strong>Duracion: </strong><span>{{rt.duration}}</span></div>
                 </div>
                 <div class="col-xs-2">
-                    <div style="margin-top:39px"><strong>Precio: </strong>${{flight.totalPrice}}</div>
+                    <div style="margin-top:39px"><strong>Precio: </strong>${{trip.price}}</div>
                 </div>
             </div>
         </div>

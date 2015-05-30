@@ -2,9 +2,9 @@ package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.config.App;
-import com.hax.connectors.FlightsInMemoryRepository;
+import com.hax.connectors.TripsInMemoryRepository;
+import com.hax.models.Trip;
 import com.hax.models.Flight;
-import com.hax.models.Segment;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -21,17 +21,17 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by martin on 5/3/15.
  */
-public class FlightsRepositoryTest extends GenericTest {
+public class TripsRepositoryTest extends GenericTest {
 
     @Test
     public void insertFlight(){
-        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
+        TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
-        List<Segment> s1 = Arrays.asList(new Segment());
-        List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        List<Flight> s1 = Arrays.asList(new Flight());
+        List<Flight> s2 = Arrays.asList(new Flight());
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
-        ListenableFuture<Flight> lf = dc.insert(flight);
+        ListenableFuture<Trip> lf = dc.insert(trip);
 
         try {
             lf.get();
@@ -43,21 +43,21 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void getFlight() throws ExecutionException, InterruptedException {
-        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
+        TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
 
 
-        List<Segment> s1 = Arrays.asList(new Segment());
-        List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        List<Flight> s1 = Arrays.asList(new Flight());
+        List<Flight> s2 = Arrays.asList(new Flight());
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
-        dc.insert(flight).get();
+        dc.insert(trip).get();
 
-        ListenableFuture<Flight> lf = dc.get(0);
+        ListenableFuture<Trip> lf = dc.get(0);
 
         try {
-            Flight f = lf.get();
-            assertTrue(f == flight);
+            Trip f = lf.get();
+            assertTrue(f == trip);
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -65,34 +65,34 @@ public class FlightsRepositoryTest extends GenericTest {
 
     @Test
     public void getFlightMissingFlight() throws ExecutionException, InterruptedException {
-        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
+        TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
-        ListenableFuture<Flight> lf = dc.get(0);
+        ListenableFuture<Trip> lf = dc.get(0);
 
         try {
             lf.get();
             assertTrue(false);
         } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Flight not found"));
+            assertTrue(e.getMessage().contains("Trip not found"));
         }
     }
 
     @Test
     public void getAllFlight() throws ExecutionException, InterruptedException {
-        FlightsInMemoryRepository dc = new FlightsInMemoryRepository();
+        TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
-        List<Segment> s1 = Arrays.asList(new Segment());
-        List<Segment> s2 = Arrays.asList(new Segment());
-        Flight flight = new Flight(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        List<Flight> s1 = Arrays.asList(new Flight());
+        List<Flight> s2 = Arrays.asList(new Flight());
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
 
-        dc.insert(flight).get();
+        dc.insert(trip).get();
 
-        ListenableFuture<List<Flight>> lf = dc.getAll();
+        ListenableFuture<List<Trip>> lf = dc.getAll();
 
         try {
-            List<Flight> lstFlights = lf.get();
-            assertTrue(lstFlights.contains(flight));
-            assertTrue(lstFlights.size()==1);
+            List<Trip> lstTrips = lf.get();
+            assertTrue(lstTrips.contains(trip));
+            assertTrue(lstTrips.size()==1);
         } catch (Exception e) {
             assertTrue(false);
         }

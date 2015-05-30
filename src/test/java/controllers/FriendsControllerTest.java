@@ -30,7 +30,7 @@ public class FriendsControllerTest extends GenericTest {
 
         when(us.getFriends(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
 
-        final Response responseWrapper = target("friends").request(MediaType.APPLICATION_JSON).header("userId", "0").get();
+        final Response responseWrapper = target("friends").request(MediaType.APPLICATION_JSON).header("token", "0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
@@ -41,7 +41,7 @@ public class FriendsControllerTest extends GenericTest {
 
         when(us.addFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
 
-        final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("userId", "0").post(null);
+        final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("token", "0").post(null);
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 
@@ -52,7 +52,7 @@ public class FriendsControllerTest extends GenericTest {
 
         when(us.removeFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
 
-        final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("userId", "0").delete();
+        final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("token", "0").delete();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
     }
 

@@ -31,12 +31,12 @@ public class RecommendationsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getRecommendations(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.getRecommendations(userId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.getRecommendations(token), asyncResponse);
         }
     }
 
@@ -48,12 +48,12 @@ public class RecommendationsController {
                                 @Context HttpHeaders hh,
                                 @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer fromUserId = Integer.parseInt(optUserId);
-            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), fromUserId, recJson.getToUserId());
+            Integer fromToken = Integer.parseInt(optToken);
+            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), fromToken, recJson.getToUserId());
             addControllerCallback(f, asyncResponse);
         }
     }
@@ -66,12 +66,12 @@ public class RecommendationsController {
                                      @Context HttpHeaders hh,
                                      @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.acceptRecommendation(recommendationId, userId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.acceptRecommendation(recommendationId, token), asyncResponse);
         }
     }
 
@@ -82,12 +82,12 @@ public class RecommendationsController {
     public void rejectRecommendation(@PathParam("recommendationId") Integer recommendationId,
                                      @Context HttpHeaders hh,
                                      @Suspended final AsyncResponse asyncResponse) throws JSONException {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.rejectRecommendation(recommendationId, userId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.rejectRecommendation(recommendationId, token), asyncResponse);
         }
     }
 }

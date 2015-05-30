@@ -9,22 +9,23 @@
  */
 angular.module('frontendApp')
   .controller('FlightpickCtrl', function ($scope, $http, geolocatorFactory) {
-    
+
     $scope.flightOptions = [];
-    
+
     $scope.flightClick = function(flight){
       $scope.selectedFlight = flight;
       $('#modalCrear').modal();
     };
-    
+
     $scope.guardarVuelo = function(){
-      
+
       //si no es exactamente como lo pide Jersey se rompe
       delete $scope.selectedFlight.$$hashKey;
-      
+
       $.ajax({
           type: "POST",
-          url: 'api/v1/flights',
+          url: 'api/v1/trips',
+          headers:{'token':0},
           contentType: 'application/json',
           data: JSON.stringify($scope.selectedFlight)
       })
@@ -34,17 +35,17 @@ angular.module('frontendApp')
         }).modal('hide');
       })
     };
-    
+
     function actOnDateChange(){
       $(this).datepicker('hide');
       var returnDate = $('#returnDate').val();
       var leaveDate = $('#leaveDate').val();
-      
+
       if( returnDate && leaveDate ){
-        
+
         $('#spinner').show();
         $('#error').empty();
-        
+
         $http
         .get('api/v1/flights', {
           params: {
@@ -60,32 +61,30 @@ angular.module('frontendApp')
             var inboundChoice = item.inbound_choices[0];
             var outboundFirstSeg = outboundChoice.segments[0];
             var inboundFirstSeg = inboundChoice.segments[0];
-            
+
             return {
-              wayTicket: {
+              wayFlights: [{
                 origin: $scope.originAirportCode,
                 destiny: $scope.destinyAirportCode,
-                company: outboundFirstSeg.airline,
+                airline: outboundFirstSeg.airline,
                 flightNum: outboundFirstSeg.flight_id,
                 departureTime: moment(outboundFirstSeg.departure_datetime, "YYYY-MM-DDTHH:mm:ss.SSSSZ").format('DD-MM-YYYY HH:mm'),
-                duration: outboundChoice.duration + ' hs',
-                price:0,
-              },
-              returnTicket: {
+                duration: outboundChoice.duration + ' hs'
+              }],
+              returnFlights: [{
                 origin: $scope.destinyAirportCode,
                 destiny: $scope.originAirportCode,
-                company: inboundFirstSeg.airline,
+                airline: inboundFirstSeg.airline,
                 flightNum: inboundFirstSeg.flight_id,
                 departureTime: moment(inboundFirstSeg.departure_datetime, "YYYY-MM-DDTHH:mm:ss.SSSSZ").format('DD-MM-YYYY HH:mm'),
-                duration: inboundChoice.duration + ' hs',
-                price:0,
-              },
-              totalPrice: item.price_detail.total
+                duration: inboundChoice.duration + ' hs'
+              }],
+              price: item.price_detail.total
             };
           });
-          
+
           if(!$scope.flightOptions.length)
-            $('#error').append('No se encontraron resultados<br>' + 
+            $('#error').append('No se encontraron resultados<br>' +
                   '<a style="text-decoration:underline" href="#/destinyMapPick">Buscar otro destinto</a>');
         })
         .error(function(error){
@@ -97,11 +96,11 @@ angular.module('frontendApp')
           $('#spinner').hide();
         });
       }
-    };       
-    
+    };
+
     $('#leaveDate').datepicker().on('changeDate', actOnDateChange);
     $('#returnDate').datepicker().on('changeDate', actOnDateChange);
-         
+
     navigator.geolocation.getCurrentPosition(function(pos){
       $http
       .get('api/v1/airports', {
@@ -114,7 +113,7 @@ angular.module('frontendApp')
         $scope.originAirportCode = airport.code;
       });
     });
-    
+
     $http
     .get('api/v1/airports', {
       params: {

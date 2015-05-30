@@ -1,13 +1,11 @@
 package controllers;
 
-import com.hax.models.Flight;
-import com.hax.services.FlightsServiceInterface;
+import com.hax.services.TripsServiceInterface;
 import com.hax.services.UsersServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.concurrent.Callable;
@@ -15,8 +13,6 @@ import java.util.concurrent.Callable;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 /**
@@ -27,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class FlightsControllerTest extends GenericTest {
     //Al estar compartido por los test tiene efecto de lado pero el biding se da una sola vez asique no queda otra.
     //A menos que se encuentre forma de re-iniciar el mock dentro de cada instancia.
-    FlightsServiceInterface fs = mock(FlightsServiceInterface.class);
+    TripsServiceInterface fs = mock(TripsServiceInterface.class);
     UsersServiceInterface us = mock(UsersServiceInterface.class);
 
     @Override
@@ -35,7 +31,7 @@ public class FlightsControllerTest extends GenericTest {
         return new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(fs).to(FlightsServiceInterface.class);
+                bind(fs).to(TripsServiceInterface.class);
                 bind(us).to(UsersServiceInterface.class);
             }
         };
@@ -72,38 +68,5 @@ public class FlightsControllerTest extends GenericTest {
                 .request(MediaType.APPLICATION_JSON).get();
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    }
-
-    @Test
-    public void createFlightResponse() {
-        String json = "{\n" +
-                "     \"waySegments\":\n" +
-                "     [{\n" +
-                "     \"origin\":\"EZE, Buenos Aires, Argentina\",\n" +
-                "     \"destiny\":\"MNT, Montevideo, Uruguay\",\n" +
-                "     \"airline\":\"American Airlines\",\n" +
-                "     \"flightNum\":\"B34A5\",\n" +
-                "     \"departureTime\":\"20-04-2015 18:30\",\n" +
-                "     \"duration\":\"1h 20m\"\n" +
-                "     }],\n" +
-                "     \"returnSegments\":\n" +
-                "     [{\n" +
-                "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
-                "     \"destiny\":\"EZE, Buenos Aires, Argentina\",\n" +
-                "     \"airline\":\"American Airlines\",\n" +
-                "     \"flightNum\":\"A98P5\",\n" +
-                "     \"departureTime\":\"09-06-2015 06:10\",\n" +
-                "     \"duration\":\"50m\"\n" +
-                "     }],\n" +
-                "     \"totalPrice\":\"532\",\n" +
-                "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
-                "     \"destiny\":\"EZE, Buenos Aires, Argentina\"\n" +
-                "     }";
-
-        when(fs.createFlight(any(Flight.class), anyInt())).thenReturn(immediateFuture(new Flight()));
-
-
-        final Response response = target("flights").request(MediaType.APPLICATION_JSON).header("userId",0).post(Entity.json(json));
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 }

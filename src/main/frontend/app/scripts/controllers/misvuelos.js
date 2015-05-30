@@ -9,7 +9,7 @@
  */
 angular.module('frontendApp')
   .controller('MisvuelosCtrl', function ($scope, $http) {
-    
+
     function dibujarMapa(){
       if($('#modalMap').hasClass('in') && $scope.originLtLg && $scope.destinyLtLg){
         var mapa = new google.maps.Map($('#mapa')[0]);
@@ -29,23 +29,23 @@ angular.module('frontendApp')
         mapa.fitBounds(bounds);
       }
     }
-    
+
     $scope.showMap = function(flight){
       $('#modalMap').modal();
-      
-      $.get('api/v1/airports/' + flight.wayTicket.origin, function(originAirport){
+
+      $.get('api/v1/airports/' + flight.wayFlights[0].origin, function(originAirport){
         $scope.originLtLg = new google.maps.LatLng(originAirport.lat, originAirport.lon);
         dibujarMapa();
       });
-      
-      $.get('api/v1/airports/' + flight.wayTicket.destiny, function(destinyAirport){
+
+      $.get('api/v1/airports/' + flight.wayFlights[0].destiny, function(destinyAirport){
         $scope.destinyLtLg = new google.maps.LatLng(destinyAirport.lat, destinyAirport.lon);
         dibujarMapa()
       });
     };
-    
+
     $http
-      .get('api/v1/flights/all')
+      .get('api/v1/trips/all')
       .success(function(flights){
         $scope.myFlights = flights;
       });

@@ -34,12 +34,12 @@ public class FriendsController {
     @Produces(MediaType.APPLICATION_JSON)
     public void getFriends(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.getFriends(userId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.getFriends(token), asyncResponse);
         }
     }
 
@@ -53,12 +53,12 @@ public class FriendsController {
     @Path("{friendId}")
     public void addFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.addFriend(userId, friendId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.addFriend(token, friendId), asyncResponse);
         }
     }
 
@@ -72,12 +72,12 @@ public class FriendsController {
     @Path("{friendId}")
     public void removeFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
-        String optUserId = hh.getHeaderString("userId");
-        if(optUserId==null) {
-            fail("Missing userId", asyncResponse);
+        String optToken = hh.getHeaderString("token");
+        if(optToken==null) {
+            fail("Missing token", asyncResponse);
         } else {
-            Integer userId = Integer.parseInt(optUserId);
-            addControllerCallback(usersService.removeFriend(userId, friendId), asyncResponse);
+            Integer token = Integer.parseInt(optToken);
+            addControllerCallback(usersService.removeFriend(token, friendId), asyncResponse);
         }
     }
 }

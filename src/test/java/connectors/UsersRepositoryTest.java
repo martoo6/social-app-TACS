@@ -74,7 +74,7 @@ public class UsersRepositoryTest extends GenericTest {
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
-        ListenableFuture<User> lf = ur.get(0);
+        ListenableFuture<User> lf = ur.get(1);
 
         User userRes =lf.get();
         assertTrue(userRes == user);
@@ -105,7 +105,7 @@ public class UsersRepositoryTest extends GenericTest {
         try {
             List<User> userLst = lf.get();
             assertTrue(userLst.contains(user));
-            assertTrue(userLst.size()==1);
+            assertTrue(userLst.size()==2);
         } catch (Exception e) {
             assertTrue(false);
         }

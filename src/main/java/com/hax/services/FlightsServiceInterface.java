@@ -1,7 +1,7 @@
 package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 
 import java.util.List;
 
@@ -10,7 +10,5 @@ import java.util.List;
  */
 
 public interface FlightsServiceInterface {
-    ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
-    ListenableFuture<List<Flight>> getAllSavedFlights();
-    ListenableFuture<Flight> createFlight(Flight flight, Integer userId);
+    ListenableFuture<String> getFlights(String from, String to, String fromDate, String toDate);
 }

@@ -12,7 +12,7 @@ public class User {
     private String email;
     private Integer id;
     private List<User> friends = new ArrayList<User>();
-    private List<Flight> flights = new ArrayList<Flight>();
+    private List<Trip> trips = new ArrayList<Trip>();
     private List<Recommendation> recommendations = new ArrayList<Recommendation>();
     private String longLivedToken;
 
@@ -51,12 +51,12 @@ public class User {
         this.friends = friends;
     }
 
-    public List<Flight> getFlights() {
-        return flights;
+    public List<Trip> getTrips() {
+        return trips;
     }
 
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 
     public List<Recommendation> getRecommendations() {

@@ -7,9 +7,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple2;
 import com.hax.async.utils.Tuple3;
-import com.hax.connectors.FlightsRepositoryInterface;
+import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
@@ -24,7 +24,7 @@ public class UsersService implements UsersServiceInterface {
     @Inject
     public UsersRepositoryInterface usersRepository;
     @Inject
-    public FlightsRepositoryInterface flightsRepository;
+    public TripsRepositoryInterface flightsRepository;
 
     public ListenableFuture<List<User>> getAll() {
         return usersRepository.getAll();
@@ -46,10 +46,10 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<Flight>> getFlights(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<Flight>>() {
-            public List<Flight> apply(User user) {
-                return user.getFlights();
+    public ListenableFuture<List<Trip>> getFlights(Integer id) {
+        return Futures.transform(usersRepository.get(id), new Function<User, List<Trip>>() {
+            public List<Trip> apply(User user) {
+                return user.getTrips();
             }
         });
     }
@@ -81,15 +81,15 @@ public class UsersService implements UsersServiceInterface {
          Al no ir a los repositorios de manera secuencial se logra la maxima velocidad para obtener los resultados.
          */
 
-        final ListenableFuture<Flight> flightF = flightsRepository.get(flightId);
+        final ListenableFuture<Trip> flightF = flightsRepository.get(flightId);
         final ListenableFuture<User> fromUserF = usersRepository.get(fromUserId);
         final ListenableFuture<User> toUserF = usersRepository.get(toUserId);
 
 
-        ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
+        ListenableFuture<Tuple3<Trip,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
 
-        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight, User, User>, Recommendation>() {
-            public ListenableFuture<Recommendation> apply(Tuple3<Flight, User, User> t) throws Exception {
+        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Trip, User, User>, Recommendation>() {
+            public ListenableFuture<Recommendation> apply(Tuple3<Trip, User, User> t) throws Exception {
                 User toUser = t.getR3();
                 final Recommendation recom = new Recommendation(t.getR1(), t.getR2());
                 toUser.getRecommendations().add(recom);

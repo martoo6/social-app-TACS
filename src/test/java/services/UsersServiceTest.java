@@ -2,9 +2,9 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.FlightsRepositoryInterface;
+import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
@@ -173,9 +173,9 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        List<Flight> flights = user.getFlights();
-        Flight flight = new Flight();
-        flights.add(flight);
+        List<Trip> trips = user.getTrips();
+        Trip trip = new Trip();
+        trips.add(trip);
 
         when(ur.get(1)).thenReturn(Futures.immediateFuture(user));
 
@@ -183,11 +183,11 @@ public class UsersServiceTest extends GenericTest {
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Flight>> lf = us.getFlights(1);
+        ListenableFuture<List<Trip>> lf = us.getFlights(1);
 
         try {
-            List<Flight> ul = lf.get();
-            assertTrue(ul.contains(flight));
+            List<Trip> ul = lf.get();
+            assertTrue(ul.contains(trip));
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -198,9 +198,9 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        List<Flight> flights = user.getFlights();
-        Flight flight = new Flight();
-        flights.add(flight);
+        List<Trip> trips = user.getTrips();
+        Trip trip = new Trip();
+        trips.add(trip);
 
         when(ur.get(1)).thenReturn(ex.submit(new Callable() {
             public Object call() throws Exception {
@@ -212,7 +212,7 @@ public class UsersServiceTest extends GenericTest {
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Flight>> lf = us.getFlights(1);
+        ListenableFuture<List<Trip>> lf = us.getFlights(1);
 
         try {
             lf.get();
@@ -465,7 +465,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void recommendFlight() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
-        FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
 
 
         User user = new User();
@@ -474,12 +474,12 @@ public class UsersServiceTest extends GenericTest {
         User friend = new User();
         friend.setId(2);
 
-        Flight flight = new Flight();
+        Trip trip = new Trip();
 
         when(ur.get(1)).thenReturn(Futures.immediateFuture(user));
         when(ur.get(2)).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
-        when(fr.get(0)).thenReturn(Futures.immediateFuture(flight));
+        when(fr.get(0)).thenReturn(Futures.immediateFuture(trip));
 
 
         UsersService us = new UsersService();
@@ -490,7 +490,7 @@ public class UsersServiceTest extends GenericTest {
 
         try {
             Recommendation r = lf.get();
-            assertTrue(r.getFlight()==flight);
+            assertTrue(r.getTrip()== trip);
             assertTrue(r.getFromUser() == user);
             assertTrue(r.getState()== RecommendationState.PENDING);
         } catch (Exception e) {
@@ -501,7 +501,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void recommendFlightMissingFlight() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
-        FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
 
 
         User user = new User();
@@ -515,7 +515,7 @@ public class UsersServiceTest extends GenericTest {
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
         when(fr.get(0)).thenReturn(ex.submit(new Callable() {
             public Object call() throws Exception {
-                throw new RuntimeException("Missing Flight");
+                throw new RuntimeException("Missing Trip");
             }
         }));
 
@@ -530,7 +530,7 @@ public class UsersServiceTest extends GenericTest {
             lf.get();
             assertTrue(false);
         } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Missing Flight"));
+            assertTrue(e.getMessage().contains("Missing Trip"));
         }
     }
 

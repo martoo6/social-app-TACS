@@ -1,66 +1,23 @@
 package com.hax.models;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-/**
- * Created by martin on 5/5/15.
- */
-
 public class Flight {
-    private List<Segment> waySegments;
-    private List<Segment> returnSegments;
     private String origin;
     private String destiny;
-    private BigDecimal totalPrice;
-    private String state;
-    private Integer id;
+    private String airline;
+    private String flightNum;
+    private String departureTime; //TODO: Pasar a dateTime (posiblemente JODA)
+    private String duration;//TODO: Pasar a dateTime (posiblemente JODA)
 
-    //Dummy Contructor
-    public Flight() {
-    }
+    //Dummy Contructor para poder funcionar con la Inyeccion de Dependencias
+    public Flight(){}
 
-    public Flight(List<Segment> waySegments, List<Segment> returnSegments, BigDecimal totalPrice, String origin, String destiny) {
-        this.waySegments = waySegments;
-        this.returnSegments = returnSegments;
-        this.totalPrice = totalPrice;
-        this.state = "Sin Publicar";
-    }
-
-    public List<Segment> getWaySegments() {
-        return waySegments;
-    }
-
-    public void setWaySegments(List<Segment> waySegments) {
-        this.waySegments = waySegments;
-    }
-
-    public List<Segment> getReturnSegments() {
-        return returnSegments;
-    }
-
-    public void setReturnSegments(List<Segment> returnSegments) {
-        this.returnSegments = returnSegments;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public Integer getId() { return id; }
-
-    public void setId(Integer id) { this.id = id; }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
+    public Flight(String origin, String destiny, String airline, String flightNum, String departureTime, String duration) {
+        this.origin = origin;
+        this.destiny = destiny;
+        this.airline = airline;
+        this.flightNum = flightNum;
+        this.departureTime = departureTime;
+        this.duration = duration;
     }
 
     public String getOrigin() {
@@ -78,5 +35,36 @@ public class Flight {
     public void setDestiny(String destiny) {
         this.destiny = destiny;
     }
-}
 
+    public String getAirline() {
+        return airline;
+    }
+
+    public void setAirline(String airline) {
+        this.airline = airline;
+    }
+
+    public String getFlightNum() {
+        return flightNum;
+    }
+
+    public void setFlightNum(String flightNum) {
+        this.flightNum = flightNum;
+    }
+
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+}

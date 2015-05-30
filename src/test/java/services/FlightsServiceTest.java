@@ -3,11 +3,11 @@ package services;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnectorInterface;
-import com.hax.connectors.FlightsRepositoryInterface;
+import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.User;
-import com.hax.services.FlightsService;
+import com.hax.services.TripsService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
@@ -37,7 +37,7 @@ public class FlightsServiceTest extends GenericTest {
         }));
 
 
-        FlightsService fs = new FlightsService();
+        TripsService fs = new TripsService();
         fs.despegarConnector = dc;
 
         ListenableFuture<String> lf = fs.getFlights("EZE", "MIA", "2015-10-10", "2015-11-10");
@@ -61,7 +61,7 @@ public class FlightsServiceTest extends GenericTest {
         }));
 
 
-        FlightsService fs = new FlightsService();
+        TripsService fs = new TripsService();
         fs.despegarConnector = dc;
 
         ListenableFuture<String> lf = fs.getFlights("EZE", "MIA", "2015-10-10", "2015-11-10");
@@ -85,7 +85,7 @@ public class FlightsServiceTest extends GenericTest {
         }));
 
 
-        FlightsService fs = new FlightsService();
+        TripsService fs = new TripsService();
         fs.despegarConnector = dc;
 
         ListenableFuture<String> lf = fs.getFlights("ZZZ", "MIA", "2015-11-10", "2015-10-10");
@@ -100,25 +100,25 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void createFlight() {
-        FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
 
         when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
-        when(fr.insert(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
-            public Flight call() throws Exception {
-                return new Flight();
+        when(fr.insert(any(Trip.class))).thenReturn(ex.submit(new Callable<Trip>() {
+            public Trip call() throws Exception {
+                return new Trip();
             }
         }));
 
 
-        FlightsService fs = new FlightsService();
+        TripsService fs = new TripsService();
         fs.flightsRepository = fr;
         fs.userRepository = ur;
 
-        ListenableFuture<Flight> lf = fs.createFlight(new Flight(), 0);
+        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), 0);
 
         try {
             lf.get();
@@ -130,7 +130,7 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void createFlightFailed() {
-        FlightsRepositoryInterface fr = mock(FlightsRepositoryInterface.class);
+        TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
@@ -138,18 +138,18 @@ public class FlightsServiceTest extends GenericTest {
         when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
 
-        when(fr.insert(any(Flight.class))).thenReturn(ex.submit(new Callable<Flight>() {
-            public Flight call() throws Exception {
+        when(fr.insert(any(Trip.class))).thenReturn(ex.submit(new Callable<Trip>() {
+            public Trip call() throws Exception {
                 throw  new RuntimeException("Error");
             }
         }));
 
 
-        FlightsService fs = new FlightsService();
+        TripsService fs = new TripsService();
         fs.flightsRepository = fr;
         fs.userRepository = ur;
 
-        ListenableFuture<Flight> lf = fs.createFlight(new Flight(), 0);
+        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), 0);
 
         try {
             lf.get();

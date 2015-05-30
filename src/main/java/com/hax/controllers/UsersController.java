@@ -25,7 +25,7 @@ public class UsersController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{userID}")
-    public void getUser(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public void getUser(@PathParam("token") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
     {
         addControllerCallback(usersService.getUser(userId), asyncResponse);
     }

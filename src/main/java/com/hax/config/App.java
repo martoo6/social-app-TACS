@@ -25,9 +25,10 @@ public class App extends ResourceConfig {
                 //-------------Connectors y Repositorios----------
                 bind(DespegarConnector.class).to(DespegarConnectorInterface.class);
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
-                bind(FlightsInMemoryRepository.class).to(FlightsRepositoryInterface.class);
+                bind(TripsInMemoryRepository.class).to(TripsRepositoryInterface.class);
                 bind(UsersInMemoryRepository.class).to(UsersRepositoryInterface.class);
                 //-------------------Servicios--------------
+                bind(TripsService.class).to(TripsServiceInterface.class);
                 bind(FlightsService.class).to(FlightsServiceInterface.class);
                 bind(AirportsService.class).to(AirportsServiceInterface.class);
                 bind(UsersService.class).to(UsersServiceInterface.class);

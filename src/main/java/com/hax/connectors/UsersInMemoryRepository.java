@@ -13,6 +13,14 @@ import java.util.List;
 public class UsersInMemoryRepository implements UsersRepositoryInterface {
     List<User> collection = new ArrayList<User>();
 
+    public UsersInMemoryRepository() {
+        User u = new User();
+        u.setId(0);
+        u.setUsername("UsernameDePrueba");
+        u.setPassword("PasswordDePrueba");
+        collection.add(u);
+    }
+
     public ListenableFuture<User> insert(final User user) {
         if (user == null) return Futures.immediateFuture(new User());
         user.setId(collection.size());
