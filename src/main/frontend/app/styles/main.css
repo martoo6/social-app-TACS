@@ -1,5 +1,5 @@
 html, body{
-    height: calc(100% - 73px - 50px); 
+    height: calc(100% - 73px - 50px);
     margin: 0px;
     padding: 0px;
 }
@@ -112,4 +112,9 @@ html, body{
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.dateSelection{
+  font-weight: bold;
+  text-align: center;
 }

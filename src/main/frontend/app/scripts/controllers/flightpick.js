@@ -12,6 +12,27 @@ angular.module('frontendApp')
 
     $scope.flightOptions = [];
 
+
+    //--------------------
+
+    var locations = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: 'autocomplete/airports/buenos',
+      remote: {
+        url: 'autocomplete/airports/%QUERY',
+        wildcard: '%QUERY'
+      }
+    });
+
+    $('.typeahead').typeahead(null, {
+      name: 'select-location',
+      display: 'description',
+      source: locations
+    });
+
+    //--------------------
+
     $scope.flightClick = function(flight){
       $scope.selectedFlight = flight;
       $('#modalCrear').modal();
