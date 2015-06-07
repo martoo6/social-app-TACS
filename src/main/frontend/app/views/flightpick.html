@@ -1,63 +1,75 @@
-<div class="row"   style="margin-bottom:15px;">
-    <div class="col-xs-6">
-        <strong>Salida:</strong>
-        <input id="leaveDate" class="datepicker" data-provide="datepicker" data-date-format="dd/mm/yyyy" style="font-weight: bold;text-align: center" />
+<div ng-init="init()">
+    <div class="row"   style="margin-bottom:15px;">
+        <div class="col-xs-6">
+            <strong>Origen:</strong>
+            <location-selection data-change="actOnChange" data-id="origin" selection="originLocation"></location-selection>
+        </div>
+        <div class="col-xs-6">
+            <strong>Destino:</strong>
+            <location-selection data-change="actOnChange" data-id="destiny" selection="destinyLocation"></location-selection>
+        </div>
     </div>
-    <div class="col-xs-6">
-        <strong>Vuelta:</strong>
-        <input id="returnDate" class="datepicker" data-provide="datepicker" data-date-format="dd/mm/yyyy" style="font-weight: bold;text-align: center" />
-    </div>
-</div>
-
-<div style="height:100%;overflow-y:auto;">
-    <img id="spinner" class="center-block" style="display:none;position:relative;top:calc(50% - 50px);" src="images/spinner.gif" />
-
-    <div ng-repeat="trip in flightOptions">
-        <div class="well selectableFlight">
-            <div class="row" ng-click="flightClick(trip)">
-                <div class="col-xs-5" ng-init="wt = trip.waySegment" style="border-right:dotted">
-                    <div style="text-align:center"><h4>Ida</h4></div>
-                    <div><strong>Origen: </strong><span>{{wt.origin}}</span></div>
-                    <div><strong>Destino: </strong><span>{{wt.destiny}}</span></div>
-                    <div><strong>Aerolinea: </strong><span>{{wt.airline}}</span></div>
-                    <div><strong>Nro Vuelo: </strong><span>{{wt.flightNum}} </span></div>
-                    <div><strong>Salida: </strong><span>{{wt.departureTime}}</span></div>
-                    <div><strong>Duracion: </strong><span>{{wt.duration}}</span></div>
-                </div>
-                <div class="col-xs-5" ng-init="rt = trip.returnSegment" style="border-right:dotted">
-                    <div style="text-align:center"><h4>Vuelta</h4></div>
-                    <div><strong>Origen: </strong><span>{{rt.origin}}</span></div>
-                    <div><strong>Destino: </strong><span>{{rt.destiny}}</span></div>
-                    <div><strong>Aerolinea: </strong><span>{{rt.airline}}</span></div>
-                    <div><strong>Nro Vuelo: </strong><span>{{rt.flightNum}}</span></div>
-                    <div><strong>Salida: </strong><span>{{rt.departureTime}}</span></div>
-                    <div><strong>Duracion: </strong><span>{{rt.duration}}</span></div>
-                </div>
-                <div class="col-xs-2">
-                    <div style="margin-top:39px"><strong>Precio: </strong>${{trip.price}}</div>
-                </div>
-            </div>
+    <div class="row"   style="margin-bottom:15px;">
+        <div class="col-xs-6">
+            <strong>Salida:</strong>
+            <date-selection data-id="leaveDate" selection="leaveDate"></date-selection>
+        </div>
+        <div class="col-xs-6">
+            <strong>Vuelta:</strong>
+            <date-selection data-id="returnDate" selection="returnDate"></date-selection>
         </div>
     </div>
 
-    <h2 id="error" style="color:red;text-align:center;position:relative;top:calc(50% - 16px)"></h2>
-</div>
+    <div style="height:100%;overflow-y:auto;">
+        <img id="spinner" class="center-block" style="display:none;position:relative;top:calc(50% - 50px);" src="images/spinner.gif" />
 
-<!--modal para preguntarle al usuario si quiere crear el vuelo-->
-<div class="modal fade" id="modalCrear">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Guardar Vuelo</h4>
-      </div>
-      <div class="modal-body">
-        <p>Desea guardar este vuelo?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" ng-click="guardarVuelo()">Guardar</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+        <div ng-repeat="trip in flightOptions">
+            <div class="well selectableFlight">
+                <div class="row" ng-click="flightClick(trip)">
+                    <div class="col-xs-5" ng-init="wt = trip.wayFlights" style="border-right:dotted">
+                        <div style="text-align:center"><h4>Ida</h4></div>
+                        <div><strong>Origen: </strong><span>{{wt.origin}}</span></div>
+                        <div><strong>Destino: </strong><span>{{wt.destiny}}</span></div>
+                        <div><strong>Aerolinea: </strong><span>{{wt.airline}}</span></div>
+                        <div><strong>Nro Vuelo: </strong><span>{{wt.flightNum}} </span></div>
+                        <div><strong>Salida: </strong><span>{{wt.departureTime}}</span></div>
+                        <div><strong>Duracion: </strong><span>{{wt.duration}}</span></div>
+                    </div>
+                    <div class="col-xs-5" ng-init="rt = trip.returnFlights" style="border-right:dotted">
+                        <div style="text-align:center"><h4>Vuelta</h4></div>
+                        <div><strong>Origen: </strong><span>{{rt.origin}}</span></div>
+                        <div><strong>Destino: </strong><span>{{rt.destiny}}</span></div>
+                        <div><strong>Aerolinea: </strong><span>{{rt.airline}}</span></div>
+                        <div><strong>Nro Vuelo: </strong><span>{{rt.flightNum}}</span></div>
+                        <div><strong>Salida: </strong><span>{{rt.departureTime}}</span></div>
+                        <div><strong>Duracion: </strong><span>{{rt.duration}}</span></div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div style="margin-top:39px"><strong>Precio: </strong>${{trip.price}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="error" style="color:red;text-align:center;position:relative;top:calc(50% - 16px)"></h2>
+    </div>
+
+    <!--modal para preguntarle al usuario si quiere crear el vuelo-->
+    <div class="modal fade" id="modalCrear">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Guardar Vuelo</h4>
+          </div>
+          <div class="modal-body">
+            <p>Desea guardar este vuelo?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" ng-click="guardarVuelo()">Guardar</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
 </div>

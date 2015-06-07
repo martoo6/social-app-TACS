@@ -15,7 +15,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    "angucomplete-alt"
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -38,4 +39,22 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  }).directive('locationSelection',function(){
+    return{
+      scope: {
+        selection: '=',
+        id: '@id'
+      },
+      restrict: 'AE',
+      templateUrl: 'views/locationSelection.html'
+    }
+  }).directive('dateSelection',function(){
+    return{
+      scope: {
+        selection: '=',
+        id: '@id'
+      },
+      restrict: 'AE',
+      templateUrl: 'views/dateSelection.html'
+    }
   });
