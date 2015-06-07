@@ -1,36 +1,36 @@
-<h4 ng-show="myFlights && myFlights.length" style="text-align:center">Mis Vuelos</h4>
-<h4 ng-hide="myFlights && myFlights.length" style="text-align:center">No hay vuelos guardados :(</h4>
-<div style="height:100%;overflow-y:auto;">
+<h4 ng-show="myTrips && myTrips.length" style="text-align:center">Mis Vuelos</h4>
+<h4 ng-hide="myTrips && myTrips.length" style="text-align:center">No hay vuelos guardados :(</h4>
+<div style="height:100%">
 
     <img id="spinner" class="center-block" style="display:none;position:relative;top:calc(50% - 50px);" src="images/spinner.gif" />
 
-    <div ng-repeat="trip in myFlights">
-        <div class="well selectableFlight">
-            <div class="row" ng-click="showMap(trip)">
-                <div class="col-xs-5" ng-init="wt = trip.waySegment" style="border-right:dotted">
-                    <div style="text-align:center"><h4>Ida</h4></div>
-                    <div><strong>Origen: </strong><span>{{wt.origin}}</span></div>
-                    <div><strong>Destino: </strong><span>{{wt.destiny}}</span></div>
-                    <div><strong>Aerolinea: </strong><span>{{wt.airline}}</span></div>
-                    <div><strong>Nro Vuelo: </strong><span>{{wt.flightNum}} </span></div>
-                    <div><strong>Salida: </strong><span>{{wt.departureTime}}</span></div>
-                    <div><strong>Duracion: </strong><span>{{wt.duration}}</span></div>
-                </div>
-                <div class="col-xs-5" ng-init="rt = trip.returnSegment" style="border-right:dotted">
-                    <div style="text-align:center"><h4>Vuelta</h4></div>
-                    <div><strong>Origen: </strong><span>{{rt.origin}}</span></div>
-                    <div><strong>Destino: </strong><span>{{rt.destiny}}</span></div>
-                    <div><strong>Aerolinea: </strong><span>{{rt.airline}}</span></div>
-                    <div><strong>Nro Vuelo: </strong><span>{{rt.flightNum}}</span></div>
-                    <div><strong>Salida: </strong><span>{{rt.departureTime}}</span></div>
-                    <div><strong>Duracion: </strong><span>{{rt.duration}}</span></div>
-                </div>
-                <div class="col-xs-2">
-                    <div style="margin-top:39px"><strong>Precio: </strong>${{trip.price}}</div>
+    <div ng-repeat="trip in myTrips">
+            <div class="well selectableFlight" ng-click="showMap(trip)">
+                <div class="row">
+                    <div class="col-xs-5" ng-init="wt = trip.wayFlights.slice(1).pop()" style="border-right:dotted">
+                        <div style="text-align:center"><h4>Ida</h4></div>
+                        <div><strong>Origen: </strong><span>{{trip.origin}}</span></div>
+                        <div><strong>Destino: </strong><span>{{trip.destiny}}</span></div>
+                        <div><strong>Aerolinea: </strong><span>{{wt.airline}}</span></div>
+                        <div><strong>Nro Vuelo: </strong><span>{{wt.flightNum}} </span></div>
+                        <div><strong>Salida: </strong><span>{{wt.departureTime}}</span></div>
+                        <div><strong>Duracion: </strong><span>{{trip.wayDuration}}</span></div>
+                    </div>
+                    <div class="col-xs-5" ng-init="rt = trip.returnFlights.slice(-1).pop()" style="border-right:dotted">
+                        <div style="text-align:center"><h4>Vuelta</h4></div>
+                        <div><strong>Origen: </strong><span>{{trip.destiny}}</span></div>
+                        <div><strong>Destino: </strong><span>{{trip.origin}}</span></div>
+                        <div><strong>Aerolinea: </strong><span>{{rt.airline}}</span></div>
+                        <div><strong>Nro Vuelo: </strong><span>{{rt.flightNum}}</span></div>
+                        <div><strong>Salida: </strong><span>{{rt.departureTime}}</span></div>
+                        <div><strong>Duracion: </strong><span>{{trip.returnDuration}}</span></div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div style="margin-top:39px"><strong>Precio: </strong>${{trip.price}}</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <h2 id="error" style="color:red;text-align:center;position:relative;top:calc(50% - 16px)"></h2>
 </div>

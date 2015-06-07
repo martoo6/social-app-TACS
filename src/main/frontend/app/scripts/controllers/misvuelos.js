@@ -8,45 +8,86 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('MisvuelosCtrl', function ($scope, $http) {
+  .controller('MisvuelosCtrl', function ($scope, $http, $q) {
 
-    function dibujarMapa(){
-      if($('#modalMap').hasClass('in') && $scope.originLtLg && $scope.destinyLtLg){
-        var mapa = new google.maps.Map($('#mapa')[0]);
+    $scope.wayStopPoints = []; 
+    $scope.returnStopPoints = []; 
+    $scope.myTrips = [];
+    
+    function drawMap(){
+      var points = $scope.wayStopPoints
+                      .sort(function(a, b){ return a.ord > b.ord })
+                      .map(function(el){ return el.gPoint }); 
+      var mapa = new google.maps.Map($('#mapa')[0]);
 
-        var trazaVuelo = new google.maps.Polyline({ path: [$scope.originLtLg, $scope.destinyLtLg],
-                                                    geodesic: true,
-                                                    strokeColor: '#FF0000',
-                                                    strokeOpacity: 1.0,
-                                                    strokeWeight: 2,
-                                                    clickable: false
-                                                });
-        trazaVuelo.setMap(mapa);
+      var trazaVuelo = new google.maps.Polyline({ path: points,
+                                                  geodesic: true,
+                                                  strokeColor: '#FF0000',
+                                                  strokeOpacity: 1.0,
+                                                  strokeWeight: 2,
+                                                  clickable: false
+                                              });
+      trazaVuelo.setMap(mapa);
 
-        //AJUSTA EL ZOOM PARA QUE SE VEA EL RECORRIDO
-        var bounds = new google.maps.LatLngBounds();
-        trazaVuelo.getPath().forEach(function(bound) {bounds.extend(bound);})
-        mapa.fitBounds(bounds);
-      }
+      //AJUSTA EL ZOOM PARA QUE SE VEA EL RECORRIDO
+      var bounds = new google.maps.LatLngBounds();
+      trazaVuelo.getPath().forEach(function(bound) {bounds.extend(bound);});
+      mapa.fitBounds(bounds);
     }
 
-    $scope.showMap = function(flight){
+    $scope.showMap = function(trip){
+
+      //stopPoints refer to when a plane stops at an airport 
+      //but its not the final destination
+      $scope.returnStopPoints = $scope.wayStopPoints = [];
       $('#modalMap').modal();
-
-      $.get('api/v1/airports/' + flight.wayFlights[0].origin, function(originAirport){
-        $scope.originLtLg = new google.maps.LatLng(originAirport.lat, originAirport.lon);
-        dibujarMapa();
-      });
-
-      $.get('api/v1/airports/' + flight.wayFlights[0].destiny, function(destinyAirport){
-        $scope.destinyLtLg = new google.maps.LatLng(destinyAirport.lat, destinyAirport.lon);
-        dibujarMapa()
-      });
+      
+      var wayStopPromises = flightsStopsPromises(trip.wayFlights);
+      //var returnStopPromises = flightsStopsPromises(trip.wayFlights);
+      
+      $q.all(wayStopPromises).then(drawMap);
     };
+    
+    
+    //////////////////////////////////////////
+    ///////////////// HELPERS ////////////////
+    //////////////////////////////////////////
 
-    $http
-      .get('api/v1/trips/all')
-      .success(function(flights){
-        $scope.myFlights = flights;
-      });
+    
+    function flightsStopsPromises(flights){
+      
+      var ord = 0;
+      
+      return flights.reduce(function(stops, flight){
+        return stops.concat([
+          makeAirportStopPromise(flight.origin, ord++),
+          makeAirportStopPromise(flight.destiny, ord++)
+        ]);
+      }, []);
+    }
+    
+    function makeAirportStopPromise(airportCode, ordNum){
+      
+      return $http.get('api/v1/airports/' + airportCode)
+              .success(function recordAirportStop(airport){
+                $scope.wayStopPoints.push({ //change here needed to implement the return polyline
+                  ord: ordNum, 
+                  gPoint: new google.maps.LatLng(airport.lat, airport.lon)
+                });
+              });
+    }
+    
+
+    //////////////////////////////////////////
+    ////////////// INIT FUNCTION /////////////
+    //////////////////////////////////////////
+    
+    
+    (function init(){
+      
+      $http.get('api/v1/trips/all')
+        .success(function(trips){
+          $scope.myTrips = trips;
+        });
+    }());
   });

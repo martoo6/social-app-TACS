@@ -29,7 +29,7 @@ public class TripsRepositoryTest extends GenericTest {
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
-        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
 
         ListenableFuture<Trip> lf = dc.insert(trip);
 
@@ -49,7 +49,7 @@ public class TripsRepositoryTest extends GenericTest {
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
-        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
 
         dc.insert(trip).get();
 
@@ -83,7 +83,7 @@ public class TripsRepositoryTest extends GenericTest {
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
-        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA");
+        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
 
         dc.insert(trip).get();
 

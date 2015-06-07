@@ -15,16 +15,36 @@ public class Trip {
     private BigDecimal price;
     private String state;
     private Integer id;
+    private String wayDuration;
+    private String returnDuration;
+
 
     //Dummy Contructor
-    public Trip() {
-    }
+    public Trip() {}
 
-    public Trip(List<Flight> wayFlights, List<Flight> returnFlights, BigDecimal price, String origin, String destiny) {
+    public Trip(List<Flight> wayFlights, List<Flight> returnFlights, BigDecimal price, String origin, String destiny, String wayDuration, String returnDuration) {
+        this.wayDuration = wayDuration;
+        this.returnDuration = returnDuration;
         this.wayFlights = wayFlights;
         this.returnFlights = returnFlights;
         this.price = price;
         this.state = "Sin Publicar";
+    }
+    
+    public void setWayDuration(String wayDuration){
+        this.wayDuration = wayDuration;
+    }
+    
+    public String getWayDuration(){
+        return this.wayDuration;
+    }
+    
+    public void setReturnDuration(String returnDuration){
+        this.returnDuration = returnDuration;
+    }
+    
+    public String getReturnDuration(){
+        return this.returnDuration;
     }
 
     public List<Flight> getWayFlights() {

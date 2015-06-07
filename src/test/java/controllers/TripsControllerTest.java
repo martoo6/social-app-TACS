@@ -63,6 +63,8 @@ public class TripsControllerTest extends GenericTest {
                 "     \"departureTime\":\"09-06-2015 06:10\",\n" +
                 "     \"duration\":\"50m\"\n" +
                 "     }],\n" +
+                "     \"wayDuration\":\"50m\",\n" +
+                "     \"returnDuration\":\"50m\",\n" +
                 "     \"price\":\"532\",\n" +
                 "     \"origin\":\"MNT, Montevideo, Uruguay\",\n" +
                 "     \"destiny\":\"EZE, Buenos Aires, Argentina\"\n" +

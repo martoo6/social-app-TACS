@@ -8,18 +8,32 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('FlightpickCtrl', function ($scope, $http, geolocatorFactory) {
+  .controller('FlightpickCtrl', function ($scope, $http) {
 
-    $scope.flightOptions = [];
+    $scope.originLocation;
+    $scope.destinyLocation;
+    $scope.leaveDate;
+    $scope.returnDate;
+    $scope.tripOptions = [];
+    
+      
+    $scope.init = function(){
+      $(document).on('blur', '.angucomplete', $scope.actOnChange);
+      
+      $(document).on('changeDate', '.datepicker', function(){
+        $(this).datepicker('hide');
+        $scope.actOnChange();
+      });
+    };
 
     $scope.flightClick = function(flight){
       $scope.selectedFlight = flight;
       $('#modalCrear').modal();
     };
 
-    $scope.guardarVuelo = function(){
+    $scope.saveTrip = function(){
 
-      //si no es exactamente como lo pide Jersey se rompe
+      //delete extra attributes, otherwise jersey wont save
       delete $scope.selectedFlight.$$hashKey;
 
       $.ajax({
@@ -36,60 +50,48 @@ angular.module('frontendApp')
       })
     };
 
-    function actOnDateChange(){
-      $(this).datepicker('hide');
-      var returnDate = $('#returnDate').val();
-      var leaveDate = $('#leaveDate').val();
-
-      if( returnDate && leaveDate ){
-
+    //acts on input change: fetches itineraries and maps them to backend
+    //structure before presenting them to the user to choose one
+    $scope.actOnChange = function(){  
+      if($scope.returnDate && $scope.leaveDate && $scope.originLocation && $scope.destinyLocation){
         $('#spinner').show();
         $('#error').empty();
 
         $http
         .get('api/v1/flights', {
           params: {
-            origin: $scope.originAirportCode,
-            destiny: $scope.destinyAirportCode,
-            arrival: moment(returnDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-            departure: moment(leaveDate,'DD/MM/YYYY').format('YYYY-MM-DD')
+            origin: $scope.originLocation.originalObject.code,
+            destiny: $scope.destinyLocation.originalObject.code,
+            arrival: moment($scope.returnDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+            departure: moment($scope.leaveDate,'DD/MM/YYYY').format('YYYY-MM-DD')
           }
         })
-        .success(function(flightOptions){
-          $scope.flightOptions = flightOptions.items.map(function(item) {
+        .success(function(tripOptions){
+          $scope.tripOptions = tripOptions.items.map(function(item) {
+            
+            //we are only considering the first choices at the moment
             var outboundChoice = item.outbound_choices[0];
             var inboundChoice = item.inbound_choices[0];
-            var outboundFirstSeg = outboundChoice.segments[0];
-            var inboundFirstSeg = inboundChoice.segments[0];
-
+            
             return {
-              wayFlights: [{
-                origin: $scope.originAirportCode,
-                destiny: $scope.destinyAirportCode,
-                airline: outboundFirstSeg.airline,
-                flightNum: outboundFirstSeg.flight_id,
-                departureTime: moment(outboundFirstSeg.departure_datetime, "YYYY-MM-DDTHH:mm:ss.SSSSZ").format('DD-MM-YYYY HH:mm'),
-                duration: outboundChoice.duration + ' hs'
-              }],
-              returnFlights: [{
-                origin: $scope.destinyAirportCode,
-                destiny: $scope.originAirportCode,
-                airline: inboundFirstSeg.airline,
-                flightNum: inboundFirstSeg.flight_id,
-                departureTime: moment(inboundFirstSeg.departure_datetime, "YYYY-MM-DDTHH:mm:ss.SSSSZ").format('DD-MM-YYYY HH:mm'),
-                duration: inboundChoice.duration + ' hs'
-              }],
-              price: item.price_detail.total
+              origin: $scope.originLocation.originalObject.code,
+              destiny: $scope.destinyLocation.originalObject.code,
+              price: item.price_detail.total,
+              
+              wayDuration: outboundChoice.duration + ' hs',
+              returnDuration: inboundChoice.duration + ' hs',
+              
+              wayFlights: choiceToSegments(outboundChoice),
+              returnFlights: choiceToSegments(inboundChoice),
             };
           });
 
-          if(!$scope.flightOptions.length)
-            $('#error').append('No se encontraron resultados<br>' +
-                  '<a style="text-decoration:underline" href="#/destinyMapPick">Buscar otro destinto</a>');
+          if(!$scope.tripOptions.length)
+            $('#error').append('No se encontraron resultados<br>');
         })
         .error(function(error){
-          $scope.flightOptions = [];
-          $('#error').append('ERROR<br><br><a style="text-decoration:underline" href="#/destinyMapPick">Volver</a> a intentar.<br><br>');
+          $scope.tripOptions = [];
+          $('#error').append('ERROR<br><br>');
           $('#error').append(error);
         })
         .finally(function(){
@@ -97,32 +99,22 @@ angular.module('frontendApp')
         });
       }
     };
+    
+    //////////////////////// HELPERS //////////////////////
 
-    $('#leaveDate').datepicker().on('changeDate', actOnDateChange);
-    $('#returnDate').datepicker().on('changeDate', actOnDateChange);
-
-    navigator.geolocation.getCurrentPosition(function(pos){
-      $http
-      .get('api/v1/airports', {
-        params: {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude
-        }
-      })
-      .success(function(airport){
-        $scope.originAirportCode = airport.code;
+    //maps choice(inboundChoice/outboundChoice)
+    //segments into flights consumable by the backend
+    function choiceToSegments(choice){
+      return choice.segments.map(function(segment){
+        return {
+          origin: segment.from,
+          destiny: segment.to,
+          airline: segment.airline,
+          flightNum: segment.flight_id,
+          departureTime: moment(segment.departure_datetime, "YYYY-MM-DDTHH:mm:ss.SSSSZ").format('DD-MM-YYYY HH:mm'),
+          duration: segment.duration + ' hs'
+        };
       });
-    });
-
-    $http
-    .get('api/v1/airports', {
-      params: {
-        latitude: geolocatorFactory.getDestinyCoords().latitude,
-        longitude: geolocatorFactory.getDestinyCoords().longitude
-      }
-    })
-    .success(function(airport){
-      $scope.destinyAirportCode = airport.code;
-    });
-
-  });
+    }
+});
+    

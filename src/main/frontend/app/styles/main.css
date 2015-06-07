@@ -10,10 +10,11 @@ html, body{
     padding-bottom: 60px;
 }
 
+.selectableFlight:first-of-type{
+    margin-top: 10px;
+}
 .selectableFlight{
     cursor:pointer;
-    margin-left: 10px;
-    margin-right: 10px
 }
 .selectableFlight:hover{
     background-color:#F5F5FD;
@@ -63,10 +64,15 @@ html, body{
 
 /* Custom page footer */
 .footer {
+  width: 100%;
   padding-top: 19px;
   margin-top: 53px;
   color: #777;
   border-top: 1px solid #e5e5e5;
+  bottom: 0px;
+  z-index: 1;
+  position: fixed;
+  background-color: inherit;
 }
 
 .container-narrow > hr {
@@ -112,4 +118,22 @@ html, body{
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.angucomplete-dropdown{
+    width:100%;
+}
+
+.angucomplete-dropdown > div:hover{
+    background-color: #ADD8E6 !important;
+}
+
+.angucomplete-dropdown > div:nth-child(even){
+   background-color: #e7e7e7;
+}
+
+.ourDatePickers{
+    width:100%;
+    font-weight: bold;
+    text-align: center
 }
