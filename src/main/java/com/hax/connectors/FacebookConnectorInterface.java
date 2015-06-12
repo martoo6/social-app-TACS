@@ -8,4 +8,5 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 public interface FacebookConnectorInterface {
     ListenableFuture<String> getLongLivedToken(String shortLivedToken);
+    ListenableFuture<Boolean> verifyAccessToken(String token);
 }

@@ -14,6 +14,24 @@ import javax.ws.rs.core.Response;
 
 public class FacebookConnector implements FacebookConnectorInterface{
 
+
+    public ListenableFuture<Boolean> verifyAccessToken(String token){
+        String url = "https://graph.facebook.com/me";
+        ListenableFuture<Response> future = RxListenableFuture.newClient()
+                .target(url)
+                .queryParam("access_token", token)
+                .request()
+                .rx()
+                .get();
+
+        return Futures.transform(future, new Function<Response, Boolean>() {
+            public Boolean apply(Response response) {
+                return response.getStatus()==Response.Status.OK.getStatusCode();
+            }
+        });
+    }
+
+
     public ListenableFuture<String> getLongLivedToken(String shortLivedToken) {
         String url = "https://www.facebook.com/oauth/access_token";
         ListenableFuture<Response> future = RxListenableFuture.newClient()
