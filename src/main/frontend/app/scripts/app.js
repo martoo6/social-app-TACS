@@ -16,6 +16,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'facebookUtils',
     "angucomplete-alt"
   ])
   .config(function ($routeProvider) {
@@ -26,20 +27,24 @@ angular
       })
       .when('/destinyMapPick', {
         templateUrl: 'views/destinymappick.html',
-        controller: 'DestinymappickCtrl'
+        controller: 'DestinymappickCtrl',
+        needAuth: true
       })
       .when('/flightPick', {
         templateUrl: 'views/flightpick.html',
-        controller: 'FlightpickCtrl'
+        controller: 'FlightpickCtrl',
+        needAuth: true
       })
       .when('/misVuelos', {
         templateUrl: 'views/misvuelos.html',
-        controller: 'MisvuelosCtrl'
+        controller: 'MisvuelosCtrl',
+        needAuth: true
       })
       .otherwise({
         redirectTo: '/'
       });
-  }).directive('locationSelection',function(){
+  })
+  .directive('locationSelection',function(){
     return{
       scope: {
         selection: '=',
@@ -47,8 +52,9 @@ angular
       },
       restrict: 'AE',
       templateUrl: 'views/locationSelection.html'
-    }
-  }).directive('dateSelection',function(){
+    };
+  })
+  .directive('dateSelection',function(){
     return{
       scope: {
         selection: '=',
@@ -56,5 +62,25 @@ angular
       },
       restrict: 'AE',
       templateUrl: 'views/dateSelection.html'
-    }
+    };
+  })
+  .constant('facebookConfigSettings', {
+    'appID' : '565625596912348',
+    'routingEnabled' : true
+  })
+  .run(function ($rootScope, facebookUser){
+    $rootScope.$on('fbLoginSuccess', function(name, response) {
+      facebookUser.then(function(user) {
+        user.api('/me').then(function(response) {
+          $rootScope.loggedInUser = response;
+        });
+      });
+    });
+
+    $rootScope.$on('fbLogoutSuccess', function() {
+      $rootScope.$apply(function() {
+        $rootScope.loggedInUser = {};
+      });
+    });
   });
+  
