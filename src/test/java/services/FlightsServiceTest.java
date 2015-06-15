@@ -29,12 +29,7 @@ public class FlightsServiceTest extends GenericTest {
     public void getValidFlights() {
         DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
-        when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                //TODO: INgresar resuesta correcta, robalmente un POJO
-                return "";
-            }
-        }));
+        when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(Futures.immediateFuture(""));
 
 
         TripsService fs = new TripsService();
@@ -54,11 +49,7 @@ public class FlightsServiceTest extends GenericTest {
     public void getFlightsWrongDates() {
         DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
-        when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                throw new RuntimeException("400 !!!");
-            }
-        }));
+        when(dc.getFlightsAsync("EZE", "MIA", "2015-10-10", "2015-11-10")).thenReturn(Futures.<String>immediateFailedFuture(new RuntimeException("Error")));
 
 
         TripsService fs = new TripsService();
@@ -78,11 +69,7 @@ public class FlightsServiceTest extends GenericTest {
     public void getFlightsWrongDestiny() {
         DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
-        when(dc.getFlightsAsync("ZZZ", "MIA", "2015-11-10", "2015-10-10")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                throw new RuntimeException("400 !!!");
-            }
-        }));
+        when(dc.getFlightsAsync("ZZZ", "MIA", "2015-11-10", "2015-10-10")).thenReturn(Futures.<String>immediateFailedFuture(new RuntimeException("Error")));
 
 
         TripsService fs = new TripsService();
@@ -107,11 +94,7 @@ public class FlightsServiceTest extends GenericTest {
 
         when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
-        when(fr.insert(any(Trip.class))).thenReturn(ex.submit(new Callable<Trip>() {
-            public Trip call() throws Exception {
-                return new Trip();
-            }
-        }));
+        when(fr.insert(any(Trip.class))).thenReturn(Futures.immediateFuture(new Trip()));
 
 
         TripsService fs = new TripsService();
@@ -138,11 +121,7 @@ public class FlightsServiceTest extends GenericTest {
         when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
 
-        when(fr.insert(any(Trip.class))).thenReturn(ex.submit(new Callable<Trip>() {
-            public Trip call() throws Exception {
-                throw  new RuntimeException("Error");
-            }
-        }));
+        when(fr.insert(any(Trip.class))).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Error")));
 
 
         TripsService fs = new TripsService();

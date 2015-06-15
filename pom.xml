@@ -10,13 +10,22 @@
 
   <properties>
     <jettyVersion>9.2.10.v20150310</jettyVersion>
+      <appengine.version>1.9.21</appengine.version>
+      <app.id>social-app-975</app.id>
+      <app.version>1</app.version>
+      <gcloud.plugin.version>0.9.58.v20150505</gcloud.plugin.version>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
+  <prerequisites>
+    <maven>3.1.0</maven>
+  </prerequisites>
+
   <dependencies>
     <dependency>
-	<groupId>org.json</groupId>
-	<artifactId>json</artifactId>
-	<version>20090211</version>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20090211</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
@@ -78,12 +87,23 @@
       <artifactId>commons-configuration</artifactId>
       <version>1.10</version>
     </dependency>
-
+    <!-- APP ENGINE -->
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-1.0-sdk</artifactId>
+        <version>${appengine.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>jstl</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+    </dependency>
   </dependencies>
 
 
  <build>
    <finalName>social.app</finalName>
+   <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
    <plugins>
      <plugin>
        <groupId>org.eclipse.jetty</groupId>
@@ -150,6 +170,76 @@
 
           </executions>
       </plugin>
+
+       <!-- plugins de appengine -->
+       <plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>versions-maven-plugin</artifactId>
+           <version>2.1</version>
+           <executions>
+               <execution>
+                   <phase>compile</phase>
+                   <goals>
+                       <goal>display-dependency-updates</goal>
+                       <goal>display-plugin-updates</goal>
+                   </goals>
+               </execution>
+           </executions>
+       </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <version>3.1</version>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <configuration>
+               <source>1.7</source>
+               <target>1.7</target>
+           </configuration>
+       </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-war-plugin</artifactId>
+           <version>2.4</version>
+           <configuration>
+               <archiveClasses>true</archiveClasses>
+               <webResources>
+                   <!-- in order to interpolate version from pom into appengine-web.xml -->
+                   <resource>
+                       <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                       <filtering>true</filtering>
+                       <targetPath>WEB-INF</targetPath>
+                   </resource>
+               </webResources>
+           </configuration>
+       </plugin>
+
+       <plugin>
+           <groupId>com.google.appengine</groupId>
+           <artifactId>appengine-maven-plugin</artifactId>
+           <version>${appengine.version}</version>
+           <configuration>
+               <enableJarClasses>false</enableJarClasses>
+               <version>${app.version}</version>
+               <!-- el version ese fixea un error de versiones durante el deploy -->
+
+               <!-- Comment in the below snippet to bind to all IPs instead of just localhost -->
+               <!-- address>0.0.0.0</address>
+               <port>8080</port -->
+               <!-- Comment in the below snippet to enable local debugging with a remote debugger
+                    like those included with Eclipse or IntelliJ -->
+               <!-- jvmFlags>
+                 <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
+               </jvmFlags -->
+           </configuration>
+       </plugin>
+       <plugin>
+           <groupId>com.google.appengine</groupId>
+           <artifactId>gcloud-maven-plugin</artifactId>
+           <version>${gcloud.plugin.version}</version>
+           <configuration>
+               <set_default>true</set_default>
+           </configuration>
+       </plugin>
+
    </plugins>
  </build>
 

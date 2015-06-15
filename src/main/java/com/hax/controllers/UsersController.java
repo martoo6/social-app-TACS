@@ -5,10 +5,13 @@ import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import static com.hax.utils.ControllerHelper.addControllerCallback;
 
@@ -25,17 +28,17 @@ public class UsersController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{userID}")
-    public void getUser(@PathParam("token") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getUser(@PathParam("token") int userId) throws JSONException
     {
-        addControllerCallback(usersService.getUser(userId), asyncResponse);
+        return addControllerCallback(usersService.getUser(userId));
     }
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getAllUser(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getAllUser(@Context HttpServletResponse asyncResponse) throws JSONException
     {
-        addControllerCallback(usersService.getAll(), asyncResponse);
+        return addControllerCallback(usersService.getAll());
     }
 
     //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
@@ -48,8 +51,8 @@ public class UsersController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response createUser(final User user) throws JSONException
     {
-        addControllerCallback(usersService.createUser(user), asyncResponse);
+        return addControllerCallback(usersService.createUser(user));
     }
 }

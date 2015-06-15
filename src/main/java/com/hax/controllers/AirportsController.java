@@ -7,10 +7,11 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import static com.hax.utils.ControllerHelper.addControllerCallback;
 
@@ -30,22 +31,22 @@ public class AirportsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getAirport(@QueryParam("latitude") final String latitude,
+    public Response getAirport(@QueryParam("latitude") final String latitude,
                                     @QueryParam("longitude") final String longitude, 
-                                    @Suspended final AsyncResponse asyncResponse) throws JSONException
+                                    @Context HttpServletResponse asyncResponse) throws JSONException
     {
         ListenableFuture<String> f = airportsService.getAirport(latitude, longitude);
-        addControllerCallback(f, asyncResponse);
+        return addControllerCallback(f);
     }
     
     @Path("{airportCode}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getAirportFromCode(@PathParam("airportCode") String airportCode,
-                                   @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getAirportFromCode(@PathParam("airportCode") String airportCode,
+                                   @Context HttpServletResponse asyncResponse) throws JSONException
     {
         ListenableFuture<String> f = airportsService.getAirport(airportCode);
-        addControllerCallback(f, asyncResponse);
+        return addControllerCallback(f);
     }
 
 }

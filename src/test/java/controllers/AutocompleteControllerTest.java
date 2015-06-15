@@ -5,6 +5,9 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -19,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 
 public class AutocompleteControllerTest extends GenericTest {
+
     AutocompleteServiceInterface acs = mock(AutocompleteServiceInterface.class);
 
     @Override

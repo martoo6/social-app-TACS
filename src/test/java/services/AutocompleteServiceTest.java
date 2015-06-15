@@ -1,5 +1,6 @@
 package services;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnectorInterface;
 import com.hax.services.AutocompleteService;
@@ -23,9 +24,8 @@ public class AutocompleteServiceTest extends GenericTest {
     public void getValidFlights() {
         DespegarConnectorInterface dc = mock(DespegarConnectorInterface.class);
 
-        when(dc.getAirportsAsync("buenos")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                String response = "[\n" +
+        when(dc.getAirportsAsync("buenos")).thenReturn(Futures.immediateFuture(
+                "[\n" +
                         " {\n" +
                         "  \"id\": \"GEO_POINT-192636\",\n" +
                         "  \"item\": {\n" +
@@ -68,10 +68,8 @@ public class AutocompleteServiceTest extends GenericTest {
                         "  \"geo_point_type\": \"AIRPORT\",\n" +
                         "  \"commercial\": true\n" +
                         " }\n" +
-                        "]";
-                return response;
-            }
-        }));
+                        "]"
+        ));
 
 
         AutocompleteService acs = new AutocompleteService();

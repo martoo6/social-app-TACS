@@ -10,12 +10,14 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static com.hax.utils.ControllerHelper.addControllerCallback;
@@ -58,10 +60,10 @@ public class FlightsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
+    public Response getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
                                   @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
-                                  @Suspended final AsyncResponse asyncResponse) throws JSONException
+                                  @Context HttpServletResponse asyncResponse) throws JSONException
     {
-            addControllerCallback(flightsService.getFlights(from, to, fromDate, toDate), asyncResponse);
+            return addControllerCallback(flightsService.getFlights(from, to, fromDate, toDate));
     }
 }

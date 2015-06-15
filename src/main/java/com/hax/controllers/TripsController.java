@@ -9,12 +9,14 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static com.hax.utils.ControllerHelper.addControllerCallback;
@@ -37,15 +39,15 @@ public class TripsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getFilteredTrip(@Context HttpHeaders hh,
-                                @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getFilteredTrip(@Context HttpHeaders hh,
+                                @Context HttpServletResponse asyncResponse) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
-            fail("Missing token", asyncResponse);
+            return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            addControllerCallback(usersService.getFlights(token), asyncResponse);
+            return addControllerCallback(usersService.getFlights(token));
         }
     }
 
@@ -78,14 +80,14 @@ public class TripsController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void createTrip(final Trip trip,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response createTrip(final Trip trip,@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
-            fail("Missing token", asyncResponse);
+            return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            addControllerCallback(flightsService.createTrip(trip, token), asyncResponse);
+            return addControllerCallback(flightsService.createTrip(trip, token));
         }
     }
     
@@ -98,9 +100,9 @@ public class TripsController {
     @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getAllSavedTrips(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getAllSavedTrips(@Context HttpServletResponse asyncResponse) throws JSONException
     {
         ListenableFuture<List<Trip>> f = flightsService.getAllSavedTrips();
-        addControllerCallback(f, asyncResponse);
+        return addControllerCallback(f);
     }
 }

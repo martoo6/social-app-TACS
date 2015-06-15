@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.util.concurrent.Futures;
 import com.hax.services.TripsServiceInterface;
 import com.hax.services.UsersServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -8,10 +9,8 @@ import utils.GenericTest;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
-import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,11 +52,7 @@ public class FlightsControllerTest extends GenericTest {
 
     @Test
     public void getWrongDateFlights() {
-        when(fs.getFlights("EZE", "MIA", "2015-12-10", "2015-11-10")).thenReturn(ex.submit(new Callable<String>() {
-            public String call() throws Exception {
-                throw new RuntimeException("Error 400 !");
-            }
-        }));
+        when(fs.getFlights("EZE", "MIA", "2015-12-10", "2015-11-10")).thenReturn(Futures.<String>immediateFailedFuture(new RuntimeException("Error 400 !")));
 
 
         final Response response = target("flights")
@@ -67,6 +62,6 @@ public class FlightsControllerTest extends GenericTest {
                 .queryParam("arrival", "2015-11-10")
                 .request(MediaType.APPLICATION_JSON).get();
 
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 }

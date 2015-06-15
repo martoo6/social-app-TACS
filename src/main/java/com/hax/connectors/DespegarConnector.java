@@ -4,9 +4,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.async.executors.Default;
 import com.hax.config.App;
 import com.hax.models.DespegarError;
 import com.hax.utils.JsonHelper;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
 import javax.ws.rs.core.Response;
@@ -19,7 +21,9 @@ public class DespegarConnector implements DespegarConnectorInterface {
 
     public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
-        ListenableFuture<Response> future = RxListenableFuture.newClient()
+        ListenableFuture<Response> future = RxListenableFuture.newClient(Default.ex)
+                .property(ClientProperties.CONNECT_TIMEOUT, 20000)
+                .property(ClientProperties.READ_TIMEOUT, 20000)
                 .target(url)
                 .queryParam("site", "ar")
                 .queryParam("from", from)
@@ -42,13 +46,13 @@ public class DespegarConnector implements DespegarConnectorInterface {
                 }
                 return response.readEntity(String.class);
             }
-        });
+        }, Default.ex);
     }
 
     public ListenableFuture<String> getAirportsAsync(String autocomplete) {
         String url = "https://api.despegar.com/v3/autocomplete";
 
-        ListenableFuture<Response> future = RxListenableFuture.newClient()
+        ListenableFuture<Response> future = RxListenableFuture.newClient(Default.ex)
                 .target(url)
                 .queryParam("airport_result", 5)
                 .queryParam("query", autocomplete)
@@ -67,7 +71,7 @@ public class DespegarConnector implements DespegarConnectorInterface {
                 }
                 return response.readEntity(String.class);
             }
-        });
+        }, Default.ex);
     }
 }
 

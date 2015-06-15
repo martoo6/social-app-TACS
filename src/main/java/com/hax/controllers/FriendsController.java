@@ -4,12 +4,14 @@ import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import static com.hax.utils.ControllerHelper.addControllerCallback;
 import static com.hax.utils.ControllerHelper.fail;
@@ -32,14 +34,14 @@ public class FriendsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getFriends(@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response getFriends(@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
-            fail("Missing token", asyncResponse);
+            return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            addControllerCallback(usersService.getFriends(token), asyncResponse);
+            return addControllerCallback(usersService.getFriends(token));
         }
     }
 
@@ -51,14 +53,14 @@ public class FriendsController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{friendId}")
-    public void addFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response addFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
-            fail("Missing token", asyncResponse);
+            return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            addControllerCallback(usersService.addFriend(token, friendId), asyncResponse);
+            return addControllerCallback(usersService.addFriend(token, friendId));
         }
     }
 
@@ -70,14 +72,14 @@ public class FriendsController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{friendId}")
-    public void removeFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    public Response removeFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
-            fail("Missing token", asyncResponse);
+            return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            addControllerCallback(usersService.removeFriend(token, friendId), asyncResponse);
+            return addControllerCallback(usersService.removeFriend(token, friendId));
         }
     }
 }

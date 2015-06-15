@@ -77,11 +77,7 @@ public class UsersServiceTest extends GenericTest {
     public void getUserMissing() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
@@ -148,11 +144,7 @@ public class UsersServiceTest extends GenericTest {
     public void getFriendsUserMissing() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
@@ -202,11 +194,7 @@ public class UsersServiceTest extends GenericTest {
         Trip trip = new Trip();
         trips.add(trip);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
@@ -251,11 +239,7 @@ public class UsersServiceTest extends GenericTest {
     public void getRecommendationsMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
@@ -327,11 +311,7 @@ public class UsersServiceTest extends GenericTest {
         User friend = new User();
         friend.setId(2);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
         when(ur.get(2)).thenReturn(Futures.immediateFuture(friend));
 
@@ -358,11 +338,7 @@ public class UsersServiceTest extends GenericTest {
 
         when(ur.get(1)).thenReturn(Futures.immediateFuture(user));
 
-        when(ur.get(2)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing Friend");
-            }
-        }));
+        when(ur.get(2)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
@@ -412,11 +388,7 @@ public class UsersServiceTest extends GenericTest {
         User friend = new User();
         friend.setId(2);
 
-        when(ur.get(1)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing User");
-            }
-        }));
+        when(ur.get(1)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
         when(ur.get(2)).thenReturn(Futures.immediateFuture(friend));
 
@@ -443,11 +415,7 @@ public class UsersServiceTest extends GenericTest {
 
         when(ur.get(1)).thenReturn(Futures.immediateFuture(user));
 
-        when(ur.get(2)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing Friend");
-            }
-        }));
+        when(ur.get(2)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
@@ -513,11 +481,7 @@ public class UsersServiceTest extends GenericTest {
         when(ur.get(1)).thenReturn(Futures.immediateFuture(user));
         when(ur.get(2)).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
-        when(fr.get(0)).thenReturn(ex.submit(new Callable() {
-            public Object call() throws Exception {
-                throw new RuntimeException("Missing Trip");
-            }
-        }));
+        when(fr.get(0)).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Missing Trip")));
 
 
         UsersService us = new UsersService();
