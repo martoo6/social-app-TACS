@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.config.App;
+import com.hax.models.fb.FbVerify;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
 import javax.ws.rs.core.Response;
@@ -15,7 +16,7 @@ import javax.ws.rs.core.Response;
 public class FacebookConnector implements FacebookConnectorInterface{
 
 
-    public ListenableFuture<Boolean> verifyAccessToken(String token){
+    public ListenableFuture<FbVerify> verifyAccessToken(String token){
         String url = "https://graph.facebook.com/me";
         ListenableFuture<Response> future = RxListenableFuture.newClient()
                 .target(url)
@@ -24,9 +25,12 @@ public class FacebookConnector implements FacebookConnectorInterface{
                 .rx()
                 .get();
 
-        return Futures.transform(future, new Function<Response, Boolean>() {
-            public Boolean apply(Response response) {
-                return response.getStatus()==Response.Status.OK.getStatusCode();
+        return Futures.transform(future, new Function<Response, FbVerify>() {
+            public FbVerify apply(Response response) {
+                if(response.getStatus()==Response.Status.OK.getStatusCode()){
+                    return response.readEntity(FbVerify.class);
+                }
+                return null;
             }
         });
     }

@@ -11,6 +11,6 @@ import java.util.List;
 public interface UsersRepositoryInterface {
     ListenableFuture<User> insert(final User user);
     ListenableFuture<User> update(final User user);
-    ListenableFuture<User> get(final Integer id);
+    ListenableFuture<User> get(final Long id);
     ListenableFuture<List<User>> getAll();
 }

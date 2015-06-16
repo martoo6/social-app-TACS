@@ -1,15 +1,18 @@
 package com.hax.services;
 
 import com.google.common.base.Function;
+import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple2;
 import com.hax.connectors.DespegarConnectorInterface;
+import com.hax.connectors.FacebookConnectorInterface;
 import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Trip;
 import com.hax.models.User;
+import com.hax.models.fb.FbVerify;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,6 +27,8 @@ public class TripsService implements TripsServiceInterface {
     public TripsRepositoryInterface flightsRepository;
     @Inject
     public UsersRepositoryInterface userRepository;
+    @Inject
+    public FacebookConnectorInterface fbConnector;
 
     /**
      * Obtiene todos los vuelos con los filtros corresondientes
@@ -42,12 +47,18 @@ public class TripsService implements TripsServiceInterface {
      * @param trip Nuevo vuelo a ingresar en el sistema
      * @return ListenableFuture con el vuelo ingresado
      */
-    public ListenableFuture<Trip> createTrip(Trip trip, Integer userId) {
+    public ListenableFuture<Trip> createTrip(final Trip trip, String token) {
 
-        ListenableFuture<Trip> flightF = flightsRepository.insert(trip);
-        ListenableFuture<User> userF = userRepository.get(userId);
+        ListenableFuture<FbVerify> fbVerify = fbConnector.verifyAccessToken(token);
 
-        ListenableFuture<Tuple2<Trip,User>> comp = FutureHelper.compose(flightF, userF);
+        ListenableFuture<Tuple2<Trip,User>> comp = Futures.transform(fbVerify, new AsyncFunction<FbVerify, Tuple2<Trip,User>>() {
+            @Override
+            public ListenableFuture<Tuple2<Trip,User>> apply(FbVerify fbVerify) throws Exception {
+                ListenableFuture<Trip> flightF = flightsRepository.insert(trip);
+                ListenableFuture<User> userF = userRepository.get(fbVerify.getId());
+                return FutureHelper.compose(flightF, userF);
+            }
+        });
 
         return Futures.transform(comp, new Function<Tuple2<Trip, User>, Trip>() {
             public Trip apply(Tuple2<Trip, User> tuple) {

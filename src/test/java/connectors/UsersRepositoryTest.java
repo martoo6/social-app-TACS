@@ -74,7 +74,7 @@ public class UsersRepositoryTest extends GenericTest {
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
-        ListenableFuture<User> lf = ur.get(1);
+        ListenableFuture<User> lf = ur.get(1L);
 
         User userRes =lf.get();
         assertTrue(userRes == user);
@@ -84,7 +84,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void getUserMissing(){
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
-        ListenableFuture<User> lf = ur.get(1);
+        ListenableFuture<User> lf = ur.get(1L);
 
         try {
             lf.get();

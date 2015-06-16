@@ -38,7 +38,7 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
         return Futures.immediateFuture(user);
     }
 
-    public ListenableFuture<User> get(final Integer id){
+    public ListenableFuture<User> get(final Long id){
         for(User user:collection){
             if(user.getId().equals(id)) return Futures.immediateFuture(user);
         }

@@ -11,8 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -27,7 +25,7 @@ import static com.hax.utils.ControllerHelper.fail;
 @Path("trips")
 public class TripsController {
     @Inject
-    TripsServiceInterface flightsService;
+    TripsServiceInterface tripsService;
     @Inject
     UsersServiceInterface usersService;
 
@@ -87,7 +85,7 @@ public class TripsController {
             return fail("Missing token");
         } else {
             Integer token = Integer.parseInt(optToken);
-            return addControllerCallback(flightsService.createTrip(trip, token));
+            return addControllerCallback(tripsService.createTrip(trip, token));
         }
     }
     
@@ -102,7 +100,7 @@ public class TripsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSavedTrips(@Context HttpServletResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<List<Trip>> f = flightsService.getAllSavedTrips();
+        ListenableFuture<List<Trip>> f = tripsService.getAllSavedTrips();
         return addControllerCallback(f);
     }
 }

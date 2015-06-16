@@ -2,6 +2,7 @@ package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnectorInterface;
+import com.hax.connectors.FacebookConnectorInterface;
 
 import javax.inject.Inject;
 
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 public class FlightsService implements FlightsServiceInterface {
     @Inject
     public DespegarConnectorInterface despegarConnector;
+
 
     /**
      * Obtiene todos los vuelos con los filtros corresondientes
