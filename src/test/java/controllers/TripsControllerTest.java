@@ -13,8 +13,7 @@ import javax.ws.rs.core.Response;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -68,7 +67,7 @@ public class TripsControllerTest extends GenericTest {
                 "     \"destiny\":\"EZE, Buenos Aires, Argentina\"\n" +
                 "     }";
 
-        when(fs.createTrip(any(Trip.class), anyInt())).thenReturn(immediateFuture(new Trip()));
+        when(fs.createTrip(any(Trip.class), anyString())).thenReturn(immediateFuture(new Trip()));
 
 
         final Response response = target("trips").request(MediaType.APPLICATION_JSON).header("token",0).post(Entity.json(json));

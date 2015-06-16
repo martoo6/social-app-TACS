@@ -12,5 +12,5 @@ import java.util.List;
 public interface TripsServiceInterface {
     ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
     ListenableFuture<List<Trip>> getAllSavedTrips();
-    ListenableFuture<Trip> createTrip(Trip trip, Integer userId);
+    ListenableFuture<Trip> createTrip(Trip trip, String token);
 }

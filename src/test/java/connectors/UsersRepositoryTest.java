@@ -37,7 +37,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUser() throws ExecutionException, InterruptedException {
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 

@@ -7,7 +7,7 @@ public class Recommendation {
     private User fromUser;
     private Trip trip;
     private RecommendationState state;
-    private Integer id;
+    private Long id;
 
     public Recommendation(Trip trip, User fromUser) {
         this.fromUser = fromUser;
@@ -39,11 +39,11 @@ public class Recommendation {
         this.state = state;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

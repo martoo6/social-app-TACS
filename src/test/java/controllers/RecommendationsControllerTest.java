@@ -17,6 +17,7 @@ import java.util.Arrays;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,7 @@ public class RecommendationsControllerTest extends GenericTest {
         User user = new User();
         Recommendation recommendation = new Recommendation(trip, user);
 
-        when(us.getRecommendations(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(recommendation)));
+        when(us.getRecommendations(anyLong())).thenReturn(Futures.immediateFuture(Arrays.asList(recommendation)));
 
         final Response responseWrapper = target("recommendations").request(MediaType.APPLICATION_JSON).header("token","0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -44,7 +45,7 @@ public class RecommendationsControllerTest extends GenericTest {
         User user = new User();
         Recommendation recommendation = new Recommendation(trip, user);
 
-        when(us.recommendFlight(anyInt(), anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
+        when(us.recommendFlight(anyLong(), anyLong(), anyLong())).thenReturn(immediateFuture(recommendation));
 
         String json = "{\n" +
                 " \"flightId\":9,\n" +
@@ -61,7 +62,7 @@ public class RecommendationsControllerTest extends GenericTest {
         User user = new User();
         Recommendation recommendation = new Recommendation(trip, user);
 
-        when(us.acceptRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
+        when(us.acceptRecommendation(anyLong(), anyLong())).thenReturn(immediateFuture(recommendation));
 
         final Response responseWrapper = target("recommendations/1").queryParam("token", 0).request(MediaType.APPLICATION_JSON).header("token", "0").put(Entity.json(""));
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -73,7 +74,7 @@ public class RecommendationsControllerTest extends GenericTest {
         User user = new User();
         Recommendation recommendation = new Recommendation(trip, user);
 
-        when(us.rejectRecommendation(anyInt(), anyInt())).thenReturn(immediateFuture(recommendation));
+        when(us.rejectRecommendation(anyLong(), anyLong())).thenReturn(immediateFuture(recommendation));
 
         final Response responseWrapper = target("recommendations/1").queryParam("token", 0).request(MediaType.APPLICATION_JSON).header("token", "0").delete();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());

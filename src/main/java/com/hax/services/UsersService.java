@@ -30,7 +30,7 @@ public class UsersService implements UsersServiceInterface {
         return usersRepository.getAll();
     }
 
-    public ListenableFuture<User> getUser(Integer id) {
+    public ListenableFuture<User> getUser(Long id) {
         return usersRepository.get(id);
     }
 
@@ -38,7 +38,7 @@ public class UsersService implements UsersServiceInterface {
         return usersRepository.insert(user);
     }
 
-    public ListenableFuture<List<User>> getFriends(Integer id) {
+    public ListenableFuture<List<User>> getFriends(Long id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<User>>() {
             public List<User> apply(User user) {
                 return user.getFriends();
@@ -46,7 +46,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<Trip>> getFlights(Integer id) {
+    public ListenableFuture<List<Trip>> getFlights(Long id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<Trip>>() {
             public List<Trip> apply(User user) {
                 return user.getTrips();
@@ -54,7 +54,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<Recommendation>> getRecommendations(Integer id) {
+    public ListenableFuture<List<Recommendation>> getRecommendations(Long id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<Recommendation>>() {
             public List<Recommendation> apply(User user) {
                 return user.getRecommendations();
@@ -73,7 +73,7 @@ public class UsersService implements UsersServiceInterface {
      * @param toUserId
      * @return
      */
-    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId){
+    public ListenableFuture<Recommendation> recommendFlight(Long flightId,Long fromUserId, Long toUserId){
 
         /**
          Hacemos 3 llamadas asincronicas a los repositorios y esperamos el resultado de las 3.
@@ -102,15 +102,15 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId) {
+    public ListenableFuture<Recommendation> acceptRecommendation(Long recommendationId,Long userId) {
         return setRecommendationState(recommendationId, RecommendationState.ACCEPTED, userId);
     }
 
-    public ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId) {
+    public ListenableFuture<Recommendation> rejectRecommendation(Long recommendationId,Long userId) {
         return setRecommendationState(recommendationId, RecommendationState.REJECTED, userId);
     }
 
-    private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, final RecommendationState state, Integer userId){
+    private ListenableFuture<Recommendation> setRecommendationState(final Long recommendationId, final RecommendationState state, Long userId){
         return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
                     public Recommendation apply(User user) {
 
@@ -126,7 +126,7 @@ public class UsersService implements UsersServiceInterface {
         );
     }
 
-    public ListenableFuture<User> addFriend(Integer userId, Integer friendId) {
+    public ListenableFuture<User> addFriend(Long userId, Long friendId) {
         ListenableFuture<User> userFuture = usersRepository.get(userId);
         ListenableFuture<User> friendFuture = usersRepository.get(friendId);
 
@@ -143,7 +143,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<User> removeFriend(Integer userId, Integer friendId) {
+    public ListenableFuture<User> removeFriend(Long userId, Long friendId) {
         ListenableFuture<User> userFuture = usersRepository.get(userId);
         ListenableFuture<User> friendFuture = usersRepository.get(friendId);
 

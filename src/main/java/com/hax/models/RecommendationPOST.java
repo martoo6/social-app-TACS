@@ -4,23 +4,23 @@ package com.hax.models;
  * Created by martin on 5/5/15.
  */
 public class RecommendationPOST {
-    private Integer toUserId;
-    private Integer flightId;
+    private Long toUserId;
+    private Long flightId;
     private String state;
 
-    public Integer getFlightId() {
+    public Long getFlightId() {
         return flightId;
     }
 
-    public void setFlightId(Integer flightId) {
+    public void setFlightId(Long flightId) {
         this.flightId = flightId;
     }
 
-    public Integer getToUserId() {
+    public Long getToUserId() {
         return toUserId;
     }
 
-    public void setToUserId(Integer toUserId) {
+    public void setToUserId(Long toUserId) {
         this.toUserId = toUserId;
     }
 }

@@ -40,7 +40,7 @@ public class FriendsController {
         if(optToken==null) {
             return fail("Missing token");
         } else {
-            Integer token = Integer.parseInt(optToken);
+            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.getFriends(token));
         }
     }
@@ -53,13 +53,13 @@ public class FriendsController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{friendId}")
-    public Response addFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh) throws JSONException
+    public Response addFriend(@PathParam("friendId") Long friendId,@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
             return fail("Missing token");
         } else {
-            Integer token = Integer.parseInt(optToken);
+            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.addFriend(token, friendId));
         }
     }
@@ -72,13 +72,13 @@ public class FriendsController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{friendId}")
-    public Response removeFriend(@PathParam("friendId") Integer friendId,@Context HttpHeaders hh) throws JSONException
+    public Response removeFriend(@PathParam("friendId") Long friendId,@Context HttpHeaders hh) throws JSONException
     {
         String optToken = hh.getHeaderString("token");
         if(optToken==null) {
             return fail("Missing token");
         } else {
-            Integer token = Integer.parseInt(optToken);
+            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.removeFriend(token, friendId));
         }
     }

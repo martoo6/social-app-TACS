@@ -14,6 +14,7 @@ import java.util.Arrays;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +29,7 @@ public class FriendsControllerTest extends GenericTest {
         User user = new User();
         user.setUsername("Pepito");
 
-        when(us.getFriends(anyInt())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
+        when(us.getFriends(anyLong())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
 
         final Response responseWrapper = target("friends").request(MediaType.APPLICATION_JSON).header("token", "0").get();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -39,7 +40,7 @@ public class FriendsControllerTest extends GenericTest {
         User user = new User();
         user.setUsername("Pepito");
 
-        when(us.addFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
+        when(us.addFriend(anyLong(), anyLong())).thenReturn(immediateFuture(user));
 
         final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("token", "0").post(null);
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
@@ -50,7 +51,7 @@ public class FriendsControllerTest extends GenericTest {
         User user = new User();
         user.setUsername("Pepito");
 
-        when(us.removeFriend(anyInt(), anyInt())).thenReturn(immediateFuture(user));
+        when(us.removeFriend(anyLong(), anyLong())).thenReturn(immediateFuture(user));
 
         final Response responseWrapper = target("friends/11").request(MediaType.APPLICATION_JSON).header("token", "0").delete();
         assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());

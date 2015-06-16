@@ -44,7 +44,7 @@ public class TripsController {
         if(optToken==null) {
             return fail("Missing token");
         } else {
-            Integer token = Integer.parseInt(optToken);
+            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.getFlights(token));
         }
     }
@@ -84,8 +84,7 @@ public class TripsController {
         if(optToken==null) {
             return fail("Missing token");
         } else {
-            Integer token = Integer.parseInt(optToken);
-            return addControllerCallback(tripsService.createTrip(trip, token));
+            return addControllerCallback(tripsService.createTrip(trip, optToken));
         }
     }
     

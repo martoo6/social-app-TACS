@@ -15,7 +15,7 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
 
     public UsersInMemoryRepository() {
         User u = new User();
-        u.setId(0);
+        u.setId(0L);
         u.setUsername("UsernameDePrueba");
         u.setPassword("PasswordDePrueba");
         collection.add(u);
@@ -23,7 +23,7 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
 
     public ListenableFuture<User> insert(final User user) {
         if (user == null) return Futures.immediateFuture(new User());
-        user.setId(collection.size());
+        user.setId(Long.valueOf(collection.size()));
         collection.add(user);
         return Futures.immediateFuture(user);
     }

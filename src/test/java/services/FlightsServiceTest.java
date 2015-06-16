@@ -3,10 +3,12 @@ package services;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.DespegarConnectorInterface;
+import com.hax.connectors.FacebookConnectorInterface;
 import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Trip;
 import com.hax.models.User;
+import com.hax.models.fb.FbVerify;
 import com.hax.services.TripsService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
@@ -89,19 +91,24 @@ public class FlightsServiceTest extends GenericTest {
     public void createFlight() {
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fbConn = mock(FacebookConnectorInterface.class);
 
         User user = new User();
 
-        when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId(0L);
+
+        when(ur.get(0L)).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
         when(fr.insert(any(Trip.class))).thenReturn(Futures.immediateFuture(new Trip()));
-
+        when(fbConn.verifyAccessToken("tokenDePrueba")).thenReturn(Futures.immediateFuture(fbVerify));
 
         TripsService fs = new TripsService();
         fs.flightsRepository = fr;
         fs.userRepository = ur;
+        fs.fbConnector = fbConn;
 
-        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), 0);
+        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), "tokenDePrueba");
 
         try {
             lf.get();
@@ -113,22 +120,29 @@ public class FlightsServiceTest extends GenericTest {
 
     @Test
     public void createFlightFailed() {
-        TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
-        UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        TripsRepositoryInterface tripRepo = mock(TripsRepositoryInterface.class);
+        UsersRepositoryInterface userRepo = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fbConn = mock(FacebookConnectorInterface.class);
 
         User user = new User();
 
-        when(ur.get(0)).thenReturn(Futures.immediateFuture(user));
-        when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId(1L);
 
-        when(fr.insert(any(Trip.class))).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Error")));
+        when(userRepo.get(0L)).thenReturn(Futures.immediateFuture(user));
+        when(userRepo.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
+
+        when(tripRepo.insert(any(Trip.class))).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Error")));
+
+        when(fbConn.verifyAccessToken("tokenDePrueba")).thenReturn(Futures.immediateFuture(fbVerify));
 
 
         TripsService fs = new TripsService();
-        fs.flightsRepository = fr;
-        fs.userRepository = ur;
+        fs.flightsRepository = tripRepo;
+        fs.userRepository = userRepo;
+        fs.fbConnector = fbConn;
 
-        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), 0);
+        ListenableFuture<Trip> lf = fs.createTrip(new Trip(), "tokenDePrueba");
 
         try {
             lf.get();

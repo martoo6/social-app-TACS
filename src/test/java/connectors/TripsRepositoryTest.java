@@ -53,7 +53,7 @@ public class TripsRepositoryTest extends GenericTest {
 
         dc.insert(trip).get();
 
-        ListenableFuture<Trip> lf = dc.get(0);
+        ListenableFuture<Trip> lf = dc.get(0L);
 
         try {
             Trip f = lf.get();
@@ -67,7 +67,7 @@ public class TripsRepositoryTest extends GenericTest {
     public void getFlightMissingFlight() throws ExecutionException, InterruptedException {
         TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
-        ListenableFuture<Trip> lf = dc.get(0);
+        ListenableFuture<Trip> lf = dc.get(0L);
 
         try {
             lf.get();

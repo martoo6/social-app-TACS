@@ -10,7 +10,7 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private Integer id;
+    private Long id;
     private List<User> friends = new ArrayList<User>();
     private List<Trip> trips = new ArrayList<Trip>();
     private List<Recommendation> recommendations = new ArrayList<Recommendation>();
@@ -39,9 +39,9 @@ public class User {
         this.email = email;
     }
 
-    public Integer getId() { return id; }
+    public Long getId() { return id; }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Long id) { this.id = id; }
 
     public List<User> getFriends() {
         return friends;

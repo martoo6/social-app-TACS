@@ -15,12 +15,12 @@ public class TripsInMemoryRepository implements TripsRepositoryInterface {
 
     public ListenableFuture<Trip> insert(final Trip trip) {
         if (trip == null) return Futures.immediateFuture(new Trip());
-        trip.setId(trips.size());
+        trip.setId(Long.valueOf(trips.size()));
         trips.add(trip);
         return Futures.immediateFuture(trip);
     }
 
-    public ListenableFuture<Trip> get(final Integer id){
+    public ListenableFuture<Trip> get(final Long id){
         for(Trip trip : trips){
             if(trip.getId()==id) return Futures.immediateFuture(trip);;
         }

@@ -14,7 +14,7 @@ public class Trip {
     private String destiny;
     private BigDecimal price;
     private String state;
-    private Integer id;
+    private Long id;
     private String wayDuration;
     private String returnDuration;
 
@@ -71,9 +71,9 @@ public class Trip {
         this.price = price;
     }
 
-    public Integer getId() { return id; }
+    public Long getId() { return id; }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getState() {
         return state;

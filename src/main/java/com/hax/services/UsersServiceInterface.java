@@ -13,15 +13,15 @@ import java.util.List;
 
 public interface UsersServiceInterface {
     ListenableFuture<List<User>> getAll();
-    ListenableFuture<User> getUser(Integer id);
+    ListenableFuture<User> getUser(Long id);
     ListenableFuture<User> createUser(User user);
-    ListenableFuture<List<User>> getFriends(Integer id);
-    ListenableFuture<List<Trip>> getFlights(Integer id);
+    ListenableFuture<List<User>> getFriends(Long id);
+    ListenableFuture<List<Trip>> getFlights(Long id);
     ListenableFuture<User> update(User user);
-    ListenableFuture<List<Recommendation>> getRecommendations(Integer id);
-    ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
-    ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId);
-    ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId);
-    ListenableFuture<User> addFriend(Integer userId, Integer friendId);
-    ListenableFuture<User> removeFriend(Integer userId, Integer friendId);
+    ListenableFuture<List<Recommendation>> getRecommendations(Long id);
+    ListenableFuture<Recommendation> recommendFlight(Long flightId,Long fromUserId, Long toUserId);
+    ListenableFuture<Recommendation> acceptRecommendation(Long recommendationId,Long userId);
+    ListenableFuture<Recommendation> rejectRecommendation(Long recommendationId,Long userId);
+    ListenableFuture<User> addFriend(Long userId, Long friendId);
+    ListenableFuture<User> removeFriend(Long userId, Long friendId);
 }

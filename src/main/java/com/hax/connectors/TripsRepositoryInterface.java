@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface TripsRepositoryInterface {
     ListenableFuture<Trip> insert(Trip trip);
-    ListenableFuture<Trip> get(Integer id);
+    ListenableFuture<Trip> get(Long id);
     ListenableFuture<List<Trip>> getAll();
 }
