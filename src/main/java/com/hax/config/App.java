@@ -27,6 +27,7 @@ public class App extends ResourceConfig {
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
                 bind(TripsInMemoryRepository.class).to(TripsRepositoryInterface.class);
                 bind(UsersInMemoryRepository.class).to(UsersRepositoryInterface.class);
+                bind(FacebookConnector.class).to(FacebookConnectorInterface.class);
                 //-------------------Servicios--------------
                 bind(TripsService.class).to(TripsServiceInterface.class);
                 bind(FlightsService.class).to(FlightsServiceInterface.class);
