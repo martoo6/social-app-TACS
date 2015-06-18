@@ -1,5 +1,7 @@
 package com.hax.models;
 
+import com.hax.models.fb.FbVerify;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,27 +10,27 @@ import java.util.List;
  */
 public class User {
     private String username;
-    private String password;
     private String email;
-    private Long id;
+    private String id;
     private List<User> friends = new ArrayList<User>();
     private List<Trip> trips = new ArrayList<Trip>();
     private List<Recommendation> recommendations = new ArrayList<Recommendation>();
     private String longLivedToken;
+    private String gender;
 
+    public User() {
+    }
+
+    public User(FbVerify fbVerify) {
+        username = fbVerify.getName();
+        id = fbVerify.getId();
+        gender = fbVerify.getGender();
+    }
 
     public String getUsername() { return username; }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -39,9 +41,9 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() { return id; }
+    public String getId() { return id; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public List<User> getFriends() {
         return friends;
@@ -73,5 +75,13 @@ public class User {
 
     public void setLongLivedToken(String longLivedToken) {
         this.longLivedToken = longLivedToken;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

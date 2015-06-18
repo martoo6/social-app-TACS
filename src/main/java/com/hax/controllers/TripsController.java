@@ -37,15 +37,13 @@ public class TripsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFilteredTrip(@Context HttpHeaders hh,
-                                @Context HttpServletResponse asyncResponse) throws JSONException
+    public Response getFilteredTrip(@Context HttpHeaders hh) throws JSONException
     {
-        String optToken = hh.getHeaderString("token");
-        if(optToken==null) {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
             return fail("Missing token");
         } else {
-            Long token = Long.parseLong(optToken);
-            return addControllerCallback(usersService.getFlights(token));
+            return addControllerCallback(usersService.getTrips(token));
         }
     }
 

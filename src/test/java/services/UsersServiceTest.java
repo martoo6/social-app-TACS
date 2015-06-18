@@ -2,12 +2,14 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.connectors.FacebookConnectorInterface;
 import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
+import com.hax.models.fb.FbVerify;
 import com.hax.services.UsersService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
@@ -15,9 +17,7 @@ import utils.GenericTest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -57,13 +57,13 @@ public class UsersServiceTest extends GenericTest {
 
         User user = new User();
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.getUser(1L);
+        ListenableFuture<User> lf = us.getUser("1");
 
         try {
             User u = lf.get();
@@ -77,13 +77,13 @@ public class UsersServiceTest extends GenericTest {
     public void getUserMissing() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.getUser(1L);
+        ListenableFuture<User> lf = us.getUser("1");
 
         try {
             lf.get();
@@ -96,21 +96,31 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void createUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fC = mock(FacebookConnectorInterface.class);
 
         User user = new User();
+        FbVerify fb = new FbVerify();
+        fb.setId("1");
+        fb.setName("pepito");
+        fb.setGender("male");
 
         when(ur.insert(any(User.class))).thenReturn(Futures.immediateFuture(user));
-
+        when(ur.get(any(String.class))).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("")));
+        when(fC.verifyAccessToken(any(String.class))).thenReturn(Futures.immediateFuture(fb));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fC;
 
-        ListenableFuture<User> lf = us.createUser(user);
+        ListenableFuture<User> lf = us.createUser("token-de-prueba");
 
         try {
             User u = lf.get();
-            assertTrue(u==user);
+            assertTrue(u.getId().equals(fb.getId()));
+            System.out.println(u.getId());
+            System.out.println(fb.getId());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             assertTrue(false);
         }
     }
@@ -124,13 +134,13 @@ public class UsersServiceTest extends GenericTest {
         User friend = new User();
         friends.add(friend);
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<User>> lf = us.getFriends(1L);
+        ListenableFuture<List<User>> lf = us.getFriends("1");
 
         try {
             List<User> ul = lf.get();
@@ -144,13 +154,13 @@ public class UsersServiceTest extends GenericTest {
     public void getFriendsUserMissing() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<User>> lf = us.getFriends(1L);
+        ListenableFuture<List<User>> lf = us.getFriends("1");
 
         try {
             lf.get();
@@ -169,13 +179,13 @@ public class UsersServiceTest extends GenericTest {
         Trip trip = new Trip();
         trips.add(trip);
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Trip>> lf = us.getFlights(1L);
+        ListenableFuture<List<Trip>> lf = us.getTrips("1");
 
         try {
             List<Trip> ul = lf.get();
@@ -194,13 +204,13 @@ public class UsersServiceTest extends GenericTest {
         Trip trip = new Trip();
         trips.add(trip);
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Trip>> lf = us.getFlights(1L);
+        ListenableFuture<List<Trip>> lf = us.getTrips("1");
 
         try {
             lf.get();
@@ -219,13 +229,13 @@ public class UsersServiceTest extends GenericTest {
         Recommendation recommendation = new Recommendation(null,null);
         recommendations.add(recommendation);
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Recommendation>> lf = us.getRecommendations(1L);
+        ListenableFuture<List<Recommendation>> lf = us.getRecommendations("1");
 
         try {
             List<Recommendation> lstRec = lf.get();
@@ -239,13 +249,13 @@ public class UsersServiceTest extends GenericTest {
     public void getRecommendationsMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<List<Recommendation>> lf = us.getRecommendations(1L);
+        ListenableFuture<List<Recommendation>> lf = us.getRecommendations("1");
 
         try {
             lf.get();
@@ -282,19 +292,19 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.addFriend(1L, 2L);
+        ListenableFuture<User> lf = us.addFriend("1", "2");
 
         try {
             User u = lf.get();
@@ -309,17 +319,17 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.addFriend(1L, 2L);
+        ListenableFuture<User> lf = us.addFriend("1", "2");
 
         try {
             lf.get();
@@ -334,16 +344,16 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
-        when(ur.get(2L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
+        when(ur.get("2")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.addFriend(1L, 2L);
+        ListenableFuture<User> lf = us.addFriend("1", "2");
 
         try {
             lf.get();
@@ -358,20 +368,20 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
         User user = new User();
         user.getFriends().add(friend);
-        user.setId(1L);
+        user.setId("1");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.removeFriend(1L, 2L);
+        ListenableFuture<User> lf = us.removeFriend("1", "2");
 
         try {
             User u = lf.get();
@@ -386,17 +396,17 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
-        when(ur.get(1L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.removeFriend(1L, 2L);
+        ListenableFuture<User> lf = us.removeFriend("1", "2");
 
         try {
             lf.get();
@@ -411,16 +421,16 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
 
-        when(ur.get(2L)).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
+        when(ur.get("2")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing Friend")));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<User> lf = us.removeFriend(1L, 2L);
+        ListenableFuture<User> lf = us.removeFriend("1", "2");
 
         try {
             lf.get();
@@ -437,15 +447,15 @@ public class UsersServiceTest extends GenericTest {
 
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
         Trip trip = new Trip();
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
         when(fr.get(0L)).thenReturn(Futures.immediateFuture(trip));
 
@@ -454,7 +464,7 @@ public class UsersServiceTest extends GenericTest {
         us.usersRepository = ur;
         us.flightsRepository = fr;
 
-        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, 1L, 2L);
+        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
 
         try {
             Recommendation r = lf.get();
@@ -473,13 +483,13 @@ public class UsersServiceTest extends GenericTest {
 
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
         User friend = new User();
-        friend.setId(2L);
+        friend.setId("2");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(2L)).thenReturn(Futures.immediateFuture(friend));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
         when(fr.get(0L)).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Missing Trip")));
 
@@ -488,7 +498,7 @@ public class UsersServiceTest extends GenericTest {
         us.usersRepository = ur;
         us.flightsRepository = fr;
 
-        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, 1L, 2L);
+        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
 
         try {
             lf.get();
@@ -507,17 +517,17 @@ public class UsersServiceTest extends GenericTest {
         recommendation.setId(4L);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
         user.getRecommendations().add(recommendation);
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, 1L);
+        ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, "1");
 
         try {
             Recommendation r = lf.get();
@@ -532,16 +542,16 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, 1L);
+        ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, "1");
 
         try {
             lf.get();
@@ -560,17 +570,17 @@ public class UsersServiceTest extends GenericTest {
         recommendation.setId(4L);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
         user.getRecommendations().add(recommendation);
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, 1L);
+        ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, "1");
 
         try {
             Recommendation r = lf.get();
@@ -585,16 +595,16 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
 
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
 
-        when(ur.get(1L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
 
-        ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, 1L);
+        ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, "1");
 
         try {
             lf.get();

@@ -33,11 +33,10 @@ public class RecommendationsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRecommendations(@Context HttpHeaders hh) throws JSONException
     {
-        String optToken = hh.getHeaderString("token");
-        if(optToken==null) {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
             return fail("Missing token");
         } else {
-            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.getRecommendations(token));
         }
     }
@@ -49,12 +48,11 @@ public class RecommendationsController {
     public Response recommendFlight(final RecommendationPOST recJson,
                                 @Context HttpHeaders hh) throws JSONException
     {
-        String optToken = hh.getHeaderString("token");
-        if(optToken==null) {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
             return fail("Missing token");
         } else {
-            Long fromToken = Long.parseLong(optToken);
-            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), fromToken, recJson.getToUserId());
+            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), token, recJson.getToUserId());
             return addControllerCallback(f);
         }
     }
@@ -67,11 +65,10 @@ public class RecommendationsController {
                                      @Context HttpHeaders hh,
                                      @Context HttpServletResponse asyncResponse) throws JSONException
     {
-        String optToken = hh.getHeaderString("token");
-        if(optToken==null) {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
             return fail("Missing token");
         } else {
-            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.acceptRecommendation(recommendationId, token));
         }
     }
@@ -83,11 +80,10 @@ public class RecommendationsController {
     public Response rejectRecommendation(@PathParam("recommendationId") Long recommendationId,
                                      @Context HttpHeaders hh,
                                      @Context HttpServletResponse asyncResponse) throws JSONException {
-        String optToken = hh.getHeaderString("token");
-        if(optToken==null) {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
             return fail("Missing token");
         } else {
-            Long token = Long.parseLong(optToken);
             return addControllerCallback(usersService.rejectRecommendation(recommendationId, token));
         }
     }

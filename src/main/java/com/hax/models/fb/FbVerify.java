@@ -4,7 +4,7 @@ package com.hax.models.fb;
  * Created by martin on 6/16/15.
  */
 public class FbVerify {
-            public Long id; //": "10204366521345833",
+            public String id; //": "10204366521345833",
             public String first_name; //": "Martin",
             public String gender; //": "male",
             public String last_name; //": "Silber",
@@ -13,13 +13,13 @@ public class FbVerify {
             public String name; //": "Martin Silber",
             public String timezone; //": -3,
             public String updated_time; //": "2015-06-05T12:33:08+0000",
-            public String verified; //": true
+            public Boolean verified; //": true
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -87,11 +87,11 @@ public class FbVerify {
         this.updated_time = updated_time;
     }
 
-    public String getVerified() {
+    public Boolean getVerified() {
         return verified;
     }
 
-    public void setVerified(String verified) {
+    public void setVerified(Boolean verified) {
         this.verified = verified;
     }
 }

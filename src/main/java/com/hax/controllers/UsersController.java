@@ -27,8 +27,8 @@ public class UsersController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{userID}")
-    public Response getUser(@PathParam("token") Long userId) throws JSONException
+    @Path("{token}")
+    public Response getUser(@PathParam("token") String userId) throws JSONException
     {
         return addControllerCallback(usersService.getUser(userId));
     }
@@ -51,8 +51,9 @@ public class UsersController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(final User user) throws JSONException
+    @Path("{token}")
+    public Response createUser(@PathParam("token") String token) throws JSONException
     {
-        return addControllerCallback(usersService.createUser(user));
+        return addControllerCallback(usersService.createUser(token));
     }
 }

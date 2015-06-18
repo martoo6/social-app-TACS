@@ -96,9 +96,9 @@ public class FlightsServiceTest extends GenericTest {
         User user = new User();
 
         FbVerify fbVerify = new FbVerify();
-        fbVerify.setId(0L);
+        fbVerify.setId("0");
 
-        when(ur.get(0L)).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("0")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
         when(fr.insert(any(Trip.class))).thenReturn(Futures.immediateFuture(new Trip()));
         when(fbConn.verifyAccessToken("tokenDePrueba")).thenReturn(Futures.immediateFuture(fbVerify));
@@ -127,9 +127,9 @@ public class FlightsServiceTest extends GenericTest {
         User user = new User();
 
         FbVerify fbVerify = new FbVerify();
-        fbVerify.setId(1L);
+        fbVerify.setId("1");
 
-        when(userRepo.get(0L)).thenReturn(Futures.immediateFuture(user));
+        when(userRepo.get("0")).thenReturn(Futures.immediateFuture(user));
         when(userRepo.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
 
         when(tripRepo.insert(any(Trip.class))).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Error")));

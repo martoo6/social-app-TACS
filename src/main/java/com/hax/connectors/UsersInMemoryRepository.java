@@ -13,17 +13,8 @@ import java.util.List;
 public class UsersInMemoryRepository implements UsersRepositoryInterface {
     List<User> collection = new ArrayList<User>();
 
-    public UsersInMemoryRepository() {
-        User u = new User();
-        u.setId(0L);
-        u.setUsername("UsernameDePrueba");
-        u.setPassword("PasswordDePrueba");
-        collection.add(u);
-    }
-
     public ListenableFuture<User> insert(final User user) {
         if (user == null) return Futures.immediateFuture(new User());
-        user.setId(Long.valueOf(collection.size()));
         collection.add(user);
         return Futures.immediateFuture(user);
     }
@@ -38,7 +29,7 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
         return Futures.immediateFuture(user);
     }
 
-    public ListenableFuture<User> get(final Long id){
+    public ListenableFuture<User> get(final String id){
         for(User user:collection){
             if(user.getId().equals(id)) return Futures.immediateFuture(user);
         }

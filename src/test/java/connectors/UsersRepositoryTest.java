@@ -37,7 +37,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUser() throws ExecutionException, InterruptedException {
         User user = new User();
-        user.setId(1L);
+        user.setId("1");
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
@@ -71,10 +71,11 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void getUser() throws ExecutionException, InterruptedException {
         User user = new User();
+        user.setId("1");
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
         ur.insert(user).get();
 
-        ListenableFuture<User> lf = ur.get(1L);
+        ListenableFuture<User> lf = ur.get("1");
 
         User userRes =lf.get();
         assertTrue(userRes == user);
@@ -84,7 +85,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void getUserMissing(){
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
-        ListenableFuture<User> lf = ur.get(1L);
+        ListenableFuture<User> lf = ur.get("1");
 
         try {
             lf.get();
@@ -105,7 +106,7 @@ public class UsersRepositoryTest extends GenericTest {
         try {
             List<User> userLst = lf.get();
             assertTrue(userLst.contains(user));
-            assertTrue(userLst.size()==2);
+            assertTrue(userLst.size()==1);
         } catch (Exception e) {
             assertTrue(false);
         }

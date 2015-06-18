@@ -4,7 +4,7 @@ package com.hax.models;
  * Created by martin on 5/5/15.
  */
 public class RecommendationPOST {
-    private Long toUserId;
+    private String toUserId;
     private Long flightId;
     private String state;
 
@@ -16,11 +16,11 @@ public class RecommendationPOST {
         this.flightId = flightId;
     }
 
-    public Long getToUserId() {
+    public String getToUserId() {
         return toUserId;
     }
 
-    public void setToUserId(Long toUserId) {
+    public void setToUserId(String toUserId) {
         this.toUserId = toUserId;
     }
 }

@@ -2,17 +2,20 @@ package com.hax.services;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.FutureFallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple2;
 import com.hax.async.utils.Tuple3;
+import com.hax.connectors.FacebookConnectorInterface;
 import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
+import com.hax.models.fb.FbVerify;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,20 +28,32 @@ public class UsersService implements UsersServiceInterface {
     public UsersRepositoryInterface usersRepository;
     @Inject
     public TripsRepositoryInterface flightsRepository;
+    @Inject
+    public FacebookConnectorInterface facebookConnector;
 
     public ListenableFuture<List<User>> getAll() {
         return usersRepository.getAll();
     }
 
-    public ListenableFuture<User> getUser(Long id) {
+    public ListenableFuture<User> getUser(String id) {
         return usersRepository.get(id);
     }
 
-    public ListenableFuture<User> createUser(User user) {
-        return usersRepository.insert(user);
+    public ListenableFuture<User> createUser(String token) {
+        return Futures.transform(facebookConnector.verifyAccessToken(token), new AsyncFunction<FbVerify, User>() {
+            @Override
+            public ListenableFuture<User> apply(final FbVerify fbVerify) throws Exception {
+                return Futures.withFallback(usersRepository.get(fbVerify.getId()), new FutureFallback<User>() {
+                    @Override
+                    public ListenableFuture<User> create(Throwable throwable) throws Exception {
+                        return usersRepository.insert(new User(fbVerify));
+                    }
+                });
+            }
+        });
     }
 
-    public ListenableFuture<List<User>> getFriends(Long id) {
+    public ListenableFuture<List<User>> getFriends(String id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<User>>() {
             public List<User> apply(User user) {
                 return user.getFriends();
@@ -46,7 +61,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<Trip>> getFlights(Long id) {
+    public ListenableFuture<List<Trip>> getTrips(String id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<Trip>>() {
             public List<Trip> apply(User user) {
                 return user.getTrips();
@@ -54,7 +69,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<Recommendation>> getRecommendations(Long id) {
+    public ListenableFuture<List<Recommendation>> getRecommendations(String id) {
         return Futures.transform(usersRepository.get(id), new Function<User, List<Recommendation>>() {
             public List<Recommendation> apply(User user) {
                 return user.getRecommendations();
@@ -73,7 +88,7 @@ public class UsersService implements UsersServiceInterface {
      * @param toUserId
      * @return
      */
-    public ListenableFuture<Recommendation> recommendFlight(Long flightId,Long fromUserId, Long toUserId){
+    public ListenableFuture<Recommendation> recommendFlight(Long flightId,String fromUserId, String toUserId){
 
         /**
          Hacemos 3 llamadas asincronicas a los repositorios y esperamos el resultado de las 3.
@@ -102,15 +117,15 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<Recommendation> acceptRecommendation(Long recommendationId,Long userId) {
+    public ListenableFuture<Recommendation> acceptRecommendation(Long recommendationId,String userId) {
         return setRecommendationState(recommendationId, RecommendationState.ACCEPTED, userId);
     }
 
-    public ListenableFuture<Recommendation> rejectRecommendation(Long recommendationId,Long userId) {
+    public ListenableFuture<Recommendation> rejectRecommendation(Long recommendationId,String userId) {
         return setRecommendationState(recommendationId, RecommendationState.REJECTED, userId);
     }
 
-    private ListenableFuture<Recommendation> setRecommendationState(final Long recommendationId, final RecommendationState state, Long userId){
+    private ListenableFuture<Recommendation> setRecommendationState(final Long recommendationId, final RecommendationState state, String userId){
         return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
                     public Recommendation apply(User user) {
 
@@ -126,7 +141,7 @@ public class UsersService implements UsersServiceInterface {
         );
     }
 
-    public ListenableFuture<User> addFriend(Long userId, Long friendId) {
+    public ListenableFuture<User> addFriend(String userId, String friendId) {
         ListenableFuture<User> userFuture = usersRepository.get(userId);
         ListenableFuture<User> friendFuture = usersRepository.get(friendId);
 
@@ -143,7 +158,7 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<User> removeFriend(Long userId, Long friendId) {
+    public ListenableFuture<User> removeFriend(String userId, String friendId) {
         ListenableFuture<User> userFuture = usersRepository.get(userId);
         ListenableFuture<User> friendFuture = usersRepository.get(friendId);
 
