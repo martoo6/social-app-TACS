@@ -85,7 +85,7 @@ angular.module('frontendApp')
     
     (function init(){
       
-      $http.get('api/v1/trips/all')
+      $http.get('api/v1/trips')
         .success(function(trips){
           $scope.myTrips = trips;
         });

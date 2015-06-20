@@ -66,21 +66,32 @@ angular
   })
   .constant('facebookConfigSettings', {
     'appID' : '565625596912348',
-    'routingEnabled' : true
+    'routingEnabled' : true,
+    'permissions' : 'publish_actions'
   })
-  .run(function ($rootScope, facebookUser){
+  .run(function ($rootScope, facebookUser, $http){
     $rootScope.$on('fbLoginSuccess', function(name, response) {
       facebookUser.then(function(user) {
         user.api('/me').then(function(response) {
           $rootScope.loggedInUser = response;
         });
       });
+      window.fbStatus = response;
+      $rootScope.fbStatus = response;
+      $http.defaults.headers.common['token'] = $rootScope.fbStatus.authResponse.accessToken;
+      $.ajax({
+            type: 'POST', 
+            url: 'api/v1/users/' + response.authResponse.accessToken,
+            contentType: 'application/json',
+            data: {id: response.id}
+          });
     });
 
     $rootScope.$on('fbLogoutSuccess', function() {
       $rootScope.$apply(function() {
         $rootScope.loggedInUser = {};
+        $rootScope.fbStatus = {};
+        $http.defaults.headers.common['token'] = '';
       });
     });
   });
-  

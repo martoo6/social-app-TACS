@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('FlightpickCtrl', function ($scope, $http) {
+  .controller('FlightpickCtrl', function ($scope, $http, $rootScope) {
 
     $scope.originLocation;
     $scope.destinyLocation;
@@ -26,28 +26,47 @@ angular.module('frontendApp')
       });
     };
 
-    $scope.flightClick = function(flight){
-      $scope.selectedFlight = flight;
+    $scope.tripClick = function(trip){
+      $scope.selectedTrip = trip;
+      console.log(trip)
+      console.log($scope.destinyLocation)
+      console.log($scope.leaveDate)
       $('#modalCrear').modal();
     };
 
     $scope.saveTrip = function(){
 
       //delete extra attributes, otherwise jersey wont save
-      delete $scope.selectedFlight.$$hashKey;
+      delete $scope.selectedTrip.$$hashKey;
+
 
       $.ajax({
           type: "POST",
           url: 'api/v1/trips',
-          headers:{'token':0},
+          headers:{'token': $rootScope.fbStatus.authResponse.accessToken},
           contentType: 'application/json',
-          data: JSON.stringify($scope.selectedFlight)
+          data: JSON.stringify($scope.selectedTrip)
       })
       .success(function(){
         $('#modalCrear').on('hidden.bs.modal', function(){
-          window.location.href = '#/misVuelos';
+          
+          if($scope.destinyLocation && $scope.leaveDate){
+            $.get('api/v1/airports/'+ $scope.destinyLocation.originalObject.code, function(airport){
+              
+              //more on api parameters at the end of the file
+              FB.api('/me/feed', 'post', {
+                message: 'Me voy a ' + airport.city + ' el ' + $scope.leaveDate + ' !'
+              }, function(response) {
+                if (!response || response.error) {
+                  //Error occured - handle it
+                } else {
+                  window.location.href = '#/misVuelos';
+                }
+              });
+            });
+          }
         }).modal('hide');
-      })
+      });
     };
 
     //acts on input change: fetches itineraries and maps them to backend
@@ -117,4 +136,21 @@ angular.module('frontendApp')
       });
     }
 });
-    
+  
+//
+//  Reminder for facebook parameters to post to wall
+//    
+//  fbParams = {
+//    message: to display in post body
+//    name: name of the link showing in post
+//    link: link to content (url)
+//    picture: picture that shows for link container
+//    caption: little grey text at link container bottom
+//  };
+//  FB.api('/me/feed', 'post', fbParams, function(response) {
+//    if (!response || response.error) {
+//      //Error occured - handle it
+//    } else {
+//      //Success!
+//    }
+//  });

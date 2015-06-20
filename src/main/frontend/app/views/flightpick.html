@@ -26,7 +26,7 @@
 
         <div ng-repeat="trip in tripOptions">
             <div class="well selectableFlight">
-                <div class="row" ng-click="flightClick(trip)">
+                <div class="row" ng-click="tripClick(trip)">
                     <div class="col-xs-5" ng-init="wt = trip.wayFlights.slice(1).pop()" style="border-right:dotted">
                         <div style="text-align:center"><h4>Ida</h4></div>
                         <div><strong>Origen: </strong><span>{{trip.origin}}</span></div>
@@ -65,6 +65,7 @@
           </div>
           <div class="modal-body">
             <p>Desea guardar este vuelo?</p>
+            <p>Al guardar el vuelo se posteará en el muro de facebook</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
