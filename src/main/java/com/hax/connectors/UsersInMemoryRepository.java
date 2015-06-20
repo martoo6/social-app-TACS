@@ -14,7 +14,9 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
     List<User> collection = new ArrayList<User>();
 
     public ListenableFuture<User> insert(final User user) {
+        System.out.println("El usuario es: "+(user == null));
         if (user == null) return Futures.immediateFuture(new User());
+        System.out.println("Cree al usuario");
         collection.add(user);
         return Futures.immediateFuture(user);
     }

@@ -99,13 +99,15 @@ public class UsersServiceTest extends GenericTest {
         FacebookConnectorInterface fC = mock(FacebookConnectorInterface.class);
 
         User user = new User();
+        user.setId("1");
+        user.setUsername("pepito");
         FbVerify fb = new FbVerify();
         fb.setId("1");
         fb.setName("pepito");
         fb.setGender("male");
 
         when(ur.insert(any(User.class))).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(any(String.class))).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("")));
+        when(ur.get(any(String.class))).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("No existe el usuario")));
         when(fC.verifyAccessToken(any(String.class))).thenReturn(Futures.immediateFuture(fb));
 
         UsersService us = new UsersService();
@@ -117,10 +119,7 @@ public class UsersServiceTest extends GenericTest {
         try {
             User u = lf.get();
             assertTrue(u.getId().equals(fb.getId()));
-            System.out.println(u.getId());
-            System.out.println(fb.getId());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             assertTrue(false);
         }
     }
