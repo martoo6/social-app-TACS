@@ -14,9 +14,6 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
-import java.util.concurrent.Callable;
-
-import static com.hax.async.executors.Default.ex;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -104,7 +101,7 @@ public class FlightsServiceTest extends GenericTest {
         when(fbConn.verifyAccessToken("tokenDePrueba")).thenReturn(Futures.immediateFuture(fbVerify));
 
         TripsService fs = new TripsService();
-        fs.flightsRepository = fr;
+        fs.tripsRepository = fr;
         fs.userRepository = ur;
         fs.fbConnector = fbConn;
 
@@ -138,7 +135,7 @@ public class FlightsServiceTest extends GenericTest {
 
 
         TripsService fs = new TripsService();
-        fs.flightsRepository = tripRepo;
+        fs.tripsRepository = tripRepo;
         fs.userRepository = userRepo;
         fs.fbConnector = fbConn;
 

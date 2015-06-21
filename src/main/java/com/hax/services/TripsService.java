@@ -24,7 +24,7 @@ public class TripsService implements TripsServiceInterface {
     @Inject
     public DespegarConnectorInterface despegarConnector;
     @Inject
-    public TripsRepositoryInterface flightsRepository;
+    public TripsRepositoryInterface tripsRepository;
     @Inject
     public UsersRepositoryInterface userRepository;
     @Inject
@@ -54,7 +54,7 @@ public class TripsService implements TripsServiceInterface {
         ListenableFuture<Tuple2<Trip,User>> comp = Futures.transform(fbVerify, new AsyncFunction<FbVerify, Tuple2<Trip,User>>() {
             @Override
             public ListenableFuture<Tuple2<Trip,User>> apply(FbVerify fbVerify) throws Exception {
-                ListenableFuture<Trip> flightF = flightsRepository.insert(trip);
+                ListenableFuture<Trip> flightF = tripsRepository.insert(trip);
                 ListenableFuture<User> userF = userRepository.get(fbVerify.getId());
                 return FutureHelper.compose(flightF, userF);
             }
@@ -64,7 +64,7 @@ public class TripsService implements TripsServiceInterface {
             public Trip apply(Tuple2<Trip, User> tuple) {
                 Trip trip = tuple.getR1();
                 User user = tuple.getR2();
-                user.getTrips().add(trip);
+                user.getTrips().add(trip.getId());
                 userRepository.update(user);
                 return trip;
             }
@@ -78,7 +78,7 @@ public class TripsService implements TripsServiceInterface {
      */
     public ListenableFuture<List<Trip>> getAllSavedTrips() {
 //        System.out.println();
-//        System.out.println(flightsRepository);
-        return flightsRepository.getAll();
+//        System.out.println(tripsRespository);
+        return tripsRepository.getAll();
     }
 }

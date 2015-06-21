@@ -12,8 +12,8 @@ public class User {
     private String username;
     private String email;
     private String id;
-    private List<User> friends = new ArrayList<User>();
-    private List<Trip> trips = new ArrayList<Trip>();
+    private List<String> friends = new ArrayList<String>();
+    private List<Long> trips = new ArrayList<Long>();
     private List<Recommendation> recommendations = new ArrayList<Recommendation>();
     private String longLivedToken;
     private String gender;
@@ -45,19 +45,19 @@ public class User {
 
     public void setId(String id) { this.id = id; }
 
-    public List<User> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
-    public List<Trip> getTrips() {
+    public List<Long> getTrips() {
         return trips;
     }
 
-    public void setTrips(List<Trip> trips) {
+    public void setTrips(List<Long> trips) {
         this.trips = trips;
     }
 

@@ -30,22 +30,7 @@ public class TripsController {
     UsersServiceInterface usersService;
 
 
-    /**
-     *
-     * @return Lista de vuelos que cumplen el criterio de busqueda
-     * @throws JSONException
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getFilteredTrip(@Context HttpHeaders hh) throws JSONException
-    {
-        String token = hh.getHeaderString("token");
-        if(token==null) {
-            return fail("Missing token");
-        } else {
-            return addControllerCallback(usersService.getTrips(token));
-        }
-    }
+
 
 
     /**

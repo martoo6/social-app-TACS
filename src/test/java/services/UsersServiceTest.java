@@ -21,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -133,12 +134,14 @@ public class UsersServiceTest extends GenericTest {
         fbVerify.setId("1");
 
         User user = new User();
-        List<User> friends = user.getFriends();
+        List<String> friends = user.getFriends();
         User friend = new User();
-        friends.add(friend);
+        friend.setId("1234");
+        friends.add(friend.getId());
 
-        when(ur.get(anyString())).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(friend));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
@@ -183,20 +186,26 @@ public class UsersServiceTest extends GenericTest {
     public void getFlights() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        TripsRepositoryInterface tr = mock(TripsRepositoryInterface.class);
+
         FbVerify fbVerify = new FbVerify();
         fbVerify.setId("1");
 
         User user = new User();
-        List<Trip> trips = user.getTrips();
+        user.setId("1");
+        List<Long> trips = user.getTrips();
         Trip trip = new Trip();
-        trips.add(trip);
+        trip.setId(1234L);
+        trips.add(trip.getId());
 
         when(ur.get(anyString())).thenReturn(Futures.immediateFuture(user));
         when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(tr.get(anyLong())).thenReturn(Futures.immediateFuture(trip));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
         us.facebookConnector = fb;
+        us.tripsRespository = tr;
 
         ListenableFuture<List<Trip>> lf = us.getTrips("1");
 
@@ -204,6 +213,7 @@ public class UsersServiceTest extends GenericTest {
             List<Trip> ul = lf.get();
             assertTrue(ul.contains(trip));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             assertTrue(false);
         }
     }
@@ -217,9 +227,10 @@ public class UsersServiceTest extends GenericTest {
 
 
         User user = new User();
-        List<Trip> trips = user.getTrips();
+        List<Long> trips = user.getTrips();
         Trip trip = new Trip();
-        trips.add(trip);
+        trip.setId(1234L);
+        trips.add(trip.getId());
 
         when(ur.get(anyString())).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
         when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
@@ -336,7 +347,8 @@ public class UsersServiceTest extends GenericTest {
 
         try {
             User u = lf.get();
-            assertTrue(u.getFriends().contains(friend));
+            assertTrue(u.getFriends().contains(friend.getId()));
+            assertTrue(friend.getFriends().contains(u.getId()));
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -402,8 +414,9 @@ public class UsersServiceTest extends GenericTest {
         friend.setId("2");
 
         User user = new User();
-        user.getFriends().add(friend);
         user.setId("1");
+        user.getFriends().add(friend.getId());
+
 
         when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
@@ -416,7 +429,8 @@ public class UsersServiceTest extends GenericTest {
 
         try {
             User u = lf.get();
-            assertFalse(u.getFriends().contains(friend));
+            assertFalse(u.getFriends().contains(friend.getId()));
+            assertFalse(friend.getFriends().contains(u.getId()));
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -495,7 +509,7 @@ public class UsersServiceTest extends GenericTest {
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
-        us.flightsRepository = fr;
+        us.tripsRespository = fr;
 
         ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
 
@@ -529,7 +543,7 @@ public class UsersServiceTest extends GenericTest {
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
-        us.flightsRepository = fr;
+        us.tripsRespository = fr;
 
         ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
 

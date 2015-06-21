@@ -1,5 +1,7 @@
 package controllers;
 
+import com.google.common.util.concurrent.Futures;
+import com.hax.models.Trip;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -10,9 +12,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.Arrays;
+
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,6 +40,28 @@ public class UsersControllerTest extends GenericTest {
 //        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 //    }
 
+    @Test
+    public void getFriendsResponse() {
+        User user = new User();
+        user.setId("1234");
+
+        when(us.getFriends(anyString())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
+
+        final Response responseWrapper = target("users/me/friends").request(MediaType.APPLICATION_JSON).header("token", "0").get();
+        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
+    }
+
+
+    @Test
+    public void geTripsResponse() {
+        Trip trip = new Trip();
+        trip.setId(1234L);
+
+        when(us.getTrips(anyString())).thenReturn(Futures.immediateFuture(Arrays.asList(trip)));
+
+        final Response responseWrapper = target("users/me/trips").request(MediaType.APPLICATION_JSON).header("token", "0").get();
+        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
+    }
 
     @Override
     protected AbstractBinder setBinder() {

@@ -15,8 +15,8 @@ public interface UsersServiceInterface {
     ListenableFuture<List<User>> getAll();
     ListenableFuture<User> getUser(String token);
     ListenableFuture<User> createUser(String token);
-    ListenableFuture<List<User>> getFriends(String id);
-    ListenableFuture<List<Trip>> getTrips(String id);
+    ListenableFuture<List<User>> getFriends(String token);
+    ListenableFuture<List<Trip>> getTrips(String token);
     ListenableFuture<User> update(User user);
     ListenableFuture<List<Recommendation>> getRecommendations(String id);
     ListenableFuture<Recommendation> recommendFlight(Long flightId,String fromUserId, String toUserId);

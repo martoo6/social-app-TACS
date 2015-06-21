@@ -25,16 +25,7 @@ import static org.mockito.Mockito.when;
 public class FriendsControllerTest extends GenericTest {
     UsersServiceInterface us = mock(UsersServiceInterface.class);
 
-    @Test
-    public void getFriendsResponse() {
-        User user = new User();
-        user.setUsername("Pepito");
 
-        when(us.getFriends(anyString())).thenReturn(Futures.immediateFuture(Arrays.asList(user)));
-
-        final Response responseWrapper = target("friends").request(MediaType.APPLICATION_JSON).header("token", "0").get();
-        assertEquals(Response.Status.OK.getStatusCode(), responseWrapper.getStatus());
-    }
 
     @Test
     public void addFriendResponse() {

@@ -18,6 +18,7 @@ import com.hax.models.User;
 import com.hax.models.fb.FbVerify;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class UsersService implements UsersServiceInterface {
     @Inject
     public UsersRepositoryInterface usersRepository;
     @Inject
-    public TripsRepositoryInterface flightsRepository;
+    public TripsRepositoryInterface tripsRespository;
     @Inject
     public FacebookConnectorInterface facebookConnector;
 
@@ -63,9 +64,13 @@ public class UsersService implements UsersServiceInterface {
             }
         });
 
-        return Futures.transform(userF, new Function<User, List<User>>() {
-            public List<User> apply(User user) {
-                return user.getFriends();
+        return Futures.transform(userF, new AsyncFunction<User, List<User>>() {
+            public ListenableFuture<List<User>> apply(User user) {
+                ArrayList<ListenableFuture<User>> lst = new ArrayList<ListenableFuture<User>>();
+                for(String id:user.getFriends()){
+                    lst.add(usersRepository.get(id));
+                }
+                return Futures.allAsList(lst);
             }
         });
     }
@@ -78,9 +83,13 @@ public class UsersService implements UsersServiceInterface {
             }
         });
 
-        return Futures.transform(userF, new Function<User, List<Trip>>() {
-            public List<Trip> apply(User user) {
-                return user.getTrips();
+        return Futures.transform(userF, new AsyncFunction<User, List<Trip>>() {
+            public ListenableFuture<List<Trip>> apply(User user) {
+                ArrayList<ListenableFuture<Trip>> lst = new ArrayList<ListenableFuture<Trip>>();
+                for(Long id:user.getTrips()){
+                    lst.add(tripsRespository.get(id));
+                }
+                return Futures.allAsList(lst);
             }
         });
     }
@@ -119,7 +128,7 @@ public class UsersService implements UsersServiceInterface {
          Al no ir a los repositorios de manera secuencial se logra la maxima velocidad para obtener los resultados.
          */
 
-        final ListenableFuture<Trip> flightF = flightsRepository.get(flightId);
+        final ListenableFuture<Trip> flightF = tripsRespository.get(flightId);
         final ListenableFuture<User> fromUserF = usersRepository.get(fromUserId);
         final ListenableFuture<User> toUserF = usersRepository.get(toUserId);
 
@@ -174,7 +183,9 @@ public class UsersService implements UsersServiceInterface {
             public User apply(Tuple2<User, User> tuple) {
                 User user = tuple.getR1();
                 User friend = tuple.getR2();
-                user.getFriends().add(friend);
+                user.getFriends().add(friend.getId());
+                friend.getFriends().add(user.getId());
+                usersRepository.update(friend);
                 usersRepository.update(user);
                 return user;
             }
@@ -191,7 +202,9 @@ public class UsersService implements UsersServiceInterface {
             public User apply(Tuple2<User, User> tuple) {
                 User user = tuple.getR1();
                 User friend = tuple.getR2();
-                user.getFriends().remove(friend);
+                user.getFriends().remove(friend.getId());
+                friend.getFriends().remove(user.getId());
+                usersRepository.update(friend);
                 usersRepository.update(user);
                 return user;
             }
