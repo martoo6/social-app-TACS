@@ -126,6 +126,7 @@
 
           <configuration>
               <workingDirectory>src/main/frontend</workingDirectory>
+              <skip>${maven.grunt.skip}</skip>
           </configuration>
 
           <executions>
