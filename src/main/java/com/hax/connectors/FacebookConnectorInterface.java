@@ -1,6 +1,7 @@
 package com.hax.connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.models.fb.FbFriends;
 import com.hax.models.fb.FbVerify;
 
 /**
@@ -10,4 +11,5 @@ import com.hax.models.fb.FbVerify;
 public interface FacebookConnectorInterface {
     ListenableFuture<String> getLongLivedToken(String shortLivedToken);
     ListenableFuture<FbVerify> verifyAccessToken(String token);
+    ListenableFuture<FbFriends> getUserFriends(String token);
 }

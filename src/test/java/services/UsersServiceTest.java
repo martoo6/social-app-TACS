@@ -9,12 +9,15 @@ import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
+import com.hax.models.fb.FbFriend;
+import com.hax.models.fb.FbFriends;
 import com.hax.models.fb.FbVerify;
 import com.hax.services.UsersService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import utils.GenericTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -100,17 +103,40 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fC = mock(FacebookConnectorInterface.class);
 
+
+        User friend = new User();
+        friend.setId("1234");
+
         User user = new User();
         user.setId("1");
         user.setUsername("pepito");
+        user.getFriends().add(friend.getId());
+
         FbVerify fb = new FbVerify();
         fb.setId("1");
         fb.setName("pepito");
         fb.setGender("male");
 
+        FbFriend fbFriend1 = new FbFriend();
+        FbFriend fbFriend2 = new FbFriend();
+        fbFriend1.setId("1234");
+        fbFriend1.setName("Amigo1");
+        fbFriend2.setId("4321");
+        fbFriend2.setName("Amigo2");
+
+        ArrayList<FbFriend> friendsLst = new ArrayList<FbFriend>();
+        //friendsLst.addAll(Arrays.asList(fbFriend1, fbFriend2));
+        friendsLst.addAll(Arrays.asList(fbFriend1));
+
+        FbFriends fbFriends = new FbFriends();
+        fbFriends.setData(friendsLst);
+
         when(ur.insert(any(User.class))).thenReturn(Futures.immediateFuture(user));
-        when(ur.get(any(String.class))).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("No existe el usuario")));
+        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("No existe el usuario")));
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(friend));
+        //when(ur.get("4321")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("No existe el usuario")));
         when(fC.verifyAccessToken(any(String.class))).thenReturn(Futures.immediateFuture(fb));
+        when(fC.getUserFriends(any(String.class))).thenReturn(Futures.immediateFuture(fbFriends));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
@@ -122,6 +148,7 @@ public class UsersServiceTest extends GenericTest {
             User u = lf.get();
             assertTrue(u.getId().equals(fb.getId()));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             assertTrue(false);
         }
     }
@@ -325,34 +352,36 @@ public class UsersServiceTest extends GenericTest {
         }
     }
 
-    @Test
-    public void addFriend() {
-        UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
-        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
-        User user = new User();
-        user.setId("1");
-
-        User friend = new User();
-        friend.setId("2");
-
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
-
-
-        UsersService us = new UsersService();
-        us.usersRepository = ur;
-
-        ListenableFuture<User> lf = us.addFriend("1", "2");
-
-        try {
-            User u = lf.get();
-            assertTrue(u.getFriends().contains(friend.getId()));
-            assertTrue(friend.getFriends().contains(u.getId()));
-        } catch (Exception e) {
-            assertTrue(false);
-        }
-    }
+//No se usa mas
+//    @Test
+//    public void addFriend() {
+//        UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+//        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+//
+//        User user = new User();
+//        user.setId("1");
+//
+//        User friend = new User();
+//        friend.setId("2");
+//
+//        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+//        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
+//
+//
+//        UsersService us = new UsersService();
+//        us.usersRepository = ur;
+//
+//        ListenableFuture<User> lf = us.addFriend("1", "2");
+//
+//        try {
+//            User u = lf.get();
+//            assertTrue(u.getFriends().contains(friend.getId()));
+//            assertTrue(friend.getFriends().contains(u.getId()));
+//        } catch (Exception e) {
+//            assertTrue(false);
+//        }
+//    }
 
     @Test
     public void addFriendMissingUser() {

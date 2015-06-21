@@ -15,6 +15,8 @@ import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.RecommendationState;
 import com.hax.models.User;
+import com.hax.models.fb.FbFriend;
+import com.hax.models.fb.FbFriends;
 import com.hax.models.fb.FbVerify;
 
 import javax.inject.Inject;
@@ -40,14 +42,35 @@ public class UsersService implements UsersServiceInterface {
         return usersRepository.get(id);
     }
 
-    public ListenableFuture<User> createUser(String token) {
+    public ListenableFuture<User> createUser(final String token) {
         return Futures.transform(facebookConnector.verifyAccessToken(token), new AsyncFunction<FbVerify, User>() {
             @Override
             public ListenableFuture<User> apply(final FbVerify fbVerify) throws Exception {
                 return Futures.withFallback(usersRepository.get(fbVerify.getId()), new FutureFallback<User>() {
                     @Override
                     public ListenableFuture<User> create(Throwable throwable) throws Exception {
-                        return usersRepository.insert(new User(fbVerify));
+
+                        return Futures.transform(facebookConnector.getUserFriends(token), new AsyncFunction<FbFriends, User>() {
+                            @Override
+                            public ListenableFuture<User> apply(FbFriends fbFriends) throws Exception {
+                                ArrayList<ListenableFuture<User>> lst = new ArrayList<ListenableFuture<User>>();
+                                for(FbFriend fbFriend: fbFriends.getData()){
+                                    lst.add(usersRepository.get(fbFriend.getId()));
+                                }
+                                return Futures.transform(Futures.successfulAsList(lst), new AsyncFunction<List<User>, User>() {
+                                    @Override
+                                    public ListenableFuture<User> apply(List<User> friends) throws Exception {
+                                        User newUser = new User(fbVerify);
+                                        for(User friend :friends)  {
+                                            newUser.getFriends().add(friend.getId());
+                                            friend.getFriends().add(newUser.getId());
+                                            usersRepository.update(friend);
+                                        }
+                                        return usersRepository.insert(newUser);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
