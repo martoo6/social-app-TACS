@@ -73,4 +73,12 @@ public class TripsControllerTest extends GenericTest {
         final Response response = target("trips").request(MediaType.APPLICATION_JSON).header("token",0).post(Entity.json(json));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
+
+    @Test
+    public void getTripResponse() {
+        when(fs.getTrip(100L)).thenReturn(immediateFuture(new Trip()));
+
+        final Response response = target("trips/100").request(MediaType.APPLICATION_JSON).get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 }

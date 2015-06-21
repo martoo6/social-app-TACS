@@ -70,7 +70,12 @@ public class TripsService implements TripsServiceInterface {
             }
         });
     }
-    
+
+    @Override
+    public ListenableFuture<Trip> getTrip(Long tripId) {
+        return tripsRepository.get(tripId);
+    }
+
     /**
      * trae todos los vuelos
      * 

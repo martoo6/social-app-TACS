@@ -85,4 +85,17 @@ public class TripsController {
         ListenableFuture<List<Trip>> f = tripsService.getAllSavedTrips();
         return addControllerCallback(f);
     }
+
+    /**
+     * ruta de prueba para ver todos los vuelos guardados
+     *
+     * @throws JSONException
+     */
+    @GET
+    @Path("{tripId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTrip(@PathParam("tripId") Long tripId ,@Context HttpServletResponse asyncResponse) throws JSONException
+    {
+        return addControllerCallback(tripsService.getTrip(tripId));
+    }
 }

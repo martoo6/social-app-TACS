@@ -13,4 +13,5 @@ public interface TripsServiceInterface {
     ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
     ListenableFuture<List<Trip>> getAllSavedTrips();
     ListenableFuture<Trip> createTrip(Trip trip, String token);
+    ListenableFuture<Trip> getTrip(Long tripId);
 }
