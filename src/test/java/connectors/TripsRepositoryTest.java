@@ -8,6 +8,7 @@ import com.hax.models.Flight;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.junit.After;
 import org.junit.Test;
 import utils.GenericTest;
 
@@ -57,6 +58,7 @@ public class TripsRepositoryTest extends GenericTest {
             Trip f = lf.get();
             assertTrue(f == trip);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             assertTrue(false);
         }
     }
@@ -79,6 +81,7 @@ public class TripsRepositoryTest extends GenericTest {
     public void getAllFlight() throws ExecutionException, InterruptedException {
         TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
+
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
         Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
@@ -96,6 +99,10 @@ public class TripsRepositoryTest extends GenericTest {
         }
     }
 
+    @After
+    public void tearDown() {
+        TripsInMemoryRepository.tearDown();
+    }
 
     @Override
     protected AbstractBinder setBinder() {

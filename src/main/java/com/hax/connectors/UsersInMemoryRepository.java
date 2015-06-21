@@ -38,6 +38,10 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
         return Futures.immediateFailedFuture(new RuntimeException("User not found: "+ids));
     }
 
+    public static void tearDown(){
+        collection.clear();
+    }
+
     public ListenableFuture<List<User>> getAll(){
         return Futures.immediateFuture(collection);
     }

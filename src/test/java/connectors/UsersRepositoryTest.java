@@ -1,9 +1,11 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.connectors.TripsInMemoryRepository;
 import com.hax.connectors.UsersInMemoryRepository;
 import com.hax.models.User;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.junit.After;
 import org.junit.Test;
 import utils.GenericTest;
 
@@ -55,6 +57,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUserMissing() throws ExecutionException, InterruptedException {
         User user = new User();
+        user.setId("1234");
         UsersInMemoryRepository ur = new UsersInMemoryRepository();
 
 
@@ -110,6 +113,11 @@ public class UsersRepositoryTest extends GenericTest {
         } catch (Exception e) {
             assertTrue(false);
         }
+    }
+
+    @After
+    public void tearDown() {
+        UsersInMemoryRepository.tearDown();
     }
 
     @Override

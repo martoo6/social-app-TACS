@@ -30,4 +30,8 @@ public class TripsInMemoryRepository implements TripsRepositoryInterface {
     public ListenableFuture<List<Trip>> getAll(){
         return Futures.immediateFuture(trips);
     }
+
+    static public void tearDown(){
+        trips.clear();
+    }
 }
