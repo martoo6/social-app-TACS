@@ -53,24 +53,47 @@ public class UsersService implements UsersServiceInterface {
         });
     }
 
-    public ListenableFuture<List<User>> getFriends(String id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<User>>() {
+    public ListenableFuture<List<User>> getFriends(final String token) {
+
+
+        ListenableFuture<User> userF = Futures.transform(facebookConnector.verifyAccessToken(token), new AsyncFunction<FbVerify, User>() {
+            @Override
+            public ListenableFuture<User> apply(FbVerify fbVerify) throws Exception {
+                return usersRepository.get(fbVerify.getId());
+            }
+        });
+
+        return Futures.transform(userF, new Function<User, List<User>>() {
             public List<User> apply(User user) {
                 return user.getFriends();
             }
         });
     }
 
-    public ListenableFuture<List<Trip>> getTrips(String id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<Trip>>() {
+    public ListenableFuture<List<Trip>> getTrips(final String token) {
+        ListenableFuture<User> userF = Futures.transform(facebookConnector.verifyAccessToken(token), new AsyncFunction<FbVerify, User>() {
+            @Override
+            public ListenableFuture<User> apply(FbVerify fbVerify) throws Exception {
+                return usersRepository.get(fbVerify.getId());
+            }
+        });
+
+        return Futures.transform(userF, new Function<User, List<Trip>>() {
             public List<Trip> apply(User user) {
                 return user.getTrips();
             }
         });
     }
 
-    public ListenableFuture<List<Recommendation>> getRecommendations(String id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<Recommendation>>() {
+    public ListenableFuture<List<Recommendation>> getRecommendations(final String token) {
+        ListenableFuture<User> userF = Futures.transform(facebookConnector.verifyAccessToken(token), new AsyncFunction<FbVerify, User>() {
+            @Override
+            public ListenableFuture<User> apply(FbVerify fbVerify) throws Exception {
+                return usersRepository.get(fbVerify.getId());
+            }
+        });
+
+        return Futures.transform(userF, new Function<User, List<Recommendation>>() {
             public List<Recommendation> apply(User user) {
                 return user.getRecommendations();
             }

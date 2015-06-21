@@ -11,12 +11,10 @@ import java.util.List;
  * Created by martin on 5/5/15.
  */
 public class UsersInMemoryRepository implements UsersRepositoryInterface {
-    List<User> collection = new ArrayList<User>();
+    static List<User> collection = new ArrayList<User>();
 
     public ListenableFuture<User> insert(final User user) {
-        System.out.println("El usuario es: "+(user == null));
-        if (user == null) return Futures.immediateFuture(new User());
-        System.out.println("Cree al usuario");
+        if (user == null) return Futures.immediateFailedFuture(new RuntimeException("User is null"));
         collection.add(user);
         return Futures.immediateFuture(user);
     }
@@ -32,10 +30,12 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
     }
 
     public ListenableFuture<User> get(final String id){
+        String ids = "Searching id: "+id+". ";
         for(User user:collection){
-            if(user.getId().equals(id)) return Futures.immediateFuture(user);
+            ids+=user.getId()+" , Checking resolved: "+user.getId().equals(id);
+            if (user.getId().equals(id)) return Futures.immediateFuture(user);
         }
-        return Futures.immediateFailedFuture(new RuntimeException("User not found"));
+        return Futures.immediateFailedFuture(new RuntimeException("User not found: "+ids));
     }
 
     public ListenableFuture<List<User>> getAll(){

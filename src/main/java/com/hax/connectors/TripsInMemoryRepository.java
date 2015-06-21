@@ -11,7 +11,7 @@ import java.util.List;
  * Created by martin on 5/5/15.
  */
 public class TripsInMemoryRepository implements TripsRepositoryInterface {
-    List<Trip> trips = new ArrayList<Trip>();
+    static List<Trip> trips = new ArrayList<Trip>();
 
     public ListenableFuture<Trip> insert(final Trip trip) {
         if (trip == null) return Futures.immediateFuture(new Trip());

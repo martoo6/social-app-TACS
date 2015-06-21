@@ -21,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -127,17 +128,21 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getFriends() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1");
 
         User user = new User();
         List<User> friends = user.getFriends();
         User friend = new User();
         friends.add(friend);
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-
+        when(ur.get(anyString())).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector =  fb;
 
         ListenableFuture<List<User>> lf = us.getFriends("1");
 
@@ -152,12 +157,17 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getFriendsUserMissing() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("2");
 
-        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
 
+        when(ur.get(anyString())).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
 
         ListenableFuture<List<User>> lf = us.getFriends("1");
 
@@ -172,17 +182,21 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getFlights() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1");
 
         User user = new User();
         List<Trip> trips = user.getTrips();
         Trip trip = new Trip();
         trips.add(trip);
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-
+        when(ur.get(anyString())).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
 
         ListenableFuture<List<Trip>> lf = us.getTrips("1");
 
@@ -197,17 +211,22 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getFlightsMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1");
+
 
         User user = new User();
         List<Trip> trips = user.getTrips();
         Trip trip = new Trip();
         trips.add(trip);
 
-        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
-
+        when(ur.get(anyString())).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
 
         ListenableFuture<List<Trip>> lf = us.getTrips("1");
 
@@ -222,6 +241,9 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getRecommendations() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1");
 
         User user = new User();
         List<Recommendation> recommendations = user.getRecommendations();
@@ -229,10 +251,11 @@ public class UsersServiceTest extends GenericTest {
         recommendations.add(recommendation);
 
         when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
 
         ListenableFuture<List<Recommendation>> lf = us.getRecommendations("1");
 
@@ -247,12 +270,16 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void getRecommendationsMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1");
 
-        when(ur.get("1")).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
-
+        when(ur.get(anyString())).thenReturn(Futures.<User>immediateFailedFuture(new RuntimeException("Missing User")));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
 
         ListenableFuture<List<Recommendation>> lf = us.getRecommendations("1");
 
@@ -267,6 +294,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void update() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
 
@@ -289,6 +317,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void addFriend() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -316,6 +345,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void addFriendMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User friend = new User();
         friend.setId("2");
@@ -341,6 +371,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void addFriendMissingFriend() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -365,6 +396,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void removeFriend() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User friend = new User();
         friend.setId("2");
@@ -393,6 +425,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void removeFriendMissingUser() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User friend = new User();
         friend.setId("2");
@@ -418,6 +451,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void removeFriendMissingFriend() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -443,7 +477,7 @@ public class UsersServiceTest extends GenericTest {
     public void recommendFlight() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
-
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -479,7 +513,7 @@ public class UsersServiceTest extends GenericTest {
     public void recommendFlightMissingFlight() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
-
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -510,7 +544,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void acceptRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
-
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         Recommendation recommendation = new Recommendation(null,null);
         recommendation.setId(4L);
@@ -539,6 +573,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void acceptRecommendationMissingRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");
@@ -563,7 +598,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void rejectRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
-
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         Recommendation recommendation = new Recommendation(null,null);
         recommendation.setId(4L);
@@ -592,6 +627,7 @@ public class UsersServiceTest extends GenericTest {
     @Test
     public void rejectRecommendationMissingRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
+        FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
         User user = new User();
         user.setId("1");

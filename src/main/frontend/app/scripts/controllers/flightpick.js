@@ -15,11 +15,11 @@ angular.module('frontendApp')
     $scope.leaveDate;
     $scope.returnDate;
     $scope.tripOptions = [];
-    
-      
+
+
     $scope.init = function(){
       $(document).on('blur', '.angucomplete', $scope.actOnChange);
-      
+
       $(document).on('changeDate', '.datepicker', function(){
         $(this).datepicker('hide');
         $scope.actOnChange();
@@ -49,17 +49,20 @@ angular.module('frontendApp')
       })
       .success(function(){
         $('#modalCrear').on('hidden.bs.modal', function(){
-          
+
           if($scope.destinyLocation && $scope.leaveDate){
             $.get('api/v1/airports/'+ $scope.destinyLocation.originalObject.code, function(airport){
-              
+
               //more on api parameters at the end of the file
               FB.api('/me/feed', 'post', {
                 message: 'Me voy a ' + airport.city + ' el ' + $scope.leaveDate + ' !'
               }, function(response) {
+                alert(response);
                 if (!response || response.error) {
                   //Error occured - handle it
+                  alert("TODO MAL");
                 } else {
+                  alert("TODO BIEN");
                   window.location.href = '#/misVuelos';
                 }
               });
@@ -71,7 +74,7 @@ angular.module('frontendApp')
 
     //acts on input change: fetches itineraries and maps them to backend
     //structure before presenting them to the user to choose one
-    $scope.actOnChange = function(){  
+    $scope.actOnChange = function(){
       if($scope.returnDate && $scope.leaveDate && $scope.originLocation && $scope.destinyLocation){
         $('#spinner').show();
         $('#error').empty();
@@ -87,19 +90,19 @@ angular.module('frontendApp')
         })
         .success(function(tripOptions){
           $scope.tripOptions = tripOptions.items.map(function(item) {
-            
+
             //we are only considering the first choices at the moment
             var outboundChoice = item.outbound_choices[0];
             var inboundChoice = item.inbound_choices[0];
-            
+
             return {
               origin: $scope.originLocation.originalObject.code,
               destiny: $scope.destinyLocation.originalObject.code,
               price: item.price_detail.total,
-              
+
               wayDuration: outboundChoice.duration + ' hs',
               returnDuration: inboundChoice.duration + ' hs',
-              
+
               wayFlights: choiceToSegments(outboundChoice),
               returnFlights: choiceToSegments(inboundChoice),
             };
@@ -118,7 +121,7 @@ angular.module('frontendApp')
         });
       }
     };
-    
+
     //////////////////////// HELPERS //////////////////////
 
     //maps choice(inboundChoice/outboundChoice)
@@ -136,10 +139,10 @@ angular.module('frontendApp')
       });
     }
 });
-  
+
 //
 //  Reminder for facebook parameters to post to wall
-//    
+//
 //  fbParams = {
 //    message: to display in post body
 //    name: name of the link showing in post

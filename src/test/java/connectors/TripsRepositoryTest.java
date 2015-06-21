@@ -45,8 +45,6 @@ public class TripsRepositoryTest extends GenericTest {
     public void getFlight() throws ExecutionException, InterruptedException {
         TripsInMemoryRepository dc = new TripsInMemoryRepository();
 
-
-
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
         Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
