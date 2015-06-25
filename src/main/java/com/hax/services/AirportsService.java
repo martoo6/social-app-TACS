@@ -2,6 +2,7 @@ package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.AirportsConnectorInterface;
+import com.hax.models.AirportResponse;
 
 import javax.inject.Inject;
 
@@ -29,7 +30,7 @@ public class AirportsService implements AirportsServiceInterface{
      * @param airportCode
      * @return Json del aeropuerto de codigo airportCode
      */
-    public ListenableFuture<String> getAirport(String airportCode){
+    public ListenableFuture<AirportResponse> getAirport(String airportCode){
         return airportsConnector.getAirportAsync(airportCode);
     }
 }

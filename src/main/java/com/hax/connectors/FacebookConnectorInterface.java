@@ -12,4 +12,5 @@ public interface FacebookConnectorInterface {
     ListenableFuture<String> getLongLivedToken(String shortLivedToken);
     ListenableFuture<FbVerify> verifyAccessToken(String token);
     ListenableFuture<FbFriends> getUserFriends(String token);
+    ListenableFuture<String> publishToWall(String token,String message);
 }

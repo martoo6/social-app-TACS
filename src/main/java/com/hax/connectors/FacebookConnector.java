@@ -4,10 +4,13 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.config.App;
+import com.hax.models.fb.FbFeed;
 import com.hax.models.fb.FbFriends;
 import com.hax.models.fb.FbVerify;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -49,6 +52,25 @@ public class FacebookConnector implements FacebookConnectorInterface{
             public FbFriends apply(Response response) {
                 if(response.getStatus()==Response.Status.OK.getStatusCode()){
                     return response.readEntity(FbFriends.class);
+                }
+                return null;
+            }
+        });
+    }
+
+    public ListenableFuture<String> publishToWall(String token,String message){
+        String url = fbUrl+"me/feed";
+        ListenableFuture<Response> future = RxListenableFuture.newClient()
+                .target(url)
+                .queryParam("access_token", token)
+                .request()
+                .rx()
+                .post(Entity.entity(new FbFeed(message), MediaType.APPLICATION_JSON));
+
+        return Futures.transform(future, new Function<Response, String>() {
+            public String apply(Response response) {
+                if(response.getStatus()==Response.Status.OK.getStatusCode()){
+                    return response.readEntity(String.class);
                 }
                 return null;
             }

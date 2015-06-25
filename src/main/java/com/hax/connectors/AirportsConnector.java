@@ -1,11 +1,14 @@
 package com.hax.connectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.models.AirportResponse;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 
 public class AirportsConnector implements AirportsConnectorInterface {
@@ -34,7 +37,7 @@ public class AirportsConnector implements AirportsConnectorInterface {
         });
     }
         
-    public ListenableFuture<String> getAirportAsync(String airportCode){
+    public ListenableFuture<AirportResponse> getAirportAsync(String airportCode){
         String url = "http://airports.pidgets.com/v1/airports/" + airportCode;
         ListenableFuture<Response> future = RxListenableFuture.newClient()
                 .target(url)
@@ -44,11 +47,16 @@ public class AirportsConnector implements AirportsConnectorInterface {
                 .rx()
                 .get();
 
-        return Futures.transform(future, new Function<Response, String>() {
-            public String apply(Response response) {
+        return Futures.transform(future, new Function<Response, AirportResponse>() {
+            public AirportResponse apply(Response response) {
                 String json = response.readEntity(String.class);
-                
-                return formatJson(json);
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    return mapper.readValue(formatJson(json), AirportResponse.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         });
     }

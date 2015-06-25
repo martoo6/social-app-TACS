@@ -1,6 +1,7 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.models.AirportResponse;
 import com.hax.services.AirportsServiceInterface;
 import org.json.JSONException;
 import org.jvnet.hk2.annotations.Service;
@@ -45,7 +46,7 @@ public class AirportsController {
     public Response getAirportFromCode(@PathParam("airportCode") String airportCode,
                                    @Context HttpServletResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<String> f = airportsService.getAirport(airportCode);
+        ListenableFuture<AirportResponse> f = airportsService.getAirport(airportCode);
         return addControllerCallback(f);
     }
 

@@ -2,10 +2,8 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.DespegarConnectorInterface;
-import com.hax.connectors.FacebookConnectorInterface;
-import com.hax.connectors.TripsRepositoryInterface;
-import com.hax.connectors.UsersRepositoryInterface;
+import com.hax.connectors.*;
+import com.hax.models.AirportResponse;
 import com.hax.models.Trip;
 import com.hax.models.User;
 import com.hax.models.fb.FbVerify;
@@ -16,6 +14,7 @@ import utils.GenericTest;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -89,21 +88,27 @@ public class FlightsServiceTest extends GenericTest {
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fbConn = mock(FacebookConnectorInterface.class);
+        AirportsConnectorInterface airportsConnector = mock(AirportsConnectorInterface.class);
 
         User user = new User();
 
         FbVerify fbVerify = new FbVerify();
         fbVerify.setId("0");
 
+        AirportResponse destiny = new AirportResponse();
+        destiny.setCity("Alguna ciudad");
+
         when(ur.get("0")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(any(User.class))).thenReturn(Futures.immediateFuture(user));
         when(fr.insert(any(Trip.class))).thenReturn(Futures.immediateFuture(new Trip()));
         when(fbConn.verifyAccessToken("tokenDePrueba")).thenReturn(Futures.immediateFuture(fbVerify));
+        when(airportsConnector.getAirportAsync(anyString())).thenReturn(Futures.immediateFuture(destiny));
 
         TripsService fs = new TripsService();
         fs.tripsRepository = fr;
         fs.userRepository = ur;
         fs.fbConnector = fbConn;
+        fs.airportsConnector = airportsConnector;
 
         ListenableFuture<Trip> lf = fs.createTrip(new Trip(), "tokenDePrueba");
 
