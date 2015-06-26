@@ -30,9 +30,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void getFlightsRecommendationsResponse() {
-        Trip trip = new Trip(null,null,null, "Argentina", "USA", "2m", "2m");
-        User user = new User();
-        Recommendation recommendation = new Recommendation(trip, user);
+        Recommendation recommendation = new Recommendation(333L, "abc", "dfg");
 
         when(us.getRecommendations(anyString())).thenReturn(Futures.immediateFuture(Arrays.asList(recommendation)));
 
@@ -42,9 +40,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void recommendFlightResponse() {
-        Trip trip = new Trip(null,null,null, "Argentina", "USA", "2m", "2m");
-        User user = new User();
-        Recommendation recommendation = new Recommendation(trip, user);
+        Recommendation recommendation = new Recommendation(333L, "abc", "dfg");
 
         when(us.recommendFlight(anyLong(), anyString(), anyString())).thenReturn(immediateFuture(recommendation));
 
@@ -59,9 +55,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void acceptRecommendationsResponse() {
-        Trip trip = new Trip(null,null,null, "Argentina", "USA", "2m", "2m");
-        User user = new User();
-        Recommendation recommendation = new Recommendation(trip, user);
+        Recommendation recommendation = new Recommendation(333L, "abc", "dfg");
 
         when(us.acceptRecommendation(anyLong(), anyString())).thenReturn(immediateFuture(recommendation));
 
@@ -71,9 +65,7 @@ public class RecommendationsControllerTest extends GenericTest {
 
     @Test
     public void rejectRecommendationsResponse() {
-        Trip trip = new Trip(null,null,null, "Argentina", "USA", "2m", "2m");
-        User user = new User();
-        Recommendation recommendation = new Recommendation(trip, user);
+        Recommendation recommendation = new Recommendation(333L, "abc", "dfg");
 
         when(us.rejectRecommendation(anyLong(), anyString())).thenReturn(immediateFuture(recommendation));
 

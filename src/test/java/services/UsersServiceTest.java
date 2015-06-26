@@ -2,13 +2,8 @@ package services;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.FacebookConnectorInterface;
-import com.hax.connectors.TripsRepositoryInterface;
-import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Trip;
-import com.hax.models.Recommendation;
-import com.hax.models.RecommendationState;
-import com.hax.models.User;
+import com.hax.connectors.*;
+import com.hax.models.*;
 import com.hax.models.fb.FbFriend;
 import com.hax.models.fb.FbFriends;
 import com.hax.models.fb.FbVerify;
@@ -280,26 +275,32 @@ public class UsersServiceTest extends GenericTest {
     public void getRecommendations() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
+
         FbVerify fbVerify = new FbVerify();
-        fbVerify.setId("1");
+        fbVerify.setId("1234");
 
         User user = new User();
-        List<Recommendation> recommendations = user.getRecommendations();
-        Recommendation recommendation = new Recommendation(null,null);
-        recommendations.add(recommendation);
+        user.setId("1234");
+        List<Long> recommendations = user.getRecommendations();
+        recommendations.add(120L);
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        Recommendation r = new Recommendation(120L, "1234", "4567");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken("abcd")).thenReturn(Futures.immediateFuture(fbVerify));
+        when(rr.get(120L)).thenReturn(Futures.immediateFuture(r));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
         us.facebookConnector = fb;
+        us.recommendationsRepository = rr;
 
-        ListenableFuture<List<Recommendation>> lf = us.getRecommendations("1");
+        ListenableFuture<List<Recommendation>> lf = us.getRecommendations("abcd");
 
         try {
             List<Recommendation> lstRec = lf.get();
-            assertTrue(lstRec.contains(recommendation));
+            assertTrue(lstRec.contains(r));
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -521,31 +522,49 @@ public class UsersServiceTest extends GenericTest {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
+        AirportsConnectorInterface airportsConnector = mock(AirportsConnectorInterface.class);
 
         User user = new User();
-        user.setId("1");
+        user.setId("1234");
 
         User friend = new User();
-        friend.setId("2");
+        friend.setId("2345");
 
         Trip trip = new Trip();
+        trip.setId(0L);
+        trip.setDestiny("BUE");
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
-        when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
+
+        Recommendation rec= new Recommendation(trip.getId(), user.getId(), friend.getId());
+        rec.setId(10L);
+
+        AirportResponse ar = new AirportResponse();
+        ar.setCity("Buenos Aires");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
+        when(ur.get("2345")).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
         when(fr.get(0L)).thenReturn(Futures.immediateFuture(trip));
-
+        when(fb.verifyAccessToken("abc")).thenReturn(Futures.immediateFuture(fbVerify));
+        when(rr.insert(any(Recommendation.class))).thenReturn(Futures.immediateFuture(rec));
+        when(airportsConnector.getAirportAsync("BUE")).thenReturn(Futures.immediateFuture(ar));
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
         us.tripsRespository = fr;
+        us.facebookConnector = fb;
+        us.recommendationsRepository = rr;
+        us.airportsConnector = airportsConnector;
 
-        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
+        ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "abc", "2345");
 
         try {
             Recommendation r = lf.get();
-            assertTrue(r.getTrip()== trip);
-            assertTrue(r.getFromUser() == user);
+            assertTrue(r.getTrip()== trip.getId());
+            assertTrue(r.getFromUserId() == user.getId());
             assertTrue(r.getState()== RecommendationState.PENDING);
         } catch (Exception e) {
             assertTrue(false);
@@ -558,21 +577,27 @@ public class UsersServiceTest extends GenericTest {
         TripsRepositoryInterface fr = mock(TripsRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
 
+
         User user = new User();
-        user.setId("1");
+        user.setId("1234");
 
         User friend = new User();
         friend.setId("2");
+
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
 
         when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
         when(ur.get("2")).thenReturn(Futures.immediateFuture(friend));
         when(ur.update(friend)).thenReturn(Futures.immediateFuture(friend));
         when(fr.get(0L)).thenReturn(Futures.<Trip>immediateFailedFuture(new RuntimeException("Missing Trip")));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
         us.tripsRespository = fr;
+        us.facebookConnector = fb;
 
         ListenableFuture<Recommendation> lf = us.recommendFlight(0L, "1", "2");
 
@@ -588,20 +613,41 @@ public class UsersServiceTest extends GenericTest {
     public void acceptRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
-
-        Recommendation recommendation = new Recommendation(null,null);
-        recommendation.setId(4L);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
+        AirportsConnectorInterface airportsConnector = mock(AirportsConnectorInterface.class);
+        TripsRepositoryInterface tripsRepository = mock(TripsRepositoryInterface.class);
 
         User user = new User();
-        user.setId("1");
-        user.getRecommendations().add(recommendation);
+        user.setId("1234");
+        user.getRecommendations().add(333L);
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
+
+        Recommendation rec = new Recommendation(333L,"1234","4567");
+
+        AirportResponse ar = new AirportResponse();
+        ar.setCity("Buenos Aires");
+
+        Trip trip = new Trip();
+        trip.setDestiny("BUE");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(fb.publishNotification(anyString(), anyString())).thenReturn(Futures.immediateFuture(""));
+        when(rr.get(anyLong())).thenReturn(Futures.immediateFuture(rec));
+        when(airportsConnector.getAirportAsync("BUE")).thenReturn(Futures.immediateFuture(ar));
+        when(tripsRepository.get(anyLong())).thenReturn(Futures.immediateFuture(trip));
+        when(rr.update(any(Recommendation.class))).thenReturn(Futures.immediateFuture(rec));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
+        us.airportsConnector = airportsConnector;
+        us.recommendationsRepository = rr;
+        us.tripsRespository = tripsRepository;
 
         ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, "1");
 
@@ -617,16 +663,25 @@ public class UsersServiceTest extends GenericTest {
     public void acceptRecommendationMissingRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
 
         User user = new User();
-        user.setId("1");
+        user.setId("1234");
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(fb.publishNotification(anyString(), anyString())).thenReturn(Futures.immediateFuture(""));
+        when(rr.get(anyLong())).thenReturn(Futures.<Recommendation>immediateFailedFuture(new RuntimeException("Missing Recommendation")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
+        us.recommendationsRepository = rr;
 
         ListenableFuture<Recommendation> lf = us.acceptRecommendation(4L, "1");
 
@@ -642,20 +697,38 @@ public class UsersServiceTest extends GenericTest {
     public void rejectRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
-
-        Recommendation recommendation = new Recommendation(null,null);
-        recommendation.setId(4L);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
+        TripsRepositoryInterface tripsRepository = mock(TripsRepositoryInterface.class);
 
         User user = new User();
-        user.setId("1");
-        user.getRecommendations().add(recommendation);
+        user.setId("1234");
+        user.getRecommendations().add(333L);
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
+
+        Recommendation rec = new Recommendation(333L,"1234","4567");
+
+        AirportResponse ar = new AirportResponse();
+        ar.setCity("Buenos Aires");
+
+        Trip trip = new Trip();
+        trip.setDestiny("BUE");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(fb.publishNotification(anyString(), anyString())).thenReturn(Futures.immediateFuture(""));
+        when(rr.get(anyLong())).thenReturn(Futures.immediateFuture(rec));
+        when(tripsRepository.get(anyLong())).thenReturn(Futures.immediateFuture(trip));
+        when(rr.update(any(Recommendation.class))).thenReturn(Futures.immediateFuture(rec));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
+        us.recommendationsRepository = rr;
+        us.tripsRespository = tripsRepository;
 
         ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, "1");
 
@@ -671,16 +744,25 @@ public class UsersServiceTest extends GenericTest {
     public void rejectRecommendationMissingRecommendation() {
         UsersRepositoryInterface ur = mock(UsersRepositoryInterface.class);
         FacebookConnectorInterface fb = mock(FacebookConnectorInterface.class);
+        RecommendationsRepositoryInterface rr = mock(RecommendationsRepositoryInterface.class);
 
         User user = new User();
-        user.setId("1");
+        user.setId("1234");
 
-        when(ur.get("1")).thenReturn(Futures.immediateFuture(user));
+        FbVerify fbVerify = new FbVerify();
+        fbVerify.setId("1234");
+
+        when(ur.get("1234")).thenReturn(Futures.immediateFuture(user));
         when(ur.update(user)).thenReturn(Futures.immediateFuture(user));
+        when(fb.verifyAccessToken(anyString())).thenReturn(Futures.immediateFuture(fbVerify));
+        when(fb.publishNotification(anyString(), anyString())).thenReturn(Futures.immediateFuture(""));
+        when(rr.get(anyLong())).thenReturn(Futures.<Recommendation>immediateFailedFuture(new RuntimeException("Missing Recommendation")));
 
 
         UsersService us = new UsersService();
         us.usersRepository = ur;
+        us.facebookConnector = fb;
+        us.recommendationsRepository = rr;
 
         ListenableFuture<Recommendation> lf = us.rejectRecommendation(4L, "1");
 

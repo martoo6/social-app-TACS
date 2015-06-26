@@ -4,30 +4,40 @@ package com.hax.models;
  * Created by martin on 5/5/15.
  */
 public class Recommendation {
-    private User fromUser;
-    private Trip trip;
+    private String fromUserId;
+    private String toUserId;
+    private Long trip;
     private RecommendationState state;
     private Long id;
 
-    public Recommendation(Trip trip, User fromUser) {
-        this.fromUser = fromUser;
-        this.trip = trip;
+    public Recommendation(Long tripId, String fromUserId, String toUserId) {
+        this.fromUserId = fromUserId;
+        this.trip = tripId;
         this.state = RecommendationState.PENDING;
+        this.toUserId = toUserId;
     }
 
-    public User getFromUser() {
-        return fromUser;
+    public String getToUserId() {
+        return toUserId;
     }
 
-    public void setFromUser(User toUser) {
-        this.fromUser = toUser;
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
     }
 
-    public Trip getTrip() {
+    public String getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(String toUser) {
+        this.fromUserId = toUser;
+    }
+
+    public Long getTrip() {
         return trip;
     }
 
-    public void setTrip(Trip trip) {
+    public void setTrip(Long trip) {
         this.trip = trip;
     }
 

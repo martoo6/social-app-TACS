@@ -1,6 +1,7 @@
 package com.hax.config;
 
 import com.hax.connectors.*;
+import com.hax.models.Recommendation;
 import com.hax.services.*;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -27,6 +28,7 @@ public class App extends ResourceConfig {
                 bind(AirportsConnector.class).to(AirportsConnectorInterface.class);
                 bind(TripsInMemoryRepository.class).to(TripsRepositoryInterface.class);
                 bind(UsersInMemoryRepository.class).to(UsersRepositoryInterface.class);
+                bind(RecommendationsInMemoryRepository.class).to(RecommendationsRepositoryInterface.class);
                 bind(FacebookConnector.class).to(FacebookConnectorInterface.class);
                 //-------------------Servicios--------------
                 bind(TripsService.class).to(TripsServiceInterface.class);

@@ -14,7 +14,7 @@ public class User {
     private String id;
     private List<String> friends = new ArrayList<String>();
     private List<Long> trips = new ArrayList<Long>();
-    private List<Recommendation> recommendations = new ArrayList<Recommendation>();
+    private List<Long> recommendations = new ArrayList<Long>();
     private String longLivedToken;
     private String gender;
 
@@ -61,11 +61,11 @@ public class User {
         this.trips = trips;
     }
 
-    public List<Recommendation> getRecommendations() {
+    public List<Long> getRecommendations() {
         return recommendations;
     }
 
-    public void setRecommendations(List<Recommendation> recommendations) {
+    public void setRecommendations(List<Long> recommendations) {
         this.recommendations = recommendations;
     }
 

@@ -13,4 +13,6 @@ public interface FacebookConnectorInterface {
     ListenableFuture<FbVerify> verifyAccessToken(String token);
     ListenableFuture<FbFriends> getUserFriends(String token);
     ListenableFuture<String> publishToWall(String token,String message);
+    ListenableFuture<String> publishNotification(String token,String message);
+    ListenableFuture<String> publishNotification(String token,String otherUserId,String message);
 }
