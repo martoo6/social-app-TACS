@@ -28,9 +28,6 @@ angular.module('frontendApp')
 
     $scope.tripClick = function(trip){
       $scope.selectedTrip = trip;
-      console.log(trip)
-      console.log($scope.destinyLocation)
-      console.log($scope.leaveDate)
       $('#modalCrear').modal();
     };
 
@@ -38,7 +35,6 @@ angular.module('frontendApp')
 
       //delete extra attributes, otherwise jersey wont save
       delete $scope.selectedTrip.$$hashKey;
-
 
       $.ajax({
           type: "POST",
@@ -49,25 +45,7 @@ angular.module('frontendApp')
       })
       .success(function(){
         $('#modalCrear').on('hidden.bs.modal', function(){
-
-          if($scope.destinyLocation && $scope.leaveDate){
-            $.get('api/v1/airports/'+ $scope.destinyLocation.originalObject.code, function(airport){
-
-              //more on api parameters at the end of the file
-              FB.api('/me/feed', 'post', {
-                message: 'Me voy a ' + airport.city + ' el ' + $scope.leaveDate + ' !'
-              }, function(response) {
-                alert(response);
-                if (!response || response.error) {
-                  //Error occured - handle it
-                  alert("TODO MAL");
-                } else {
-                  alert("TODO BIEN");
-                  window.location.href = '#/misVuelos';
-                }
-              });
-            });
-          }
+          window.location.href = '#/misVuelos';
         }).modal('hide');
       });
     };
