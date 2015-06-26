@@ -73,15 +73,10 @@ angular
     $rootScope.$on('fbLoginSuccess', function(name, response) {
       facebookUser.then(function(user) {
         user.api('/me').then(function(response) {
-          console.log(response);
-          window.fbResponse = response;
           $rootScope.loggedInUser = response;
         });
       });
-      window.fbUser = response;
-      window.fbStatus = response;
       $rootScope.fbStatus = response;
-      console.log(response);
       $http.defaults.headers.common['token'] = $rootScope.fbStatus.authResponse.accessToken;
       $.ajax({
             type: 'POST',
