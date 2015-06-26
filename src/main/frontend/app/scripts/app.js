@@ -40,6 +40,11 @@ angular
         controller: 'MisvuelosCtrl',
         needAuth: true
       })
+      .when('/friends', {
+        templateUrl: 'views/friends.html',
+        controller: 'FriendsCtrl', 
+        needAuth: true
+      })
       .otherwise({
         redirectTo: '/'
       });
