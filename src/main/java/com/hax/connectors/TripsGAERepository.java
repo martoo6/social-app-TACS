@@ -2,36 +2,42 @@ package com.hax.connectors;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.googlecode.objectify.ObjectifyService;
+import com.hax.async.executors.Default;
 import com.hax.models.Trip;
+import com.hax.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by martin on 5/5/15.
  */
 public class TripsGAERepository implements TripsRepositoryInterface {
-    static List<Trip> trips = new ArrayList<Trip>();
+    public Trip insert(final Trip trip) {
+        if (trip == null) throw new RuntimeException("Trip is null");
 
-    public ListenableFuture<Trip> insert(final Trip trip) {
-        if (trip == null) return Futures.immediateFuture(new Trip());
-        trip.setId(Long.valueOf(trips.size()));
-        trips.add(trip);
-        return Futures.immediateFuture(trip);
+        ObjectifyService.ofy().save().entity(trip).now();
+        return trip;
     }
 
-    public ListenableFuture<Trip> get(final Long id){
-        for(Trip trip : trips){
-            if(trip.getId()==id) return Futures.immediateFuture(trip);;
-        }
-        return Futures.immediateFailedFuture(new RuntimeException("Trip not found"));
+    public Trip update(final Trip trip) {
+        if (trip == null) throw new RuntimeException("User is null");
+        ObjectifyService.ofy().save().entity(trip).now();
+        return trip;
     }
 
-    public ListenableFuture<List<Trip>> getAll(){
-        return Futures.immediateFuture(trips);
+    public Trip get(final Long id){
+        Trip trip = ObjectifyService.ofy().load().type(Trip.class).id(id).safeGet();
+        if (trip == null) throw new RuntimeException("Trip not found: " + id);
+        return trip;
     }
 
-    static public void tearDown(){
-        trips.clear();
+
+    public List<Trip> getAll(){
+        return ObjectifyService.ofy().load().type(Trip.class).list();
     }
+
+
 }

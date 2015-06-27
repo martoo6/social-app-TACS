@@ -1,14 +1,22 @@
 package com.hax.models;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+
 /**
  * Created by martin on 5/5/15.
  */
+@Entity
 public class Recommendation {
-    private String fromUserId;
-    private String toUserId;
-    private Long trip;
-    private RecommendationState state;
-    private Long id;
+    public String fromUserId;
+    public String toUserId;
+    public Long trip;
+    public RecommendationState state;
+    @Id public Long id;
+
+    public Recommendation() {
+        //dummy
+    }
 
     public Recommendation(Long tripId, String fromUserId, String toUserId) {
         this.fromUserId = fromUserId;

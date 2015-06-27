@@ -13,22 +13,22 @@ import java.util.List;
 public class TripsInMemoryRepository implements TripsRepositoryInterface {
     static List<Trip> trips = new ArrayList<Trip>();
 
-    public ListenableFuture<Trip> insert(final Trip trip) {
-        if (trip == null) return Futures.immediateFuture(new Trip());
+    public Trip insert(final Trip trip) {
+        if (trip == null) return (new Trip());
         trip.setId(Long.valueOf(trips.size()));
         trips.add(trip);
-        return Futures.immediateFuture(trip);
+        return (trip);
     }
 
-    public ListenableFuture<Trip> get(final Long id){
+    public Trip get(final Long id){
         for(Trip trip : trips){
-            if(trip.getId()==id) return Futures.immediateFuture(trip);;
+            if(trip.getId()==id) return (trip);;
         }
-        return Futures.immediateFailedFuture(new RuntimeException("Trip not found"));
+        throw(new RuntimeException("Trip not found"));
     }
 
-    public ListenableFuture<List<Trip>> getAll(){
-        return Futures.immediateFuture(trips);
+    public List<Trip> getAll(){
+        return (trips);
     }
 
     static public void tearDown(){

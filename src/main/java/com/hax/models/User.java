@@ -1,5 +1,9 @@
 package com.hax.models;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
 import com.hax.models.fb.FbVerify;
 
 import java.util.ArrayList;
@@ -8,22 +12,23 @@ import java.util.List;
 /**
  * Created by martin on 5/5/15.
  */
+@Entity
 public class User {
-    private String username;
-    private String email;
-    private String id;
-    private List<String> friends = new ArrayList<String>();
-    private List<Long> trips = new ArrayList<Long>();
-    private List<Long> recommendations = new ArrayList<Long>();
-    private String longLivedToken;
-    private String gender;
+    public String username;
+    public String email;
+    @Id public String facebookId;
+    public List<String> friends = new ArrayList<String>();
+    public List<Long> trips = new ArrayList<Long>();
+    public List<Long> recommendations = new ArrayList<Long>();
+    public String longLivedToken;
+    public String gender;
 
     public User() {
     }
 
     public User(FbVerify fbVerify) {
         username = fbVerify.getName();
-        id = fbVerify.getId();
+        facebookId = fbVerify.getId();
         gender = fbVerify.getGender();
     }
 
@@ -41,9 +46,9 @@ public class User {
         this.email = email;
     }
 
-    public String getId() { return id; }
+    public String getFacebookId() { return facebookId; }
 
-    public void setId(String id) { this.id = id; }
+    public void setFacebookId(String facebookId) { this.facebookId = facebookId; }
 
     public List<String> getFriends() {
         return friends;

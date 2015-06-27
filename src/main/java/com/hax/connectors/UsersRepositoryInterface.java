@@ -9,8 +9,8 @@ import java.util.List;
  * Created by martin on 5/5/15.
  */
 public interface UsersRepositoryInterface {
-    ListenableFuture<User> insert(final User user);
-    ListenableFuture<User> update(final User user);
-    ListenableFuture<User> get(final String id);
-    ListenableFuture<List<User>> getAll();
+    User insert(final User user);
+    User update(final User user);
+    User get(final String id);
+    List<User> getAll();
 }

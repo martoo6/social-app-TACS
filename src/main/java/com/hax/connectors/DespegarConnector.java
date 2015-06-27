@@ -11,6 +11,7 @@ import com.hax.utils.JsonHelper;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.guava.RxListenableFuture;
 
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
 /**
@@ -19,9 +20,9 @@ import javax.ws.rs.core.Response;
 
 public class DespegarConnector implements DespegarConnectorInterface {
 
-    public ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate){
+    public String getFlightsAsync(String from, String to, String fromDate,String toDate){
         String url = "https://api.despegar.com/v3/flights/itineraries";
-        ListenableFuture<Response> future = RxListenableFuture.newClient(Default.ex)
+        Response response =  ClientBuilder.newClient()
                 .property(ClientProperties.CONNECT_TIMEOUT, 20000)
                 .property(ClientProperties.READ_TIMEOUT, 20000)
                 .target(url)
@@ -33,11 +34,8 @@ public class DespegarConnector implements DespegarConnectorInterface {
                 .queryParam("adults", "1")
                 .request()
                 .header("X-ApiKey", App.config.getString("despegar.api.key.value"))
-                .rx()
                 .get();
 
-        return Futures.transform(future, new Function<Response, String>() {
-            public String apply(Response response) {
                 if(response.getStatus()!=Response.Status.OK.getStatusCode()){
                     DespegarError de = JsonHelper.readValue(response, DespegarError.class);
                     Joiner joiner = Joiner.on(". ").skipNulls();
@@ -45,24 +43,19 @@ public class DespegarConnector implements DespegarConnectorInterface {
                     throw new RuntimeException(errorMsg);
                 }
                 return response.readEntity(String.class);
-            }
-        }, Default.ex);
     }
 
-    public ListenableFuture<String> getAirportsAsync(String autocomplete) {
+    public String getAirportsAsync(String autocomplete) {
         String url = "https://api.despegar.com/v3/autocomplete";
 
-        ListenableFuture<Response> future = RxListenableFuture.newClient(Default.ex)
+        Response response =  ClientBuilder.newClient()
                 .target(url)
                 .queryParam("airport_result", 5)
                 .queryParam("query", autocomplete)
                 .request()
                 .header("X-ApiKey", App.config.getString("despegar.api.key.value"))
-                .rx()
                 .get();
 
-        return Futures.transform(future, new Function<Response, String>() {
-            public String apply(Response response) {
                 if(response.getStatus()!=Response.Status.OK.getStatusCode()){
                     DespegarError de = JsonHelper.readValue(response, DespegarError.class);
                     Joiner joiner = Joiner.on(". ").skipNulls();
@@ -70,8 +63,6 @@ public class DespegarConnector implements DespegarConnectorInterface {
                     throw new RuntimeException(errorMsg);
                 }
                 return response.readEntity(String.class);
-            }
-        }, Default.ex);
     }
 }
 

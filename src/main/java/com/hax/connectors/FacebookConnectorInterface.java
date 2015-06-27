@@ -9,10 +9,10 @@ import com.hax.models.fb.FbVerify;
  */
 
 public interface FacebookConnectorInterface {
-    ListenableFuture<String> getLongLivedToken(String shortLivedToken);
-    ListenableFuture<FbVerify> verifyAccessToken(String token);
-    ListenableFuture<FbFriends> getUserFriends(String token);
-    ListenableFuture<String> publishToWall(String token,String message);
-    ListenableFuture<String> publishNotification(String token,String message);
-    ListenableFuture<String> publishNotification(String token,String otherUserId,String message);
+    String getLongLivedToken(String shortLivedToken);
+    FbVerify verifyAccessToken(String token);
+    FbFriends getUserFriends(String token);
+    String publishToWall(String token,String message);
+    String publishNotification(String token,String message);
+    String publishNotification(String token,String otherUserId,String message);
 }

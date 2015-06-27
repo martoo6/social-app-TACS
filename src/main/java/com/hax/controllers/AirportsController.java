@@ -36,7 +36,7 @@ public class AirportsController {
                                     @QueryParam("longitude") final String longitude, 
                                     @Context HttpServletResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<String> f = airportsService.getAirport(latitude, longitude);
+        String f = airportsService.getAirport(latitude, longitude);
         return addControllerCallback(f);
     }
     
@@ -46,7 +46,7 @@ public class AirportsController {
     public Response getAirportFromCode(@PathParam("airportCode") String airportCode,
                                    @Context HttpServletResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<AirportResponse> f = airportsService.getAirport(airportCode);
+        AirportResponse f = airportsService.getAirport(airportCode);
         return addControllerCallback(f);
     }
 

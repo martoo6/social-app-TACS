@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by martin on 5/30/15.
@@ -26,10 +28,10 @@ public class ControllerHelper {
      * @param asyncResponse AsyncResponse del metodo del contolador
      * @param <T> Tipo que retorna el ListenableFuture
      */
-    public static <T> Response addControllerCallback(ListenableFuture<T> f){
+    public static <T> Response addControllerCallback(T f){
         try {
-            return Response.ok(f.get(), "application/json").build();
-        } catch (InterruptedException | ExecutionException e) {
+            return Response.ok(f, "application/json").build();
+        } catch (RuntimeException e) {
             return Response.serverError().entity(e.getMessage()).build();
         }
     }

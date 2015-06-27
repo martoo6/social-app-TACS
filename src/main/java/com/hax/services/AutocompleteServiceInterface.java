@@ -7,5 +7,5 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 
 public interface AutocompleteServiceInterface {
-    ListenableFuture<String> getAirports(String autocomplete);
+    String getAirports(String autocomplete);
 }

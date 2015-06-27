@@ -15,6 +15,7 @@
       <app.version>1</app.version>
       <gcloud.plugin.version>0.9.58.v20150505</gcloud.plugin.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <jackson.version>2.4.4</jackson.version>
   </properties>
 
   <prerequisites>
@@ -27,6 +28,11 @@
 	    <artifactId>json</artifactId>
 	    <version>20090211</version>
     </dependency>
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>${jackson.version}</version>
+      </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet-core</artifactId>
@@ -98,6 +104,12 @@
         <artifactId>jstl</artifactId>
         <version>1.2</version>
     </dependency>
+      <!-- PARA PERSISTENCIA EN GAE -->
+      <dependency>
+          <groupId>com.googlecode.objectify</groupId>
+          <artifactId>objectify</artifactId>
+          <version>4.0b1</version>
+      </dependency>
   </dependencies>
 
 

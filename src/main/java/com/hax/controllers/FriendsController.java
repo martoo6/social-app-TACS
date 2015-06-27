@@ -43,40 +43,4 @@ public class FriendsController {
             return addControllerCallback(usersService.getFriends(token));
         }
     }
-
-    /**
-     *
-     * @return Todos los amigos de un usuario
-     * @throws JSONException
-     */
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{friendId}")
-    public Response addFriend(@PathParam("friendId") String friendId, @Context HttpHeaders hh) throws JSONException
-    {
-        String token = hh.getHeaderString("token");
-        if(token==null) {
-            return fail("Missing token");
-        } else {
-            return addControllerCallback(usersService.addFriend(token, friendId));
-        }
-    }
-
-    /**
-     *
-     * @return Todos los amigos de un usuario
-     * @throws JSONException
-     */
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{friendId}")
-    public Response removeFriend(@PathParam("friendId") String friendId,@Context HttpHeaders hh) throws JSONException
-    {
-        String token = hh.getHeaderString("token");
-        if(token==null) {
-            return fail("Missing token");
-        } else {
-            return addControllerCallback(usersService.removeFriend(token, friendId));
-        }
-    }
 }

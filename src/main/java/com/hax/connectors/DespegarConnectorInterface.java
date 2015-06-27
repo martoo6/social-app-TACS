@@ -7,6 +7,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 
 public interface DespegarConnectorInterface {
-    ListenableFuture<String> getFlightsAsync(String from, String to, String fromDate,String toDate);
-    ListenableFuture<String> getAirportsAsync(String autocomplete);
+    String getFlightsAsync(String from, String to, String fromDate,String toDate);
+    String getAirportsAsync(String autocomplete);
 }

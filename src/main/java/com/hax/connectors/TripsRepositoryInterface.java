@@ -9,7 +9,7 @@ import java.util.List;
  * Created by martin on 5/5/15.
  */
 public interface TripsRepositoryInterface {
-    ListenableFuture<Trip> insert(Trip trip);
-    ListenableFuture<Trip> get(Long id);
-    ListenableFuture<List<Trip>> getAll();
+    Trip insert(Trip trip);
+    Trip get(Long id);
+    List<Trip> getAll();
 }

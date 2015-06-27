@@ -13,36 +13,36 @@ import java.util.List;
 public class UsersInMemoryRepository implements UsersRepositoryInterface {
     static List<User> collection = new ArrayList<User>();
 
-    public ListenableFuture<User> insert(final User user) {
-        if (user == null) return Futures.immediateFailedFuture(new RuntimeException("User is null"));
+    public User insert(final User user) {
+        if (user == null) throw(new RuntimeException("User is null"));
         collection.add(user);
-        return Futures.immediateFuture(user);
+        return (user);
     }
 
     //TODO: Este metodo en realidad va a se de hibernate. Lo que hace no tiene mucho sentido.
-    public ListenableFuture<User> update(final User user) {
+    public User update(final User user) {
         User updatable=null;
-        for(User tmpUser:collection) if(tmpUser.getId().equals(user.getId())) updatable = tmpUser;
-        if(updatable== null) return Futures.immediateFailedFuture(new RuntimeException("User not found"));
+        for(User tmpUser:collection) if(tmpUser.getFacebookId().equals(user.getFacebookId())) updatable = tmpUser;
+        if(updatable== null) throw(new RuntimeException("User not found"));
         collection.remove(updatable);
         collection.add(user);
-        return Futures.immediateFuture(user);
+        return user;
     }
 
-    public ListenableFuture<User> get(final String id){
+    public User get(final String id){
         String ids = "Searching id: "+id+". ";
         for(User user:collection){
-            ids+=user.getId()+" , Checking resolved: "+user.getId().equals(id);
-            if (user.getId().equals(id)) return Futures.immediateFuture(user);
+            ids+=user.getFacebookId()+" , Checking resolved: "+user.getFacebookId().equals(id);
+            if (user.getFacebookId().equals(id)) return (user);
         }
-        return Futures.immediateFailedFuture(new RuntimeException("User not found: "+ids));
+        return null;
     }
 
     public static void tearDown(){
         collection.clear();
     }
 
-    public ListenableFuture<List<User>> getAll(){
-        return Futures.immediateFuture(collection);
+    public List<User> getAll(){
+        return (collection);
     }
 }

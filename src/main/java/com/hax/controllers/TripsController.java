@@ -82,7 +82,7 @@ public class TripsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSavedTrips(@Context HttpServletResponse asyncResponse) throws JSONException
     {
-        ListenableFuture<List<Trip>> f = tripsService.getAllSavedTrips();
+        List<Trip> f = tripsService.getAllSavedTrips();
         return addControllerCallback(f);
     }
 

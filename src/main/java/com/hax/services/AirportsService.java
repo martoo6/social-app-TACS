@@ -20,7 +20,7 @@ public class AirportsService implements AirportsServiceInterface{
      * @param longitude Longitud de un punto
      * @return Json del aeropuerto mas cercano a (latitud, longitud)
      */
-    public ListenableFuture<String> getAirport(String latitude, String longitude){
+    public String getAirport(String latitude, String longitude){
         return airportsConnector.getAirportAsync(latitude , longitude);
     }
     
@@ -30,7 +30,7 @@ public class AirportsService implements AirportsServiceInterface{
      * @param airportCode
      * @return Json del aeropuerto de codigo airportCode
      */
-    public ListenableFuture<AirportResponse> getAirport(String airportCode){
+    public AirportResponse getAirport(String airportCode){
         return airportsConnector.getAirportAsync(airportCode);
     }
 }

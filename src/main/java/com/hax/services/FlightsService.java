@@ -22,7 +22,7 @@ public class FlightsService implements FlightsServiceInterface {
      * @param toDate Fecha de retorno
      * @return Lista de vuelos //TODO: Lista de Flights
      */
-    public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate){
+    public String getFlights(String from, String to, String fromDate,String toDate){
         return despegarConnector.getFlightsAsync(from, to, fromDate, toDate);
     }
 }

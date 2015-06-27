@@ -18,10 +18,12 @@ import java.util.concurrent.ThreadFactory;
  */
 public class Default {
     public static ListeningExecutorService ex;
+    public static ThreadFactory factory;
 
     static{
         try{
-            ex = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(ThreadManager.currentRequestThreadFactory()));
+            ThreadFactory factory = ThreadManager.currentRequestThreadFactory();
+            ex = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(factory));
         }
         catch(Exception e){
             //Los tests no pueden inicializar el backgroundThreadFactory(), asique creamos el clasico.

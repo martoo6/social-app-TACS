@@ -52,7 +52,7 @@ public class RecommendationsController {
         if(token==null) {
             return fail("Missing token");
         } else {
-            ListenableFuture<Recommendation> f = usersService.recommendFlight(recJson.getFlightId(), token, recJson.getToUserId());
+            Recommendation f = usersService.recommendFlight(recJson.getFlightId(), token, recJson.getToUserId());
             return addControllerCallback(f);
         }
     }

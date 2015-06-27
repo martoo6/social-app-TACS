@@ -10,8 +10,8 @@ import java.util.List;
  * Created by martin on 5/5/15.
  */
 public interface RecommendationsRepositoryInterface {
-    ListenableFuture<Recommendation> insert(final Recommendation recommendation);
-    ListenableFuture<Recommendation> update(final Recommendation recommendation);
-    ListenableFuture<Recommendation> get(final Long id);
-    ListenableFuture<List<Recommendation>> getAll();
+    Recommendation insert(final Recommendation recommendation);
+    Recommendation update(final Recommendation recommendation);
+    Recommendation get(final Long id);
+    List<Recommendation> getAll();
 }

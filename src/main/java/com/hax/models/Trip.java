@@ -1,22 +1,27 @@
 package com.hax.models;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by martin on 5/5/15.
  */
-
+@Entity
 public class Trip {
-    private List<Flight> wayFlights;
-    private List<Flight> returnFlights;
-    private String origin;
-    private String destiny;
-    private BigDecimal price;
-    private String state;
-    private Long id;
-    private String wayDuration;
-    private String returnDuration;
+    public List<Flight> wayFlights;
+    public List<Flight> returnFlights;
+    public String origin;
+    public String destiny;
+    public BigDecimal price;
+    public String state;
+    @Id public Long id;
+    public String wayDuration;
+    public String returnDuration;
 
 
     //Dummy Contructor

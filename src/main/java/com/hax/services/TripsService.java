@@ -38,7 +38,7 @@ public class TripsService implements TripsServiceInterface {
      * @param toDate Fecha de retorno
      * @return Lista de vuelos //TODO: Lista de Flights
      */
-    public ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate){
+    public String getFlights(String from, String to, String fromDate,String toDate){
         return despegarConnector.getFlightsAsync(from, to , fromDate, toDate);
     }
 
@@ -47,35 +47,22 @@ public class TripsService implements TripsServiceInterface {
      * @param trip Nuevo vuelo a ingresar en el sistema
      * @return ListenableFuture con el vuelo ingresado
      */
-    public ListenableFuture<Trip> createTrip(final Trip trip, final String token) {
-
-        ListenableFuture<FbVerify> fbVerify = fbConnector.verifyAccessToken(token);
-
-        return Futures.transform(fbVerify, new AsyncFunction<FbVerify, Trip>() {
-            @Override
-            public ListenableFuture<Trip> apply(FbVerify fbVerify) throws Exception {
-                return Futures.transform(userRepository.get(fbVerify.getId()), new Function<User, Trip>() {
-                    @Override
-                    public Trip apply(User user) {
-                        //No me preocupo por si falla alguna en particular, igual no tengo transacciones
-                        tripsRepository.insert(trip);
-                        user.getTrips().add(trip.getId());
-                        userRepository.update(user);
-                        Futures.transform(airportsConnector.getAirportAsync(trip.getDestiny()), new AsyncFunction<AirportResponse, String>() {
-                            @Override
-                            public ListenableFuture<String> apply(AirportResponse destino) throws Exception {
-                                return fbConnector.publishToWall(token, "Me voy a " + destino.getCity() + "!");
-                            }
-                        });
-                        return trip;
-                    }
-                });
-            }
-        });
+    public Trip createTrip(final Trip trip, final String token) {
+        FbVerify fbVerify = fbConnector.verifyAccessToken(token);
+        User user = userRepository.get(fbVerify.getId());
+        if(user!=null) {
+            tripsRepository.insert(trip);
+            user.getTrips().add(trip.getId());
+            userRepository.update(user);
+            AirportResponse destino = airportsConnector.getAirportAsync(trip.getDestiny());
+            fbConnector.publishToWall(token, "Me voy a " + destino.getCity() + "!");
+            return trip;
+        }
+        return null;
     }
 
     @Override
-    public ListenableFuture<Trip> getTrip(Long tripId) {
+    public Trip getTrip(Long tripId) {
         return tripsRepository.get(tripId);
     }
 
@@ -84,7 +71,7 @@ public class TripsService implements TripsServiceInterface {
      *
      * @return ListenableFuture con todos los vuelos
      */
-    public ListenableFuture<List<Trip>> getAllSavedTrips() {
+    public List<Trip> getAllSavedTrips() {
 //        System.out.println();
 //        System.out.println(tripsRespository);
         return tripsRepository.getAll();

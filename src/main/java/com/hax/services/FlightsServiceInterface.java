@@ -10,5 +10,5 @@ import java.util.List;
  */
 
 public interface FlightsServiceInterface {
-    ListenableFuture<String> getFlights(String from, String to, String fromDate, String toDate);
+    String getFlights(String from, String to, String fromDate, String toDate);
 }

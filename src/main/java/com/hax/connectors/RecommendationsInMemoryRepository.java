@@ -14,36 +14,36 @@ import java.util.List;
 public class RecommendationsInMemoryRepository implements RecommendationsRepositoryInterface {
     static List<Recommendation> collection = new ArrayList<Recommendation>();
 
-    public ListenableFuture<Recommendation> insert(final Recommendation recommendation) {
-        if (recommendation == null) return Futures.immediateFailedFuture(new RuntimeException("User is null"));
+    public Recommendation insert(final Recommendation recommendation) {
+        if (recommendation == null) throw(new RuntimeException("User is null"));
         collection.add(recommendation);
-        return Futures.immediateFuture(recommendation);
+        return recommendation;
     }
 
     //TODO: Este metodo en realidad va a se de hibernate. Lo que hace no tiene mucho sentido.
-    public ListenableFuture<Recommendation> update(final Recommendation recommendation) {
+    public Recommendation update(final Recommendation recommendation) {
         Recommendation updatable=null;
         for(Recommendation tmpRecommendation:collection) if(tmpRecommendation.getId().equals(recommendation.getId())) updatable = tmpRecommendation;
-        if(updatable== null) return Futures.immediateFailedFuture(new RuntimeException("User not found"));
+        if(updatable== null) throw(new RuntimeException("User not found"));
         collection.remove(updatable);
         collection.add(recommendation);
-        return Futures.immediateFuture(recommendation);
+        return recommendation;
     }
 
-    public ListenableFuture<Recommendation> get(final Long id){
+    public Recommendation get(final Long id){
         String ids = "Searching id: "+id+". ";
         for(Recommendation recommendation:collection){
             ids+=recommendation.getId()+" , Checking resolved: "+recommendation.getId().equals(id);
-            if (recommendation.getId().equals(id)) return Futures.immediateFuture(recommendation);
+            if (recommendation.getId().equals(id)) return recommendation;
         }
-        return Futures.immediateFailedFuture(new RuntimeException("Recommendation not found: "+ids));
+        throw(new RuntimeException("Recommendation not found: "+ids));
     }
 
     public static void tearDown(){
         collection.clear();
     }
 
-    public ListenableFuture<List<Recommendation>> getAll(){
-        return Futures.immediateFuture(collection);
+    public List<Recommendation> getAll(){
+        return collection;
     }
 }

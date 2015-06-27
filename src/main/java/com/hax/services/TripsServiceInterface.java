@@ -10,8 +10,8 @@ import java.util.List;
  */
 
 public interface TripsServiceInterface {
-    ListenableFuture<String> getFlights(String from, String to, String fromDate,String toDate);
-    ListenableFuture<List<Trip>> getAllSavedTrips();
-    ListenableFuture<Trip> createTrip(Trip trip, String token);
-    ListenableFuture<Trip> getTrip(Long tripId);
+    String getFlights(String from, String to, String fromDate,String toDate);
+    List<Trip> getAllSavedTrips();
+    Trip createTrip(Trip trip, String token);
+    Trip getTrip(Long tripId);
 }

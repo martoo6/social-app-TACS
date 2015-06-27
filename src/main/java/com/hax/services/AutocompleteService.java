@@ -13,7 +13,7 @@ public class AutocompleteService implements AutocompleteServiceInterface{
     public DespegarConnectorInterface despegarConnector;
 
 
-    public ListenableFuture<String> getAirports(String autocomplete) {
+    public String getAirports(String autocomplete) {
         return despegarConnector.getAirportsAsync(autocomplete);
     }
 }

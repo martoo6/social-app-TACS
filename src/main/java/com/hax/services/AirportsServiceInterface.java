@@ -5,7 +5,7 @@ import com.hax.models.AirportResponse;
 
 
 public interface AirportsServiceInterface {
-    public ListenableFuture<String> getAirport(String latitude, String longitude);
+    public String getAirport(String latitude, String longitude);
     
-    public ListenableFuture<AirportResponse> getAirport(String airportCode);
+    public AirportResponse getAirport(String airportCode);
 }
