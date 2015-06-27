@@ -10,12 +10,12 @@
 angular.module('frontendApp')
   .controller('MisvuelosCtrl', function ($scope, $http, $q) {
 
-    $scope.wayStopPoints = [];
-    $scope.returnStopPoints = [];
+    var wayStopPoints = [];
+    var returnStopPoints = [];
     $scope.myTrips = [];
 
     function drawMap(){
-      var points = $scope.wayStopPoints
+      var points = wayStopPoints
                       .sort(function(a, b){ return a.ord > b.ord })
                       .map(function(el){ return el.gPoint });
       var mapa = new google.maps.Map($('#mapa')[0]);
@@ -39,11 +39,11 @@ angular.module('frontendApp')
 
       //stopPoints refer to when a plane stops at an airport
       //but its not the final destination
-      $scope.returnStopPoints = $scope.wayStopPoints = [];
+      returnStopPoints = wayStopPoints = [];
       $('#modalMap').modal();
 
       var wayStopPromises = flightsStopsPromises(trip.wayFlights);
-      var returnStopPromises = flightsStopsPromises(trip.returnFlights);
+//      var returnStopPromises = flightsStopsPromises(trip.returnFlights);
 
       $q.all(wayStopPromises).then(drawMap);
     };
@@ -60,8 +60,8 @@ angular.module('frontendApp')
 
       return flights.reduce(function(stops, flight){
         return stops.concat([
-          makeAirportStopPromise(flight.origin, ord++, $scope.wayStopPoints),
-          makeAirportStopPromise(flight.destiny, ord++, $scope.returnStopPoints)
+          makeAirportStopPromise(flight.origin, ord++, wayStopPoints),
+          makeAirportStopPromise(flight.destiny, ord++, returnStopPoints)
         ]);
       }, []);
     }
