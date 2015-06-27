@@ -24,15 +24,8 @@ angular.module('frontendApp')
     //////////////////////////////////////////
 
     (function init(){
-
-
-      //init collapsable accordion events
-      $(document).on('click', '.collapseOpener.open', function(e){
-        $(this).removeClass('open').addClass('closed');
-        $($(this).data('open')).collapse('toggle');
-      });
       
-      $(document).on('click', '.collapseOpener.closed', function(e){
+      $(document).on('click', '.collapseOpener', function(e){
         
         var collapser = this;
         var $spinner = $(this).find('.fa-spinner');
@@ -59,7 +52,10 @@ angular.module('frontendApp')
           
           $spinner.hide();
           $(friendSelector).collapse('toggle');
-          $(collapser).removeClass('closed').addClass('open');
+          
+          //by adding the data-target and removing the class that's delegated for the event
+          //we ensure to use the already loaded trips and use the regular collapser for displaying them
+          $(collapser).attr('data-target', friendSelector).removeClass('collapseOpener');
         });
       });
 
