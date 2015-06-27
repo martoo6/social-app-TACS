@@ -54,8 +54,8 @@ public class TripsService implements TripsServiceInterface {
             tripsRepository.insert(trip);
             user.getTrips().add(trip.getId());
             userRepository.update(user);
-            AirportResponse destino = airportsConnector.getAirportAsync(trip.getDestiny());
-            fbConnector.publishToWall(token, "Me voy a " + destino.getCity() + "!");
+
+            fbConnector.publishToWall(token, "Me voy a " + trip.getDestinyDescription() + "!");
             return trip;
         }
         return null;

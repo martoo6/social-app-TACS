@@ -44,21 +44,30 @@ public class UsersService implements UsersServiceInterface {
     public User createUser(final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
         User user = usersRepository.get(fbVerify.getId());
-        if(user==null) {
-            FbFriends fbFriends = facebookConnector.getUserFriends(token);
-            ArrayList<User> friends = new ArrayList<User>();
-            for (FbFriend fbFriend : fbFriends.getData()) {
-                friends.add(usersRepository.get(fbFriend.getId()));
-            }
-            User newUser = new User(fbVerify);
-            for (User friend : friends) {
-                newUser.getFriends().add(friend.getFacebookId());
-                friend.getFriends().add(newUser.getFacebookId());
-                usersRepository.update(friend);
-            }
-            return usersRepository.insert(newUser);
+
+        if(user==null){
+            user = new User(fbVerify);
+            setFriends(user, token);
+            return usersRepository.insert(user);
         }
-        return null;
+        setFriends(user, token);
+        return usersRepository.update(user);
+    }
+
+
+    private void setFriends(User user,String token){
+        FbFriends fbFriends = facebookConnector.getUserFriends(token);
+        ArrayList<User> friends = new ArrayList<User>();
+        for (FbFriend fbFriend : fbFriends.getData()) {
+            User friend = usersRepository.get(fbFriend.getId());
+            if(friend!=null && !user.getFriends().contains(fbFriend.getId())) friends.add(friend);
+        }
+
+        for (User friend : friends) {
+            user.getFriends().add(friend.getFacebookId());
+            friend.getFriends().add(user.getFacebookId());
+            usersRepository.update(friend);
+        }
     }
 
     public List<User> getFriends(final String token) {

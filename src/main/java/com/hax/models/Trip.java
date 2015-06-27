@@ -17,17 +17,19 @@ public class Trip {
     public List<Flight> returnFlights;
     public String origin;
     public String destiny;
-    public BigDecimal price;
+    public Double price;
     public String state;
     @Id public Long id;
     public String wayDuration;
     public String returnDuration;
+    public String originDescription;
+    public String destinyDescription;
 
 
     //Dummy Contructor
     public Trip() {}
 
-    public Trip(List<Flight> wayFlights, List<Flight> returnFlights, BigDecimal price, String origin, String destiny, String wayDuration, String returnDuration) {
+    public Trip(List<Flight> wayFlights, List<Flight> returnFlights, Double price, String origin, String destiny, String wayDuration, String returnDuration) {
         this.wayDuration = wayDuration;
         this.returnDuration = returnDuration;
         this.wayFlights = wayFlights;
@@ -35,7 +37,23 @@ public class Trip {
         this.price = price;
         this.state = "Sin Publicar";
     }
-    
+
+    public String getOriginDescription() {
+        return originDescription;
+    }
+
+    public void setOriginDescription(String originDescription) {
+        this.originDescription = originDescription;
+    }
+
+    public String getDestinyDescription() {
+        return destinyDescription;
+    }
+
+    public void setDestinyDescription(String destinyDescription) {
+        this.destinyDescription = destinyDescription;
+    }
+
     public void setWayDuration(String wayDuration){
         this.wayDuration = wayDuration;
     }
@@ -68,11 +86,11 @@ public class Trip {
         this.returnFlights = returnFlights;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

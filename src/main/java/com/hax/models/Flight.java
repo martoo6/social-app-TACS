@@ -1,8 +1,5 @@
 package com.hax.models;
 
-import com.googlecode.objectify.annotation.Entity;
-
-@Entity
 public class Flight {
     private String origin;
     private String destiny;
