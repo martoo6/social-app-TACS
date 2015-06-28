@@ -2,6 +2,7 @@ package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.connectors.UsersInMemoryRepository;
+import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.User;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.After;
@@ -17,11 +18,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by martin on 5/3/15.
  */
-public class UsersRepositoryTest extends GenericTest {
+public class UsersInMemoryRepositoryTest extends GenericTest {
 
     @Test
     public void insertUser(){
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
         User user = new User();
 
@@ -38,7 +39,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void updateUser() throws ExecutionException, InterruptedException {
         User user = new User();
         user.setFacebookId("1");
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
         ur.insert(user);
 
         try {
@@ -53,7 +54,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void updateUserMissing() throws ExecutionException, InterruptedException {
         User user = new User();
         user.setFacebookId("1234");
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
         try {
             ur.update(user);
@@ -67,7 +68,7 @@ public class UsersRepositoryTest extends GenericTest {
     public void getUser() throws ExecutionException, InterruptedException {
         User user = new User();
         user.setFacebookId("1");
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
         ur.insert(user);
 
         assertTrue(ur.get("1") == user);
@@ -75,7 +76,7 @@ public class UsersRepositoryTest extends GenericTest {
 
     @Test
     public void getUserMissing(){
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
         assertNull(ur.get("1"));
     }
@@ -83,7 +84,7 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void getAll() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersInMemoryRepository ur = new UsersInMemoryRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
         ur.insert(user);
 
         try {

@@ -29,9 +29,7 @@ public class UsersGAERepository implements UsersRepositoryInterface {
     }
 
     public User get(final String id){
-        User user = ObjectifyService.ofy().load().type(User.class).id(id).safeGet();
-        if(user==null) throw new RuntimeException("User not found: "+id);
-        return user;
+        return ObjectifyService.ofy().load().type(User.class).id(id).now();
     }
 
 

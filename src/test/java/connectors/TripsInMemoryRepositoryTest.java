@@ -3,6 +3,7 @@ package connectors;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.config.App;
 import com.hax.connectors.TripsInMemoryRepository;
+import com.hax.connectors.TripsRepositoryInterface;
 import com.hax.models.Trip;
 import com.hax.models.Flight;
 import org.apache.commons.configuration.ConfigurationException;
@@ -23,67 +24,54 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by martin on 5/3/15.
  */
-public class TripsRepositoryTest extends GenericTest {
+public class TripsInMemoryRepositoryTest extends GenericTest {
 
     @Test
     public void insertFlight(){
-        TripsInMemoryRepository tripsRepo = new TripsInMemoryRepository();
+        TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
         Trip trip = new Trip(s1,s2, 100.0, "Argentina", "USA", "2m", "2m");
 
-        try {
-            tripsRepo.insert(trip);
-            assertTrue(true);
-        } catch (Exception e) {
-            assertTrue(false);
-        }
+        Trip t = tripsRepo.insert(trip);
+        assertTrue(t.equals(trip));
     }
 
     @Test
-    public void getFlight() throws ExecutionException, InterruptedException {
-        TripsInMemoryRepository dc = new TripsInMemoryRepository();
+    public void getTrip() throws ExecutionException, InterruptedException {
+        TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
         Trip trip = new Trip(s1,s2, 100.0, "Argentina", "USA", "2m", "2m");
 
-        dc.insert(trip);
+        tripsRepo.insert(trip);
 
-        try {
-            Trip t = dc.get(0L);
-            assertTrue(t == trip);
-        } catch (Exception e) {
-            assertTrue(false);
-        }
+        Trip t = tripsRepo.get(0L);
+        assertTrue(t == trip);
     }
 
     @Test
-    public void getFlightMissingFlight() throws ExecutionException, InterruptedException {
-        TripsInMemoryRepository dc = new TripsInMemoryRepository();
-
-        assertNull(dc.get(0L));
+    public void getFlightMissingTrip() throws ExecutionException, InterruptedException {
+        TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
+        assertNull(tripsRepo.get(0L));
     }
 
     @Test
-    public void getAllFlight() throws ExecutionException, InterruptedException {
-        TripsInMemoryRepository dc = new TripsInMemoryRepository();
+    public void getAllTrip() throws ExecutionException, InterruptedException {
+        TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
 
 
         List<Flight> s1 = Arrays.asList(new Flight());
         List<Flight> s2 = Arrays.asList(new Flight());
         Trip trip = new Trip(s1,s2, 100.0, "Argentina", "USA", "2m", "2m");
 
-        dc.insert(trip);
+        tripsRepo.insert(trip);
 
-        try {
-            List<Trip> lstTrips = dc.getAll();
-            assertTrue(lstTrips.contains(trip));
-            assertTrue(lstTrips.size()==1);
-        } catch (Exception e) {
-            assertTrue(false);
-        }
+        List<Trip> lstTrips = tripsRepo.getAll();
+        assertTrue(lstTrips.contains(trip));
+        assertTrue(lstTrips.size()==1);
     }
 
     @After

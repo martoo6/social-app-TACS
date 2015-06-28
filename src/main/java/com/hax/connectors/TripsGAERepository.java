@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 public class TripsGAERepository implements TripsRepositoryInterface {
     public Trip insert(final Trip trip) {
         if (trip == null) throw new RuntimeException("Trip is null");
-
         ObjectifyService.ofy().save().entity(trip).now();
         return trip;
     }
@@ -29,9 +28,7 @@ public class TripsGAERepository implements TripsRepositoryInterface {
     }
 
     public Trip get(final Long id){
-        Trip trip = ObjectifyService.ofy().load().type(Trip.class).id(id).safeGet();
-        if (trip == null) throw new RuntimeException("Trip not found: " + id);
-        return trip;
+        return ObjectifyService.ofy().load().type(Trip.class).id(id).now();
     }
 
 

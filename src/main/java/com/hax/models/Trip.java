@@ -6,6 +6,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,8 +14,8 @@ import java.util.List;
  */
 @Entity
 public class Trip {
-    public List<Flight> wayFlights;
-    public List<Flight> returnFlights;
+    public List<Flight> wayFlights = new ArrayList<Flight>();
+    public List<Flight> returnFlights = new ArrayList<Flight>();
     public String origin;
     public String destiny;
     public Double price;
