@@ -32,7 +32,7 @@
 //        List<Flight> s2 = Arrays.asList(new Flight());
 //        Trip trip = new Trip(s1,s2, new BigDecimal(100), "Argentina", "USA", "2m", "2m");
 //
-//        ListenableFuture<Trip> lf = dc.insert(trip);
+//        Trip lf = dc.insert(trip);
 //
 //        try {
 //            lf.get();
@@ -52,7 +52,7 @@
 //
 //        dc.insert(trip).get();
 //
-//        ListenableFuture<Trip> lf = dc.get(0L);
+//        Trip lf = dc.get(0L);
 //
 //        try {
 //            Trip f = lf.get();
@@ -67,7 +67,7 @@
 //    public void getFlightMissingFlight() throws ExecutionException, InterruptedException {
 //        TripsInMemoryRepository dc = new TripsInMemoryRepository();
 //
-//        ListenableFuture<Trip> lf = dc.get(0L);
+//        Trip lf = dc.get(0L);
 //
 //        try {
 //            lf.get();

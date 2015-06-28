@@ -19,7 +19,7 @@
 //    @Test
 //    public void validFlight(){
 //        DespegarConnector dc = new DespegarConnector();
-//        ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-10-10", "2015-11-10");
+//        String lf = dc.getFlightsAsync("BUE", "MIA", "2015-10-10", "2015-11-10");
 //
 //        try {
 //            //TODO: Assert transformacion ??
@@ -33,7 +33,7 @@
 //    @Test
 //    public void invalidDate(){
 //        DespegarConnector dc = new DespegarConnector();
-//        ListenableFuture<String> lf = dc.getFlightsAsync("BUE", "MIA", "2015-11-10", "2015-10-10");
+//        String lf = dc.getFlightsAsync("BUE", "MIA", "2015-11-10", "2015-10-10");
 //
 //        try {
 //            lf.get();
@@ -47,7 +47,7 @@
 //    @Test
 //    public void invalidLocation(){
 //        DespegarConnector dc = new DespegarConnector();
-//        ListenableFuture<String> lf = dc.getFlightsAsync("ZZZ", "MIA", "2015-10-10", "2015-11-10");
+//        String lf = dc.getFlightsAsync("ZZZ", "MIA", "2015-10-10", "2015-11-10");
 //
 //        try {
 //            lf.get();
@@ -61,7 +61,7 @@
 //    @Test
 //    public void validComplete(){
 //        DespegarConnector dc = new DespegarConnector();
-//        ListenableFuture<String> lf = dc.getAirportsAsync("buenos");
+//        String lf = dc.getAirportsAsync("buenos");
 //
 //        try {
 //            //TODO: Assert transformacion ??

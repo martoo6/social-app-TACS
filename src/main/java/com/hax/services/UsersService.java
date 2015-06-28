@@ -126,14 +126,17 @@ public class UsersService implements UsersServiceInterface {
         User fromUser = usersRepository.get(fbVerify.getId());
         Trip flight = tripsRespository.get(flightId);
         User toUser = usersRepository.get(toUserId);
-        Recommendation tmpRecom = new Recommendation(flight.getId(), fromUser.getFacebookId(), toUser.getFacebookId());
-        Recommendation recommendation = recommendationsRepository.insert(tmpRecom);
-        toUser.getRecommendations().add(recommendation.getId());
-        usersRepository.update(toUser);
-        AirportResponse airportResponse = airportsConnector.getAirportAsync(flight.getDestiny());
-        facebookConnector.publishNotification(token, tmpRecom.getToUserId(), fromUser.getUsername() + " te ha recomendado un viaje a " + airportResponse.getCity());
+        if(fromUser!=null && flight!=null & toUser!=null) {
+            Recommendation tmpRecom = new Recommendation(flight.getId(), fromUser.getFacebookId(), toUser.getFacebookId());
+            Recommendation recommendation = recommendationsRepository.insert(tmpRecom);
+            toUser.getRecommendations().add(recommendation.getId());
+            usersRepository.update(toUser);
+            AirportResponse airportResponse = airportsConnector.getAirportAsync(flight.getDestiny());
+            facebookConnector.publishNotification(token, tmpRecom.getToUserId(), fromUser.getUsername() + " te ha recomendado un viaje a " + airportResponse.getCity());
 
-        return recommendation;
+            return recommendation;
+        }
+        return null;
     }
 
 
@@ -142,11 +145,12 @@ public class UsersService implements UsersServiceInterface {
         User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
         if(user!=null){
             Recommendation recom = recommendationsRepository.get(recommendationId);
-            recom.setState(RecommendationState.ACCEPTED);
-            Trip trip = tripsRespository.get(recom.getTrip());
-            AirportResponse airportResponse = airportsConnector.getAirportAsync(trip.getOrigin());
-            facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + airportResponse.getCity());
-            return recommendationsRepository.update(recom);
+            if(recom!=null) {
+                recom.setState(RecommendationState.ACCEPTED);
+                Trip trip = tripsRespository.get(recom.getTrip());
+                facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + trip.getDestinyDescription());
+                return recommendationsRepository.update(recom);
+            }
         }
         return null;
     }
@@ -156,8 +160,10 @@ public class UsersService implements UsersServiceInterface {
         User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
         if(user!=null){
             Recommendation recom = recommendationsRepository.get(recommendationId);
-            recom.setState(RecommendationState.REJECTED);
-            return recommendationsRepository.update(recom);
+            if(recom!=null) {
+                recom.setState(RecommendationState.REJECTED);
+                return recommendationsRepository.update(recom);
+            }
         }
         return null;
     }

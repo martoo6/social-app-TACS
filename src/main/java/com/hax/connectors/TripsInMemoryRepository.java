@@ -14,17 +14,17 @@ public class TripsInMemoryRepository implements TripsRepositoryInterface {
     static List<Trip> trips = new ArrayList<Trip>();
 
     public Trip insert(final Trip trip) {
-        if (trip == null) return (new Trip());
+        if (trip == null) throw new RuntimeException("Missing trip");
         trip.setId(Long.valueOf(trips.size()));
         trips.add(trip);
-        return (trip);
+        return trip;
     }
 
     public Trip get(final Long id){
         for(Trip trip : trips){
             if(trip.getId()==id) return (trip);;
         }
-        throw(new RuntimeException("Trip not found"));
+        throw new RuntimeException("Trip not found");
     }
 
     public List<Trip> getAll(){
