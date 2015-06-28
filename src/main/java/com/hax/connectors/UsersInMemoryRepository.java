@@ -30,10 +30,8 @@ public class UsersInMemoryRepository implements UsersRepositoryInterface {
     }
 
     public User get(final String id){
-        String ids = "Searching id: "+id+". ";
         for(User user:collection){
-            ids+=user.getFacebookId()+" , Checking resolved: "+user.getFacebookId().equals(id);
-            if (user.getFacebookId().equals(id)) return (user);
+            if (user.getFacebookId().equals(id)) return user;
         }
         return null;
     }

@@ -42,7 +42,7 @@ angular
       })
       .when('/friends', {
         templateUrl: 'views/friends.html',
-        controller: 'FriendsCtrl', 
+        controller: 'FriendsCtrl',
         needAuth: true
       })
       .otherwise({
@@ -72,7 +72,7 @@ angular
   .constant('facebookConfigSettings', {
     'appID' : '565625596912348',
     'routingEnabled' : true,
-    'permissions' : 'publish_actions'
+    'permissions' : 'publish_actions, user_friends, email'
   })
   .run(function ($rootScope, facebookUser, $http){
     $rootScope.$on('fbLoginSuccess', function(name, response) {

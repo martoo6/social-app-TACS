@@ -57,16 +57,14 @@ public class UsersService implements UsersServiceInterface {
 
     private void setFriends(User user,String token){
         FbFriends fbFriends = facebookConnector.getUserFriends(token);
-        ArrayList<User> friends = new ArrayList<User>();
+        //Facebook trae todos los amigos de un usuario que tambien tengan isntalda la app, porq lo que tienen que existir en la app
         for (FbFriend fbFriend : fbFriends.getData()) {
             User friend = usersRepository.get(fbFriend.getId());
-            if(friend!=null && !user.getFriends().contains(fbFriend.getId())) friends.add(friend);
-        }
-
-        for (User friend : friends) {
-            user.getFriends().add(friend.getFacebookId());
-            friend.getFriends().add(user.getFacebookId());
-            usersRepository.update(friend);
+            if(friend != null && !user.getFriends().contains(fbFriend.getId())){
+                user.getFriends().add(friend.getFacebookId());
+                friend.getFriends().add(user.getFacebookId());
+                usersRepository.update(friend);
+            }
         }
     }
 

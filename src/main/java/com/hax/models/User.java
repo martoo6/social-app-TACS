@@ -30,6 +30,7 @@ public class User {
         username = fbVerify.getName();
         facebookId = fbVerify.getId();
         gender = fbVerify.getGender();
+        email = fbVerify.getEmail();
     }
 
     public String getUsername() { return username; }

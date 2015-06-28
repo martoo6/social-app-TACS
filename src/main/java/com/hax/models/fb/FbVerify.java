@@ -13,7 +13,16 @@ public class FbVerify {
             public String name; //": "Martin Silber",
             public String timezone; //": -3,
             public String updated_time; //": "2015-06-05T12:33:08+0000",
+            public String email;
             public Boolean verified; //": true
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getId() {
         return id;
