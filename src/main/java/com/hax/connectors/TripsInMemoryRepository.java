@@ -22,9 +22,9 @@ public class TripsInMemoryRepository implements TripsRepositoryInterface {
 
     public Trip get(final Long id){
         for(Trip trip : trips){
-            if(trip.getId()==id) return (trip);;
+            if(trip.getId()==id) return (trip);
         }
-        throw new RuntimeException("Trip not found");
+        return null;
     }
 
     public List<Trip> getAll(){
