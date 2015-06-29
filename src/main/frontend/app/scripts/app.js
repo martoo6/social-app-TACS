@@ -45,6 +45,10 @@ angular
         controller: 'FriendsCtrl',
         needAuth: true
       })
+      .when('/recommendations', {
+        templateUrl: 'views/recommendations.html',
+        controller: 'RecommendationsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -1,4 +1,5 @@
-<h4>¡Descubre donde viajan tus amigos!</h4>
+<h4 ng-show="myFriends && myFriends.length" style="text-align:center">¡Descubre donde viajan tus amigos!</h4>
+<h4 ng-hide="myFriends && myFriends.length" style="text-align:center"> Parece que tus amigos no están usando la aplicación. Avisales para que puedan compartir viajes! </h4>
 <br>
 
 <div class="panel-group" id="friendsAccordion" role="tablist" aria-multiselectable="true">
