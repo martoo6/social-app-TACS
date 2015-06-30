@@ -139,7 +139,7 @@ html, body{
     text-align: center
 }
 
-.shareFlight {
+.niceButton {
         position: absolute;
         bottom: 17px;
         right: 17px;
@@ -167,7 +167,7 @@ html, body{
 	padding:5px 6px;
 	text-decoration:none;
 }
-.shareFlight:hover {
+.niceButton:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7987a3), color-stop(1, #93a2c4));
 	background:-moz-linear-gradient(top, #7987a3 5%, #93a2c4 100%);
 	background:-webkit-linear-gradient(top, #7987a3 5%, #93a2c4 100%);
@@ -176,4 +176,31 @@ html, body{
 	background:linear-gradient(to bottom, #7987a3 5%, #93a2c4 100%);
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7987a3', endColorstr='#93a2c4',GradientType=0);
 	background-color:#7987a3;
+}
+
+.avioncito{
+    position:absolute; 
+    margin-left: -20px;
+}
+
+.separator{
+    margin:0
+}
+
+.infoDeRecomendacion{
+    padding-left:20px
+}
+
+.recommendationButton{
+    margin-bottom:17px;
+    text-align:center;
+    min-width:70px;
+    margin-left:10px;
+    float:right;
+    position:relative !important;
+}
+
+.redderNiceButton{
+    background:linear-gradient(to bottom, #B693C4 5%, #A37987 100%) !important;
+    border: 2px solid #7B1850 !important;
 }

@@ -1,1 +1,20 @@
-<p>This is the recommendations view.</p>
+<div style="height:100%">
+
+    <div ng-repeat="recommendation in myRecommendations">
+            <div class="well" style="position:relative">
+                <h4 style="display:inline-block">{{ recommendation.username }}</h4> <h5 style="display:inline-block"><i>te recommienda:</i></h5>
+                <hr class="separator">
+                <h5 class="infoDeRecomendacion"><i class="avioncito fa fa-plane"></i><strong>Viajar desde </strong>{{ recommendation.trip.originDescription }}</h5>
+                <hr class="separator">
+                <h5 class="infoDeRecomendacion"><i class="avioncito fa fa-plane"></i><strong>Con destino </strong>{{ recommendation.trip.destinyDescription }}</h5>
+                <hr class="separator">
+                <h5 class="infoDeRecomendacion"><strong>Por</strong> $ {{ recommendation.trip.price }}</h5>
+                
+
+                <a ng-click="reject(recommendation)" class="niceButton redderNiceButton recommendationButton">Rechazar</a>
+                <a ng-click="accept(recommendation)" class="niceButton recommendationButton">Aceptar</a>
+                <i id="recommendationSpinner" style="margin-right:10px;margin-bottom:20px;float:right;display:none;" class="fa fa-spinner fa-pulse"></i>
+            </div>
+    </div>
+
+</div>
