@@ -36,6 +36,10 @@ angular.module('frontendApp')
       //delete extra attributes, otherwise jersey wont save
       delete $scope.selectedTrip.$$hashKey;
 
+      //add descriptions to selectedTrip
+      $scope.selectedTrip.originDescription = makeAirportlessDesc($scope.originLocation.originalObject.description);
+      $scope.selectedTrip.destinyDescription = makeAirportlessDesc($scope.destinyLocation.originalObject.description);
+      
       $.ajax({
           type: "POST",
           url: 'api/v1/trips',
@@ -115,6 +119,11 @@ angular.module('frontendApp')
           duration: segment.duration + ' hs'
         };
       });
+    }
+    
+    //removes airport from a destination description
+    function makeAirportlessDesc(description){
+      return description.split(',').slice(1).join(', ');
     }
 });
 
