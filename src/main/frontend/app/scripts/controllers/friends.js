@@ -10,15 +10,6 @@
 angular.module('frontendApp')
   .controller('FriendsCtrl', function ($scope, $http, $q) {
     
-//    $scope.myFriends = [
-//      {"username":"Cacarlos Pispispispis", "id":"107826402891555", "trips":[1,2]},
-//      {"username":"Julian Selser", "id":"384563141742033", "trips":[0]},
-//      {"username":"Jhonny MelasLavo", "id":"225353", "trips":[]},
-//      {"username":"Debora Meltrozo", "id":"222232", "trips":[]},
-//      {"username":"Carlos ElQueTeCoje", "id":"252352", "trips":[]},
-//      {"username":"Nombre Creativo", "id":"222343", "trips":[]},
-//    ];
-    
     //////////////////////////////////////////
     ////////////// INIT FUNCTION /////////////
     //////////////////////////////////////////
@@ -72,7 +63,7 @@ angular.module('frontendApp')
 
     function findFriendById(id){
       return $.grep($scope.myFriends, function(friend){ 
-        return friend.id == id; 
+        return friend.facebookId == id; 
       })[0];
     }
   });

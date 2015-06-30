@@ -12,7 +12,12 @@ angular.module('frontendApp')
 
     var wayStopPoints = [];
     var returnStopPoints = [];
+    
     $scope.myTrips = [];
+    $scope.myFriends = [];
+    $scope.selectedTrip;
+    $scope.selectedFriend;
+    
 
     function drawMap(){
       var points = wayStopPoints
@@ -29,11 +34,38 @@ angular.module('frontendApp')
                                               });
       trazaVuelo.setMap(mapa);
 
-      //AJUSTA EL ZOOM PARA QUE SE VEA EL RECORRIDO
+      //adjusts zoom to the traced area
       var bounds = new google.maps.LatLngBounds();
       trazaVuelo.getPath().forEach(function(bound) {bounds.extend(bound);});
       mapa.fitBounds(bounds);
     }
+    
+    $scope.recomendFlightTo = function(selectedFriend){
+      
+      $('#modalSpinner').show();
+      
+      $http.post('api/v1/recommendations', {
+        toUserId: selectedFriend.facebookId,
+        flightId: $scope.selectedTrip.id
+      })
+      .success(function(){
+        $('#modalSpinner').hide();
+        $('#modalCheck').fadeIn();
+        
+        setTimeout(function(){
+          $('#modalCheck').fadeOut();
+        }, 1000);
+      });
+    };
+    
+    $scope.openShareModal = function(trip){
+
+      $scope.selectedTrip = trip;
+
+      $('#modalShare').modal();
+
+      return false;
+    };
 
     $scope.showMap = function(trip){
 
@@ -77,7 +109,6 @@ angular.module('frontendApp')
               });
     }
 
-
     //////////////////////////////////////////
     ////////////// INIT FUNCTION /////////////
     //////////////////////////////////////////
@@ -85,9 +116,16 @@ angular.module('frontendApp')
 
     (function init(){
 
+      //gets user trips
       $http.get('api/v1/users/me/trips')
         .success(function(trips){
           $scope.myTrips = trips;
+        });
+        
+      //gets user friends
+      $http.get('api/v1/users/me/friends')
+        .success(function(friends){
+          $scope.myFriends = friends;
         });
     }());
   });
