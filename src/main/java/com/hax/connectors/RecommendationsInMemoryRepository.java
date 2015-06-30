@@ -17,6 +17,7 @@ public class RecommendationsInMemoryRepository implements RecommendationsReposit
     public Recommendation insert(final Recommendation recommendation) {
         if (recommendation == null) throw(new RuntimeException("User is null"));
         collection.add(recommendation);
+        recommendation.setId(new Long(collection.indexOf(recommendation)));
         return recommendation;
     }
 
