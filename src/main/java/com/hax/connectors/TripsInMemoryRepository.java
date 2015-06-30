@@ -22,7 +22,7 @@ public class TripsInMemoryRepository implements TripsRepositoryInterface {
 
     public Trip get(final Long id){
         for(Trip trip : trips){
-            if(trip.getId()==id) return (trip);
+            if(trip.getId().equals(id)) return trip;
         }
         return null;
     }

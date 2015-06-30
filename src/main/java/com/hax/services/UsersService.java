@@ -148,6 +148,8 @@ public class UsersService implements UsersServiceInterface {
             if(recom!=null) {
                 recom.setState(RecommendationState.ACCEPTED);
                 Trip trip = tripsRespository.get(recom.getTrip());
+                user.getTrips().add(trip.getId());
+                usersRepository.update(user);
                 facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + trip.getDestinyDescription());
                 return recommendationsRepository.update(recom);
             }

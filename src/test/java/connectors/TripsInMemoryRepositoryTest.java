@@ -39,7 +39,7 @@ public class TripsInMemoryRepositoryTest extends GenericTest {
     }
 
     @Test
-    public void getTrip() throws ExecutionException, InterruptedException {
+    public void getTrip(){
         TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
 
         List<Flight> s1 = Arrays.asList(new Flight());
@@ -53,13 +53,13 @@ public class TripsInMemoryRepositoryTest extends GenericTest {
     }
 
     @Test
-    public void getFlightMissingTrip() throws ExecutionException, InterruptedException {
+    public void getFlightMissingTrip() {
         TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
         assertNull(tripsRepo.get(0L));
     }
 
     @Test
-    public void getAllTrip() throws ExecutionException, InterruptedException {
+    public void getAllTrip() {
         TripsRepositoryInterface tripsRepo = new TripsInMemoryRepository();
 
 
