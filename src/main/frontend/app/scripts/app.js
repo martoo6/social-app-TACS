@@ -81,10 +81,10 @@ angular
   .run(function ($rootScope, facebookUser, $http){
     $rootScope.$on('fbLoginSuccess', function(name, response) {
       facebookUser.then(function(user) {
-        user.api('/me').then(function(response) {
-          $rootScope.loggedInUser = response;
+        user.api('/me').then(function(user) {
+          $rootScope.loggedInUser = user;
         });
-      });
+        
       $rootScope.fbStatus = response;
       $http.defaults.headers.common['token'] = $rootScope.fbStatus.authResponse.accessToken;
       $.ajax({
@@ -93,6 +93,7 @@ angular
             contentType: 'application/json',
             data: {id: response.id}
           });
+      });
     });
 
     $rootScope.$on('fbLogoutSuccess', function() {

@@ -177,7 +177,3 @@ html, body{
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7987a3', endColorstr='#93a2c4',GradientType=0);
 	background-color:#7987a3;
 }
-.shareFlight:active {
-	position:relative;
-	top:1px;
-}
