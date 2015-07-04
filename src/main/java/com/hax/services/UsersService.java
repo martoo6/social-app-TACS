@@ -43,15 +43,18 @@ public class UsersService implements UsersServiceInterface {
 
     public User createUser(final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId());
+        if(fbVerify!=null){
+            User user = usersRepository.get(fbVerify.getId());
 
-        if(user==null){
-            user = new User(fbVerify);
+            if(user==null){
+                user = new User(fbVerify);
+                setFriends(user, token);
+                return usersRepository.insert(user);
+            }
             setFriends(user, token);
-            return usersRepository.insert(user);
+            return usersRepository.update(user);
         }
-        setFriends(user, token);
-        return usersRepository.update(user);
+        return null;
     }
 
 
@@ -71,41 +74,46 @@ public class UsersService implements UsersServiceInterface {
     public List<User> getFriends(final String token) {
 
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId());
-        if(user!=null) {
-            ArrayList<User> lst = new ArrayList<User>();
-            for (String id : user.getFriends()) {
-                lst.add(usersRepository.get(id));
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
+            if (user != null) {
+                ArrayList<User> lst = new ArrayList<User>();
+                for (String id : user.getFriends()) {
+                    lst.add(usersRepository.get(id));
+                }
+                return lst;
             }
-            return lst;
         }
         return null;
     }
 
     public List<Trip> getTrips(final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId());
-
-        if(user!=null) {
-            ArrayList<Trip> lst = new ArrayList<Trip>();
-            for(Long id:user.getTrips()){
-                lst.add(tripsRespository.get(id));
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
+            if (user != null) {
+                ArrayList<Trip> lst = new ArrayList<Trip>();
+                for (Long id : user.getTrips()) {
+                    lst.add(tripsRespository.get(id));
+                }
+                return lst;
             }
-            return lst;
         }
         return null;
     }
 
     public List<Recommendation> getRecommendations(final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId());
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
 
-        if(user!=null) {
-            ArrayList<Recommendation> lst = new ArrayList<Recommendation>();
-            for(Long id:user.getRecommendations()){
-                lst.add(recommendationsRepository.get(id));
+            if (user != null) {
+                ArrayList<Recommendation> lst = new ArrayList<Recommendation>();
+                for (Long id : user.getRecommendations()) {
+                    lst.add(recommendationsRepository.get(id));
+                }
+                return lst;
             }
-            return lst;
         }
         return null;
     }
@@ -123,18 +131,20 @@ public class UsersService implements UsersServiceInterface {
     public Recommendation recommendFlight(Long flightId, final String token, String toUserId){
 
         FbVerify fbVerify =facebookConnector.verifyAccessToken(token);
-        User fromUser = usersRepository.get(fbVerify.getId());
-        Trip flight = tripsRespository.get(flightId);
-        User toUser = usersRepository.get(toUserId);
-        if(fromUser!=null && flight!=null & toUser!=null) {
-            Recommendation tmpRecom = new Recommendation(flight.getId(), fromUser.getFacebookId(), toUser.getFacebookId());
-            Recommendation recommendation = recommendationsRepository.insert(tmpRecom);
-            toUser.getRecommendations().add(recommendation.getId());
-            usersRepository.update(toUser);
-            AirportResponse airportResponse = airportsConnector.getAirportAsync(flight.getDestiny());
-            facebookConnector.publishNotification(token, tmpRecom.getToUserId(), fromUser.getUsername() + " te ha recomendado un viaje a " + airportResponse.getCity());
+        if(fbVerify!=null) {
+            User fromUser = usersRepository.get(fbVerify.getId());
+            Trip flight = tripsRespository.get(flightId);
+            User toUser = usersRepository.get(toUserId);
+            if (fromUser != null && flight != null & toUser != null) {
+                Recommendation tmpRecom = new Recommendation(flight.getId(), fromUser.getFacebookId(), toUser.getFacebookId());
+                Recommendation recommendation = recommendationsRepository.insert(tmpRecom);
+                toUser.getRecommendations().add(recommendation.getId());
+                usersRepository.update(toUser);
+                AirportResponse airportResponse = airportsConnector.getAirportAsync(flight.getDestiny());
+                facebookConnector.publishNotification(token, tmpRecom.getToUserId(), fromUser.getUsername() + " te ha recomendado un viaje a " + airportResponse.getCity());
 
-            return recommendation;
+                return recommendation;
+            }
         }
         return null;
     }
@@ -142,16 +152,18 @@ public class UsersService implements UsersServiceInterface {
 
     public Recommendation acceptRecommendation(final Long recommendationId, final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
-        if(user!=null){
-            Recommendation recom = recommendationsRepository.get(recommendationId);
-            if(recom!=null) {
-                recom.setState(RecommendationState.ACCEPTED);
-                Trip trip = tripsRespository.get(recom.getTrip());
-                user.getTrips().add(trip.getId());
-                usersRepository.update(user);
-                facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + trip.getDestinyDescription());
-                return recommendationsRepository.update(recom);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
+            if (user != null) {
+                Recommendation recom = recommendationsRepository.get(recommendationId);
+                if (recom != null) {
+                    recom.setState(RecommendationState.ACCEPTED);
+                    Trip trip = tripsRespository.get(recom.getTrip());
+                    user.getTrips().add(trip.getId());
+                    usersRepository.update(user);
+                    facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + trip.getDestinyDescription());
+                    return recommendationsRepository.update(recom);
+                }
             }
         }
         return null;
@@ -159,12 +171,14 @@ public class UsersService implements UsersServiceInterface {
 
     public Recommendation rejectRecommendation(final Long recommendationId, final String token) {
         FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
-        User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
-        if(user!=null){
-            Recommendation recom = recommendationsRepository.get(recommendationId);
-            if(recom!=null) {
-                recom.setState(RecommendationState.REJECTED);
-                return recommendationsRepository.update(recom);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
+            if (user != null) {
+                Recommendation recom = recommendationsRepository.get(recommendationId);
+                if (recom != null) {
+                    recom.setState(RecommendationState.REJECTED);
+                    return recommendationsRepository.update(recom);
+                }
             }
         }
         return null;

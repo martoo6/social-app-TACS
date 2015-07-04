@@ -83,9 +83,28 @@ public class FacebookConnector implements FacebookConnectorInterface{
         String url = fbUrl+toUserId+"/notifications";
         Response response =  ClientBuilder.newClient()
                 .target(url)
-                .queryParam("access_token", token)
+                .queryParam("access_token", getAppAccessToken())
+                .queryParam("template", message)
                 .request()
-                .post(Entity.entity(new FbNotification(message), MediaType.APPLICATION_JSON));
+                .post(null);
+        //.post(Entity.entity(new FbNotification(message), MediaType.APPLICATION_JSON));
+
+        if(response.getStatus()==Response.Status.OK.getStatusCode()){
+            return response.readEntity(String.class);
+        }
+        return null;
+    }
+
+    public String getAppAccessToken(){
+        String url = fbUrl+"oauth/access_token";
+        Response response =  ClientBuilder.newClient()
+                .target(url)
+                .queryParam("client_id", App.config.getString("facebook.api.app.id"))
+                .queryParam("client_secret", App.config.getString("facebook.api.app.secret"))
+                .queryParam("grant_type", "client_credentials")
+                .request()
+                .get();
+        //.post(Entity.entity(new FbNotification(message), MediaType.APPLICATION_JSON));
 
         if(response.getStatus()==Response.Status.OK.getStatusCode()){
             return response.readEntity(String.class);
