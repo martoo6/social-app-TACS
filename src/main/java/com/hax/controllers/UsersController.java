@@ -1,21 +1,21 @@
 package com.hax.controllers;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.FutureHelper;
-import com.hax.models.Recommendation;
 import com.hax.models.User;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.fail;
 
 /**
  * Created by martin on 4/20/15.
@@ -29,18 +29,48 @@ public class UsersController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{userID}")
-    public void getUser(@PathParam("userId") int userId, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    @Path("{userId}")
+    public Response getUser(@PathParam("userId") String userId) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.getUser(userId) ,asyncResponse);
+        return addControllerCallback(usersService.getUser(userId));
     }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getAllUser(@Suspended final AsyncResponse asyncResponse) throws JSONException
+    @Path("me/friends")
+    public Response getFriends(@Context HttpHeaders hh) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.getAll() ,asyncResponse);
+        String token = hh.getHeaderString("token");
+        if(token==null) {
+            return fail("Missing token");
+        } else {
+            return addControllerCallback(usersService.getFriends(token));
+        }
+    }
+
+    /**
+     *
+     * @return Lista de vuelos que cumplen el criterio de busqueda
+     * @throws JSONException
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("me/trips")
+    public Response getFilteredTrip(@Context HttpHeaders hh) throws JSONException
+    {
+        String token = hh.getHeaderString("token");
+        if(token==null) {
+            return fail("Missing token");
+        } else {
+            return addControllerCallback(usersService.getTrips(token));
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUser(@Context HttpServletResponse asyncResponse) throws JSONException
+    {
+        return addControllerCallback(usersService.getAll());
     }
 
     //TODO: mas bien aca tiraria la vista/webpage si usaramos un template system
@@ -53,8 +83,9 @@ public class UsersController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void createUser(final User user, @Suspended final AsyncResponse asyncResponse) throws JSONException
+    @Path("{token}")
+    public Response createUser(@PathParam("token") String token) throws JSONException
     {
-        FutureHelper.addControllerCallback(usersService.createUser(user) ,asyncResponse);
+        return addControllerCallback(usersService.createUser(token));
     }
 }

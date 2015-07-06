@@ -1,3 +1,10 @@
-*
-!WEB-INF
-!.gitignore
+fonts
+images
+scripts
+styles
+views
+.htaccess
+404.html
+favicon.ico
+index.html
+robots.txt

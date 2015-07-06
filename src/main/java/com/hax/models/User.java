@@ -1,33 +1,42 @@
 package com.hax.models;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
+import com.hax.models.fb.FbVerify;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by martin on 5/5/15.
  */
+@Entity
 public class User {
-    private String username;
-    private String password;
-    private String email;
-    private Integer id;
-    private List<User> friends = new ArrayList<User>();
-    private List<Flight> flights = new ArrayList<Flight>();
-    private List<Recommendation> recommendations = new ArrayList<Recommendation>();
+    public String username;
+    public String email;
+    @Id public String facebookId;
+    public List<String> friends = new ArrayList<String>();
+    public List<Long> trips = new ArrayList<Long>();
+    public List<Long> recommendations = new ArrayList<Long>();
+    public String longLivedToken;
+    public String gender;
 
+    public User() {
+    }
+
+    public User(FbVerify fbVerify) {
+        username = fbVerify.getName();
+        facebookId = fbVerify.getId();
+        gender = fbVerify.getGender();
+        email = fbVerify.getEmail();
+    }
 
     public String getUsername() { return username; }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -38,31 +47,47 @@ public class User {
         this.email = email;
     }
 
-    public Integer getId() { return id; }
+    public String getFacebookId() { return facebookId; }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setFacebookId(String facebookId) { this.facebookId = facebookId; }
 
-    public List<User> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
-    public List<Flight> getFlights() {
-        return flights;
+    public List<Long> getTrips() {
+        return trips;
     }
 
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
+    public void setTrips(List<Long> trips) {
+        this.trips = trips;
     }
 
-    public List<Recommendation> getRecommendations() {
+    public List<Long> getRecommendations() {
         return recommendations;
     }
 
-    public void setRecommendations(List<Recommendation> recommendations) {
+    public void setRecommendations(List<Long> recommendations) {
         this.recommendations = recommendations;
+    }
+
+    public String getLongLivedToken() {
+        return longLivedToken;
+    }
+
+    public void setLongLivedToken(String longLivedToken) {
+        this.longLivedToken = longLivedToken;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

@@ -1,6 +1,5 @@
 package com.hax.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

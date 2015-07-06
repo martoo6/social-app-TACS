@@ -1,7 +1,9 @@
 package com.hax.services;
 
-import com.hax.connectors.AirportsConnectorInterface;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.hax.connectors.AirportsConnectorInterface;
+import com.hax.models.AirportResponse;
+
 import javax.inject.Inject;
 
 /**
@@ -12,13 +14,13 @@ public class AirportsService implements AirportsServiceInterface{
     public AirportsConnectorInterface airportsConnector;
 
     /**
-     * Obtiene el aeropuerto del país más cercano a (latitude, longitude)
+     * Obtiene el aeropuerto del paï¿½s mï¿½s cercano a (latitude, longitude)
      * 
      * @param latitude Latitud de un punto
      * @param longitude Longitud de un punto
      * @return Json del aeropuerto mas cercano a (latitud, longitud)
      */
-    public ListenableFuture<String> getAirport(String latitude, String longitude){
+    public String getAirport(String latitude, String longitude){
         return airportsConnector.getAirportAsync(latitude , longitude);
     }
     
@@ -28,7 +30,7 @@ public class AirportsService implements AirportsServiceInterface{
      * @param airportCode
      * @return Json del aeropuerto de codigo airportCode
      */
-    public ListenableFuture<String> getAirport(String airportCode){
+    public AirportResponse getAirport(String airportCode){
         return airportsConnector.getAirportAsync(airportCode);
     }
 }

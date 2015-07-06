@@ -2,17 +2,17 @@ package com.hax.services;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.FutureFallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hax.async.utils.FutureHelper;
 import com.hax.async.utils.Tuple2;
 import com.hax.async.utils.Tuple3;
-import com.hax.connectors.FlightsRepositoryInterface;
-import com.hax.connectors.UsersRepositoryInterface;
-import com.hax.models.Flight;
-import com.hax.models.Recommendation;
-import com.hax.models.RecommendationState;
-import com.hax.models.User;
+import com.hax.connectors.*;
+import com.hax.models.*;
+import com.hax.models.fb.FbFriend;
+import com.hax.models.fb.FbFriends;
+import com.hax.models.fb.FbVerify;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -25,139 +25,162 @@ public class UsersService implements UsersServiceInterface {
     @Inject
     public UsersRepositoryInterface usersRepository;
     @Inject
-    public FlightsRepositoryInterface flightsRepository;
+    public TripsRepositoryInterface tripsRespository;
+    @Inject
+    public FacebookConnectorInterface facebookConnector;
+    @Inject
+    public AirportsConnectorInterface airportsConnector;
+    @Inject
+    public RecommendationsRepositoryInterface recommendationsRepository;
 
-    public ListenableFuture<List<User>> getAll() {
+    public List<User> getAll() {
         return usersRepository.getAll();
     }
 
-    public ListenableFuture<User> getUser(Integer id) {
+    public User getUser(String id) {
         return usersRepository.get(id);
     }
 
-    public ListenableFuture<User> createUser(User user) {
-        return usersRepository.insert(user);
-    }
+    public User createUser(final String token) {
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null){
+            User user = usersRepository.get(fbVerify.getId());
 
-    public ListenableFuture<List<User>> getFriends(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<User>>() {
-            public List<User> apply(User user) {
-                return user.getFriends();
+            if(user==null){
+                user = new User(fbVerify);
+                setFriends(user, token);
+                return usersRepository.insert(user);
             }
-        });
+            setFriends(user, token);
+            return usersRepository.update(user);
+        }
+        return null;
     }
 
-    public ListenableFuture<List<Flight>> getFlights(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<Flight>>() {
-            public List<Flight> apply(User user) {
-                return user.getFlights();
+
+    private void setFriends(User user,String token){
+        FbFriends fbFriends = facebookConnector.getUserFriends(token);
+        //Facebook trae todos los amigos de un usuario que tambien tengan isntalda la app, porq lo que tienen que existir en la app
+        for (FbFriend fbFriend : fbFriends.getData()) {
+            User friend = usersRepository.get(fbFriend.getId());
+            if(friend != null && !user.getFriends().contains(fbFriend.getId())){
+                user.getFriends().add(friend.getFacebookId());
+                friend.getFriends().add(user.getFacebookId());
+                usersRepository.update(friend);
             }
-        });
+        }
     }
 
-    public ListenableFuture<List<Recommendation>> getRecommendations(Integer id) {
-        return Futures.transform(usersRepository.get(id), new Function<User, List<Recommendation>>() {
-            public List<Recommendation> apply(User user) {
-                return user.getRecommendations();
+    public List<User> getFriends(final String token) {
+
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
+            if (user != null) {
+                ArrayList<User> lst = new ArrayList<User>();
+                for (String id : user.getFriends()) {
+                    lst.add(usersRepository.get(id));
+                }
+                return lst;
             }
-        });
+        }
+        return null;
     }
 
-    public ListenableFuture<User> update(User user) {
+    public List<Trip> getTrips(final String token) {
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
+            if (user != null) {
+                ArrayList<Trip> lst = new ArrayList<Trip>();
+                for (Long id : user.getTrips()) {
+                    lst.add(tripsRespository.get(id));
+                }
+                return lst;
+            }
+        }
+        return null;
+    }
+
+    public List<Recommendation> getRecommendations(final String token) {
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId());
+
+            if (user != null) {
+                ArrayList<Recommendation> lst = new ArrayList<Recommendation>();
+                for (Long id : user.getRecommendations()) {
+                    lst.add(recommendationsRepository.get(id));
+                }
+                return lst;
+            }
+        }
+        return null;
+    }
+
+    public User update(User user) {
         return usersRepository.update(user);
     }
 
     /**
      *
      * @param flightId
-     * @param fromUserId
      * @param toUserId
      * @return
      */
-    public ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId){
+    public Recommendation recommendFlight(Long flightId, final String token, String toUserId){
 
-        /**
-         Hacemos 3 llamadas asincronicas a los repositorios y esperamos el resultado de las 3.
-         El Future resultante es utilizado para insertar la recomendacion.
-         Al no ir a los repositorios de manera secuencial se logra la maxima velocidad para obtener los resultados.
-         */
+        FbVerify fbVerify =facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User fromUser = usersRepository.get(fbVerify.getId());
+            Trip flight = tripsRespository.get(flightId);
+            User toUser = usersRepository.get(toUserId);
+            if (fromUser != null && flight != null & toUser != null) {
+                Recommendation tmpRecom = new Recommendation(flight.getId(), fromUser.getFacebookId(), toUser.getFacebookId());
+                Recommendation recommendation = recommendationsRepository.insert(tmpRecom);
+                toUser.getRecommendations().add(recommendation.getId());
+                usersRepository.update(toUser);
+                AirportResponse airportResponse = airportsConnector.getAirportAsync(flight.getDestiny());
+                facebookConnector.publishNotification(token, tmpRecom.getToUserId(), fromUser.getUsername() + " te ha recomendado un viaje a " + airportResponse.getCity());
 
-        final ListenableFuture<Flight> flightF = flightsRepository.get(flightId);
-        final ListenableFuture<User> fromUserF = usersRepository.get(fromUserId);
-        final ListenableFuture<User> toUserF = usersRepository.get(toUserId);
-
-
-        ListenableFuture<Tuple3<Flight,User,User>> compFuture = FutureHelper.compose(flightF, fromUserF, toUserF);
-
-        return Futures.transform(compFuture, new AsyncFunction<Tuple3<Flight, User, User>, Recommendation>() {
-            public ListenableFuture<Recommendation> apply(Tuple3<Flight, User, User> t) throws Exception {
-                User toUser = t.getR3();
-                final Recommendation recom = new Recommendation(t.getR1(), t.getR2());
-                toUser.getRecommendations().add(recom);
-                return Futures.transform(usersRepository.update(toUser), new Function<User, Recommendation>() {
-                    public Recommendation apply(User user) {
-                        return recom;
-                    }
-                });
+                return recommendation;
             }
-        });
+        }
+        return null;
     }
 
-    public ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId) {
-        return setRecommendationState(recommendationId, RecommendationState.ACCEPTED, userId);
-    }
 
-    public ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId) {
-        return setRecommendationState(recommendationId, RecommendationState.REJECTED, userId);
-    }
-
-    private ListenableFuture<Recommendation> setRecommendationState(final Integer recommendationId, final RecommendationState state, Integer userId){
-        return Futures.transform(usersRepository.get(userId), new Function<User, Recommendation>() {
-                    public Recommendation apply(User user) {
-
-                        List<Recommendation> lst = user.getRecommendations();
-                        Recommendation r = null;
-                        for (Recommendation tmpR : lst) if (tmpR.getId() == recommendationId) r=tmpR;
-                        if (r == null) throw new RuntimeException("Missing Recommendation");
-                        r.setState(state);
-                        usersRepository.update(user);
-                        return r;
-                    }
+    public Recommendation acceptRecommendation(final Long recommendationId, final String token) {
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
+            if (user != null) {
+                Recommendation recom = recommendationsRepository.get(recommendationId);
+                if (recom != null) {
+                    recom.setState(RecommendationState.ACCEPTED);
+                    Trip trip = tripsRespository.get(recom.getTrip());
+                    user.getTrips().add(trip.getId());
+                    usersRepository.update(user);
+                    facebookConnector.publishNotification(token, recom.getFromUserId(), "Han aceptado tu recomendacion a " + trip.getDestinyDescription());
+                    return recommendationsRepository.update(recom);
                 }
-        );
+            }
+        }
+        return null;
     }
 
-    public ListenableFuture<User> addFriend(Integer userId, Integer friendId) {
-        ListenableFuture<User> userFuture = usersRepository.get(userId);
-        ListenableFuture<User> friendFuture = usersRepository.get(friendId);
-
-        ListenableFuture<Tuple2<User, User>> fTuple = FutureHelper.compose(userFuture, friendFuture);
-
-        return Futures.transform(fTuple, new Function<Tuple2<User,User>, User>() {
-            public User apply(Tuple2<User, User> tuple) {
-                User user = tuple.getR1();
-                User friend = tuple.getR2();
-                user.getFriends().add(friend);
-                usersRepository.update(user);
-                return user;
+    public Recommendation rejectRecommendation(final Long recommendationId, final String token) {
+        FbVerify fbVerify = facebookConnector.verifyAccessToken(token);
+        if(fbVerify!=null) {
+            User user = usersRepository.get(fbVerify.getId()); //Si no lo encuentra no sigue la ejecucion
+            if (user != null) {
+                Recommendation recom = recommendationsRepository.get(recommendationId);
+                if (recom != null) {
+                    recom.setState(RecommendationState.REJECTED);
+                    return recommendationsRepository.update(recom);
+                }
             }
-        });
-    }
-
-    public ListenableFuture<User> removeFriend(Integer userId, Integer friendId) {
-        ListenableFuture<User> userFuture = usersRepository.get(userId);
-        ListenableFuture<User> friendFuture = usersRepository.get(friendId);
-
-        ListenableFuture<Tuple2<User, User>> fTuple = FutureHelper.compose(userFuture, friendFuture);
-
-        return Futures.transform(fTuple, new Function<Tuple2<User,User>, User>() {
-            public User apply(Tuple2<User, User> tuple) {
-                User user = tuple.getR1();
-                User friend = tuple.getR2();
-                user.getFriends().remove(friend);
-                usersRepository.update(user);
-                return user;
-            }
-        });
+        }
+        return null;
     }
 }

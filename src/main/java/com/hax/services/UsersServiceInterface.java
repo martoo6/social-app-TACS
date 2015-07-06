@@ -1,11 +1,10 @@
 package com.hax.services;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.models.Flight;
+import com.hax.models.Trip;
 import com.hax.models.Recommendation;
 import com.hax.models.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,16 +12,14 @@ import java.util.List;
  */
 
 public interface UsersServiceInterface {
-    ListenableFuture<List<User>> getAll();
-    ListenableFuture<User> getUser(Integer id);
-    ListenableFuture<User> createUser(User user);
-    ListenableFuture<List<User>> getFriends(Integer id);
-    ListenableFuture<List<Flight>> getFlights(Integer id);
-    ListenableFuture<User> update(User user);
-    ListenableFuture<List<Recommendation>> getRecommendations(Integer id);
-    ListenableFuture<Recommendation> recommendFlight(Integer flightId,Integer fromUserId, Integer toUserId);
-    ListenableFuture<Recommendation> acceptRecommendation(Integer recommendationId,Integer userId);
-    ListenableFuture<Recommendation> rejectRecommendation(Integer recommendationId,Integer userId);
-    ListenableFuture<User> addFriend(Integer userId, Integer friendId);
-    ListenableFuture<User> removeFriend(Integer userId, Integer friendId);
+    List<User> getAll();
+    User getUser(String token);
+    User createUser(String token);
+    List<User> getFriends(String token);
+    List<Trip> getTrips(String token);
+    User update(User user);
+    List<Recommendation> getRecommendations(String id);
+    Recommendation recommendFlight(Long flightId,String fromUserId, String toUserId);
+    Recommendation acceptRecommendation(Long recommendationId,String userId);
+    Recommendation rejectRecommendation(Long recommendationId,String userId);
 }

@@ -1,10 +1,8 @@
 package com.hax.controllers;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.async.utils.FutureHelper;
-import com.hax.models.Flight;
-import com.hax.models.Recommendation;
-import com.hax.services.FlightsServiceInterface;
+import com.hax.models.Trip;
+import com.hax.services.TripsServiceInterface;
 import com.hax.services.UsersServiceInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,41 +10,43 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
-import static com.hax.async.utils.FutureHelper.addControllerCallback;
-import java.util.ArrayList;
+import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static com.hax.utils.ControllerHelper.addControllerCallback;
+import static com.hax.utils.ControllerHelper.fail;
 
 @Singleton
 @Service
 @Path("flights")
 public class FlightsController {
     @Inject
-    FlightsServiceInterface flightsService;
+    TripsServiceInterface flightsService;
     @Inject
     UsersServiceInterface usersService;
 
-    /**
-     *
-     * @param flightID
-     * @param userId
-     * @return Estado de la operacion
-     * @throws JSONException
-     */
-    @Path("{flightID}/publish/{userID}")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String publishFlight(@PathParam("flightId") int flightID , @PathParam("userId") int userId) throws JSONException
-    {
-        return new JSONObject().put("success", true).toString();
-    }
+//    /**
+//     *
+//     * @param flightID
+//     * @param userId
+//     * @return Estado de la operacion
+//     * @throws JSONException
+//     */
+//    @Path("{flightID}/publish/{userID}")
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String publishFlight(@PathParam("flightId") int flightID , @PathParam("token") int userId) throws JSONException
+//    {
+//        return new JSONObject().put("success", true).toString();
+//    }
 
 
     /**
@@ -60,68 +60,10 @@ public class FlightsController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
+    public Response getFilteredFlight(@QueryParam("origin") final String from, @QueryParam("destiny") final String to,
                                   @QueryParam("departure") final String fromDate, @QueryParam("arrival") String toDate,
-                                  @QueryParam("userId") Integer userId,
-                                  @Suspended final AsyncResponse asyncResponse) throws JSONException
+                                  @Context HttpServletResponse asyncResponse) throws JSONException
     {
-        if(userId==null){
-            addControllerCallback(flightsService.getFlights(from, to, fromDate, toDate), asyncResponse);
-        } else{
-            addControllerCallback(usersService.getFlights(userId), asyncResponse);
-        }
-    }
-
-
-    /**
-     * JSON DATA:
-     {
-     "way-ticket":
-     {
-     "origin":"EZE, Buenos Aires, Argentina",
-     "destiny":"MNT, Montevideo, Uruguay",
-     "company":"American Airlines",
-     "flight-num":"B34A5",
-     "departure-time":"20-04-2015 18:30",
-     "duration":"1h 20m",
-     "price":"532"
-     },
-     "return-ticket":
-     {
-     "origin":"MNT, Montevideo, Uruguay",
-     "destiny":"EZE, Buenos Aires, Argentina",
-     "company":"American Airlines",
-     "flight-number":"A98P5",
-     "departure-time":"09-06-2015 06:10",
-     "duration":"50m",
-     "price":"532"
-     },
-     "total-price":"532"
-     }
-     */
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void createFlight(final Flight flight,@Context HttpHeaders hh, @Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        Integer userId = Integer.parseInt(hh.getHeaderString("userId"));
-        ListenableFuture<Flight> f = flightsService.createFlight(flight, userId);
-        addControllerCallback(f, asyncResponse);
-    }
-    
-    
-    /**
-     * ruta de prueba para ver todos los vuelos guardados
-     * 
-     * @throws JSONException 
-     */
-    @GET
-    @Path("all")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void getAllSavedFlights(@Suspended final AsyncResponse asyncResponse) throws JSONException
-    {
-        ListenableFuture<List<Flight>> f = flightsService.getAllSavedFlights();
-        addControllerCallback(f, asyncResponse);
+            return addControllerCallback(flightsService.getFlights(from, to, fromDate, toDate));
     }
 }

@@ -1,32 +1,33 @@
 package connectors;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.hax.connectors.UsersRepository;
+import com.hax.connectors.UsersInMemoryRepository;
+import com.hax.connectors.UsersRepositoryInterface;
 import com.hax.models.User;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.junit.After;
 import org.junit.Test;
 import utils.GenericTest;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by martin on 5/3/15.
  */
-public class UsersRepositoryTest extends GenericTest {
+public class UsersInMemoryRepositoryTest extends GenericTest {
 
     @Test
     public void insertUser(){
-        UsersRepository ur = new UsersRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
         User user = new User();
 
-        ListenableFuture<User> lf = ur.insert(user);
-
         try {
-            lf.get();
+            ur.insert(user);
             assertTrue(true);
         } catch (Exception e) {
             assertTrue(false);
@@ -37,15 +38,12 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUser() throws ExecutionException, InterruptedException {
         User user = new User();
-        user.setId(1);
-        UsersRepository ur = new UsersRepository();
-        ur.insert(user).get();
-
-
-        ListenableFuture<User> lf = ur.update(user);
+        user.setFacebookId("1");
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
+        ur.insert(user);
 
         try {
-            lf.get();
+            ur.update(user);
             assertTrue(true);
         } catch (Exception e) {
             assertTrue(false);
@@ -55,13 +53,11 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void updateUserMissing() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
-
-
-        ListenableFuture<User> lf = ur.update(user);
+        user.setFacebookId("1234");
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
         try {
-            lf.get();
+            ur.update(user);
             assertTrue(false);
         } catch (Exception e) {
             assertTrue(e.getMessage().contains("User not found"));
@@ -71,44 +67,38 @@ public class UsersRepositoryTest extends GenericTest {
     @Test
     public void getUser() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
-        ur.insert(user).get();
+        user.setFacebookId("1");
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
+        ur.insert(user);
 
-        ListenableFuture<User> lf = ur.get(0);
-
-        User userRes =lf.get();
-        assertTrue(userRes == user);
+        assertTrue(ur.get("1") == user);
     }
 
     @Test
     public void getUserMissing(){
-        UsersRepository ur = new UsersRepository();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
 
-        ListenableFuture<User> lf = ur.get(1);
-
-        try {
-            lf.get();
-            assertTrue(false);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("User not found"));
-        }
+        assertNull(ur.get("1"));
     }
 
     @Test
     public void getAll() throws ExecutionException, InterruptedException {
         User user = new User();
-        UsersRepository ur = new UsersRepository();
-        ur.insert(user).get();
-
-        ListenableFuture<List<User>> lf = ur.getAll();
+        UsersRepositoryInterface ur = new UsersInMemoryRepository();
+        ur.insert(user);
 
         try {
-            List<User> userLst = lf.get();
+            List<User> userLst = ur.getAll();
             assertTrue(userLst.contains(user));
             assertTrue(userLst.size()==1);
         } catch (Exception e) {
             assertTrue(false);
         }
+    }
+
+    @After
+    public void tearDown() {
+        UsersInMemoryRepository.tearDown();
     }
 
     @Override

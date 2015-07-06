@@ -33,6 +33,9 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/moment/moment.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/angucomplete-alt/angucomplete-alt.js',
+      'bower_components/angular-facebook-utils/src/facebookUtils.js',
+      'bower_components/angular-facebook-utils/src/facebookUtils.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

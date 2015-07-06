@@ -1,61 +1,70 @@
 package com.hax.models;
 
-/**
- * Created by martin on 5/5/15.
- */
-
 public class Flight {
-    private Ticket wayTicket;
-    private Ticket returnTicket;
-    private Double totalPrice;
-    private String state;
-    private Integer id;
+    private String origin;
+    private String destiny;
+    private String airline;
+    private String flightNum;
+    private String departureTime; //TODO: Pasar a dateTime (posiblemente JODA)
+    private String duration;//TODO: Pasar a dateTime (posiblemente JODA)
 
-    //Dummy Contructor
-    public Flight() {
+    //Dummy Contructor para poder funcionar con la Inyeccion de Dependencias
+    public Flight(){}
+
+    public Flight(String origin, String destiny, String airline, String flightNum, String departureTime, String duration) {
+        this.origin = origin;
+        this.destiny = destiny;
+        this.airline = airline;
+        this.flightNum = flightNum;
+        this.departureTime = departureTime;
+        this.duration = duration;
     }
 
-    public Flight(Ticket wayTicket, Ticket returnTicket, Double totalPrice) {
-        this.wayTicket = wayTicket;
-        this.returnTicket = returnTicket;
-        this.totalPrice = totalPrice;
-        this.state = "Sin Publicar";
+    public String getOrigin() {
+        return origin;
     }
 
-    public Ticket getWayTicket() {
-        return wayTicket;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
-    public void setWayTicket(Ticket wayTicket) {
-        this.wayTicket = wayTicket;
+    public String getDestiny() {
+        return destiny;
     }
 
-    public Ticket getReturnTicket() {
-        return returnTicket;
+    public void setDestiny(String destiny) {
+        this.destiny = destiny;
     }
 
-    public void setReturnTicket(Ticket returnTicket) {
-        this.returnTicket = returnTicket;
+    public String getAirline() {
+        return airline;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
+    public void setAirline(String airline) {
+        this.airline = airline;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
+    public String getFlightNum() {
+        return flightNum;
     }
 
-    public Integer getId() { return id; }
-
-    public void setId(Integer id) { this.id = id; }
-
-    public String getState() {
-        return state;
+    public void setFlightNum(String flightNum) {
+        this.flightNum = flightNum;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }
-

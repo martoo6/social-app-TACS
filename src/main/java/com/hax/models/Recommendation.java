@@ -1,34 +1,52 @@
 package com.hax.models;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+
 /**
  * Created by martin on 5/5/15.
  */
+@Entity
 public class Recommendation {
-    private User fromUser;
-    private Flight flight;
-    private RecommendationState state;
-    private Integer id;
+    public String fromUserId;
+    public String toUserId;
+    public Long trip;
+    public RecommendationState state;
+    @Id public Long id;
 
-    public Recommendation(Flight flight, User fromUser) {
-        this.fromUser = fromUser;
-        this.flight = flight;
+    public Recommendation() {
+        //dummy
+    }
+
+    public Recommendation(Long tripId, String fromUserId, String toUserId) {
+        this.fromUserId = fromUserId;
+        this.trip = tripId;
         this.state = RecommendationState.PENDING;
+        this.toUserId = toUserId;
     }
 
-    public User getFromUser() {
-        return fromUser;
+    public String getToUserId() {
+        return toUserId;
     }
 
-    public void setFromUser(User toUser) {
-        this.fromUser = toUser;
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
     }
 
-    public Flight getFlight() {
-        return flight;
+    public String getFromUserId() {
+        return fromUserId;
     }
 
-    public void setFlight(Flight flight) {
-        this.flight = flight;
+    public void setFromUserId(String toUser) {
+        this.fromUserId = toUser;
+    }
+
+    public Long getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Long trip) {
+        this.trip = trip;
     }
 
     public RecommendationState getState() {
@@ -39,11 +57,11 @@ public class Recommendation {
         this.state = state;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

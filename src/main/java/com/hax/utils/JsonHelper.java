@@ -1,7 +1,6 @@
 package com.hax.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hax.models.DespegarError;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
