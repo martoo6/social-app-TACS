@@ -54,7 +54,19 @@ angular.module('frontendApp')
           $('#modalCheck').fadeIn();
 
           setTimeout(function(){
-            $('#modalCheck').fadeOut();
+            $('#modalShare').fadeOut();
+            $('#modalShare').modal('hide');
+            $('#modalCheck').hide();
+            $('#friendSearch_value').val('');
+            
+            FB.ui({
+              method: 'feed',
+              caption: 'Recomendación de vuelo',
+              link: window.location.origin + '/#/recommendations',
+              description: 'Hola! Que te parece viajar a ' + $scope.selectedTrip.destinyDescription,
+              picture:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Wv_logo_proposal_flying_plane_wo_text.png/120px-Wv_logo_proposal_flying_plane_wo_text.png',
+              to: selectedFriend.facebookId
+            });
           }, 1000);
         });
       };
