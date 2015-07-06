@@ -75,7 +75,7 @@ angular
     };
   })
   .constant('facebookConfigSettings', {
-    'appID' : '565625596912348',
+    'appID' : (window.location.origin.indexOf("localhost") > -1)? '588801481261426' : '565625596912348',
     'routingEnabled' : true,
     'permissions' : 'publish_actions, user_friends, email'
   })
