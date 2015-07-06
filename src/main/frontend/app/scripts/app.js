@@ -47,7 +47,8 @@ angular
       })
       .when('/recommendations', {
         templateUrl: 'views/recommendations.html',
-        controller: 'RecommendationsCtrl'
+        controller: 'RecommendationsCtrl',
+        needAuth:true
       })
       .otherwise({
         redirectTo: '/'
@@ -78,22 +79,9 @@ angular
     'routingEnabled' : true,
     'permissions' : 'publish_actions, user_friends, email'
   })
-  .run(function ($rootScope, facebookUser, $http){
+  .run(function ($rootScope, facebookUser, fbLoginService, $http){
     $rootScope.$on('fbLoginSuccess', function(name, response) {
-      facebookUser.then(function(user) {
-        user.api('/me').then(function(user) {
-          $rootScope.loggedInUser = user;
-        });
-        
-      $rootScope.fbStatus = response;
-      $http.defaults.headers.common['token'] = $rootScope.fbStatus.authResponse.accessToken;
-      $.ajax({
-            type: 'POST',
-            url: 'api/v1/users/' + response.authResponse.accessToken,
-            contentType: 'application/json',
-            data: {id: response.id}
-          });
-      });
+      fbLoginService.setResponse(response);
     });
 
     $rootScope.$on('fbLogoutSuccess', function() {
