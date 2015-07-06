@@ -9,9 +9,9 @@
  */
 angular.module('frontendApp')
   .controller('FriendsCtrl', function ($scope, $http, $q, fbLoginService) {
-    
+
     fbLoginService.login.then(function(){
-      
+
       //////////////////////////////////////////
       ////////////// INIT FUNCTION /////////////
       //////////////////////////////////////////
@@ -33,15 +33,13 @@ angular.module('frontendApp')
             return promises.concat([
                $http.get('api/v1/trips/' + tripId)
                 .success(function(trip){
-                  friend.tripsBrought.push(trip); 
+                  friend.tripsBrought.push(trip);
               })
             ]);
           }, []);
 
           //executes promises requests and acts once all finished
           $q.all(friendTripPromises).then(function(){
-
-            console.log(friend);
 
             $spinner.hide();
             $(friendSelector).collapse('toggle');
@@ -64,8 +62,8 @@ angular.module('frontendApp')
       ////////////////////////////////
 
       function findFriendById(id){
-        return $.grep($scope.myFriends, function(friend){ 
-          return friend.facebookId == id; 
+        return $.grep($scope.myFriends, function(friend){
+          return friend.facebookId == id;
         })[0];
       }
     });
